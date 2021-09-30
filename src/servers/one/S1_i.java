@@ -5,5 +5,5 @@ import java.io.UnsupportedEncodingException;
 import java.rmi.Remote;
 
 public interface S1_i extends Remote {
-    public  String createroom()throws java.rmi.RemoteException, FileNotFoundException, UnsupportedEncodingException;;
+    public  Boolean createroom(String rno, String date, String timeslot)throws java.rmi.RemoteException, FileNotFoundException, UnsupportedEncodingException;;
 }

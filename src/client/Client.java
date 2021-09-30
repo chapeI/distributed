@@ -7,6 +7,8 @@ import java.rmi.Naming;
 
 public class Client {
 
+    String ADMIN = "DVLA123";
+
     // start_client starts the client. can access remote objects from here
     void start_client() throws Exception {
         String uid;
@@ -18,8 +20,10 @@ public class Client {
 
         // determine whether client is a student or an admin
         BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Enter the User ID");
-        uid = br.readLine();
+//        System.out.println("Enter the User ID");
+//        uid = br.readLine();
+
+        uid = ADMIN;
 
         if(uid.charAt(3)=='S') {
             student = new Student();
