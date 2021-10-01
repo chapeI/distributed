@@ -17,15 +17,27 @@ public class Admin {
         String campus = uid.substring(0,3);  // TODO: do this in Client
         System.out.println("admin from campus => " + campus);
 
-        System.out.println("Enter room number, day (1-10), slot (1-10)");
-        String rno = br.readLine();
-        String date = br.readLine();
-        String slot = br.readLine();
-        System.out.println("admin wants to book [Room Number: " + rno + "] on [Day " + date + "] for [slot " + slot + "]");
+        System.out.println("Enter room number (1-10), day (Monday to Friday), timeslot (8:00 to 16:00)");
+        String rno;
+        String date;
+        String timeslot;
+//        rno = br.readLine();
+//        date = br.readLine();
+//        timeslot = br.readLine();
+
+        // for testing
+        campus = "DVL";
+        rno = "2";
+        date = "Monday";
+        timeslot = "9:00";
+
+        // testing end
+
+        System.out.println("admin wants to book [Room Number: " + rno + "] on [Day " + date + "] for [timeslot " + timeslot + "]");
 
         if(campus.equals("DVL")) {
             System.out.println("'campus.equals = DVL' check");
-            boolean response = s1_i.createroom(rno, date, slot);  // TODO: rename s1_i to DVI_i
+            boolean response = s1_i.createroom(rno, date, timeslot);  // TODO: rename s1_i to DVI_i
             System.out.println("response: " + response);
             if(response) {
                 System.out.println("room created");

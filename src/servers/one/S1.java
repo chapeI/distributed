@@ -2,14 +2,22 @@ package servers.one;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 public class S1 extends UnicastRemoteObject implements S1_i {
+
+    S1() throws RemoteException {
+        super();
+    }
+
+    String bookingid = "bookingID_debug";
+
+
+    // "DATABASE"
 
     // 	room_record = Hashmap < date , Hashmap< rno , ts >>
     static HashMap<String,HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();
@@ -25,11 +33,6 @@ public class S1 extends UnicastRemoteObject implements S1_i {
 
     //  can add things like "UID", and what else?
     static ArrayList<String> e = new ArrayList<String>();
-
-
-    S1() throws RemoteException {
-        super();
-    }
 
     @Override
     public Boolean createroom(String rno, String date, String timeslot) throws RemoteException, FileNotFoundException, UnsupportedEncodingException {
@@ -69,6 +72,83 @@ public class S1 extends UnicastRemoteObject implements S1_i {
         a.put(date, b);
 
         System.out.println("server created room");
+        System.out.println("a: " + a);
         return true;
+    }
+
+    public String bookroom(String campusName,String rno,String date,String timeslot,String UID) throws RemoteException, InterruptedException {
+        System.out.println("\n~~ s1.bookroom()");
+        System.out.println("UID: " + UID);
+        int i = 0;
+
+        try {
+            if(d.isEmpty()) {
+                System.out.println("d = 0, no uid's in d . putting (" + UID + ", 'UID') in d)");
+                e.add("UID");
+                d.put(UID, e);
+                System.out.println("confirming d: " + d);
+            }
+
+            Set<String> set = d.keySet();
+            Iterator it = set.iterator();
+
+            while(it.hasNext()) {
+
+                String s = (String)it.next();
+//                System.out.println("s: " + s);
+//                System.out.println("UID: " + UID);
+//                System.out.println("does " + s + " == " + UID);
+                if(UID == s) {
+                    System.out.println("HIT");
+                    i++;
+                }
+            }
+
+//            System.out.println("expecting i = 1. i = " + i);
+
+            if(i == 0) {
+                System.out.println("i = 0");
+                e.add("UID");
+                d.put(UID, e);
+                System.out.println("e: " + e);
+                System.out.println("d " + d);
+                i = 0;
+            }
+
+            if(d.get(UID).size() > 3) {
+                System.out.println("You have reached the booking limit already");
+                return "limit reached";
+            } else {
+                System.out.println("booking room");
+//                si1 = (s1_i)Naming.lookup("rmi://localhost:25011/tag1");
+//                si3 = (server3interface)Naming.lookup("rmi://localhost:25013/tag3");
+                if(campusName.equals(new String("DVL"))) {
+                    bookingid = UUID.randomUUID().toString();
+                    System.out.println("bookingid: " + bookingid);
+                    a.get("Monday").get("2").put("9:00","WORKING"); // TODO: catch if cant find. or at sout a.. 
+                    System.out.println("a: " + a);
+//                    a.get(date).get(rno).put(timeslot, "sdf");
+//                    String sdf = a.get(date).get(rno).get(timeslot);
+//                    System.out.println("sdf: " + sdf);
+//                    String get_bookingID = a.get(date).get(rno).get(timeslot);
+//                    System.out.println("get_bookingID: " + get_bookingID);
+//                    roomcount--;
+                    System.out.println("booked");
+                } else if(campusName.equals(new String("WHATS THE NAME?"))) {
+//                    bookingid = si1.bookroom(campusName,rno,date,timeslot,UID);
+                } else if(campusName.equals(new String("WST"))) {
+//                    bookingid = si3.bookroom(campusName,rno,date,timeslot,UID);
+                }
+            }
+//            d.get(UID).add((bookingid));
+        } catch (Exception e) { }
+
+        return "DEBUG";
+
+//        catch(NotBoundException e ) { }
+//        catch (MalformedURLException e) { }
+
+//        System.out.println("before return");
+//        return bookingid;
     }
 }
