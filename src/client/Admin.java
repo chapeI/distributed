@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 public class Admin {
     BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
 
-
     Admin() {
         System.out.println("admin authorized");
     }
