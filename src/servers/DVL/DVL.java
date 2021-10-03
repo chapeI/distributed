@@ -1,16 +1,14 @@
-package servers.one;
+package servers.DVL;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
-public class S1 extends UnicastRemoteObject implements S1_i {
+public class DVL extends UnicastRemoteObject implements DVL_i {
 
-    S1() throws RemoteException {
+    DVL() throws RemoteException {
         super();
     }
 

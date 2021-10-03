@@ -1,4 +1,4 @@
-package servers.one;
+package servers.DVL;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
@@ -9,17 +9,17 @@ import java.rmi.registry.Registry;
 
 // TODO: look at slide 17 and see if we can copy code from there. like the way we're porting
 
-public class S1_START_SERVER {
+public class DVL_START_SERVER {
     public static void main(String args[]) throws RemoteException
     {
         // create port
         Registry re=java.rmi.registry.LocateRegistry.createRegistry(35000); // TODO: change this to the way prof binds. (w "rmi:localhost")
 
         // create powerful object
-        S1 s1=new S1();
+        DVL dvl =new DVL();
 
         // bind powerful object to port, so client can invoke port
-        re.rebind("tag1", s1);
+        re.rebind("tag1", dvl);
         System.out.println("server 1 running");
     }
 }

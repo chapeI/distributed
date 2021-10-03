@@ -1,7 +1,5 @@
 package servers.two;
 
-import servers.one.S1;
-
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 
