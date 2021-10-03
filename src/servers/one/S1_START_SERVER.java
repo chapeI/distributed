@@ -9,7 +9,7 @@ import java.rmi.registry.Registry;
 
 // TODO: look at slide 17 and see if we can copy code from there. like the way we're porting
 
-public class S1_binding {
+public class S1_START_SERVER {
     public static void main(String args[]) throws RemoteException
     {
         // create port

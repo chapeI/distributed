@@ -126,10 +126,13 @@ public class S1 extends UnicastRemoteObject implements S1_i {
 
                     if(a.get("Monday").get("2").get("9:00") == "Available") {
                         System.out.println("should see this message before 'booked'"); // TODO: use this as a check
+                    } else {
+                        System.out.println("this shit breaks"); // TODO: handle this properly
                     }
-                    System.out.println("a (before booking): " + a);
-                    a.get("Monday").get("2").put("9:00","WORKING"); // TODO: catch if cant find. or at sout a..
-                    System.out.println("a (after booking): " + a);
+
+                    System.out.println("DVL RRs -> a (before booking): " + a);
+                    a.get("Monday").get("2").put("9:00","WORKING");
+                    System.out.println("DVL RRs -> a (after booking): " + a);
 //                    a.get(date).get(rno).put(timeslot, "sdf");
 //                    String sdf = a.get(date).get(rno).get(timeslot);
 //                    System.out.println("sdf: " + sdf);

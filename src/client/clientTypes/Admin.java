@@ -1,4 +1,4 @@
-package client;
+package client.clientTypes;
 
 import servers.one.S1_i;
 
@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 public class Admin {
     BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
 
-    Admin() {
+    public Admin() {
         System.out.println("admin authorized");
     }
 

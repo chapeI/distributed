@@ -1,4 +1,4 @@
-package client;
+package client.clientTypes;
 
 import servers.one.S1_i;
 
@@ -8,7 +8,7 @@ public class Student {
 
 //    S1_i s1_i;
 
-    Student() {
+    public Student() {
         System.out.println("Student login");
     }
 

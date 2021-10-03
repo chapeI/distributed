@@ -1,4 +1,6 @@
 package client;
+import client.clientTypes.Admin;
+import client.clientTypes.Student;
 import servers.one.S1_i;
 
 import java.io.BufferedReader;
@@ -19,8 +21,7 @@ public class Client {
         Admin admin;
         Student student;
 
-        S1_i s1_i;
-        s1_i = (S1_i) Naming.lookup("rmi://localhost:35000/tag1");
+        S1_i s1_i = (S1_i) Naming.lookup("rmi://localhost:35000/tag1");
 
         // determine whether client is a student or an admin
         BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
