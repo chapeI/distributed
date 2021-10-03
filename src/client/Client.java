@@ -31,12 +31,12 @@ public class Client {
 
         if(uid.charAt(3)=='S') {
             student = new Student();
-            student.setup(uid, dvl_i, kkl_i);
+            student.run_student(uid, dvl_i, kkl_i);
         } else if(uid.charAt(3)=='A') {
             admin = new Admin();
-            admin.setup(uid, dvl_i, kkl_i);
+            admin.run_admin(uid, dvl_i, kkl_i);
         } else {
-            System.out.println("invalid. program terminated");
+            System.out.println("invalid uid. terminating program");
             return;
         }
     }
