@@ -16,7 +16,6 @@ public class S1 extends UnicastRemoteObject implements S1_i {
 
     String bookingid = "bookingID_debug";
 
-
     // "DATABASE"
 
     // 	room_record = Hashmap < date , Hashmap< rno , ts >>
@@ -71,22 +70,21 @@ public class S1 extends UnicastRemoteObject implements S1_i {
         b.put(rno, c);   //   rn : { c }
         a.put(date, b);
 
-        System.out.println("server created room");
-        System.out.println("a: " + a);
+        System.out.println("server created room. RoomRecords for DVL now looks like -> " + a);
         return true;
     }
 
     public String bookroom(String campusName,String rno,String date,String timeslot,String UID) throws RemoteException, InterruptedException {
-        System.out.println("\n~~ s1.bookroom()");
-        System.out.println("UID: " + UID);
+        System.out.println("\n~~ DVL.bookroom()");
+//        System.out.println("UID: " + UID);
         int i = 0;
 
         try {
             if(d.isEmpty()) {
-                System.out.println("d = 0, no uid's in d . putting (" + UID + ", 'UID') in d)");
+//                System.out.println("d = 0, no uid's in d . putting (" + UID + ", 'UID') in d)");
                 e.add("UID");
                 d.put(UID, e);
-                System.out.println("confirming d: " + d);
+//                System.out.println("confirming d: " + d);
             }
 
             Set<String> set = d.keySet();
@@ -119,14 +117,19 @@ public class S1 extends UnicastRemoteObject implements S1_i {
                 System.out.println("You have reached the booking limit already");
                 return "limit reached";
             } else {
-                System.out.println("booking room");
+//                System.out.println("booking room");
 //                si1 = (s1_i)Naming.lookup("rmi://localhost:25011/tag1");
 //                si3 = (server3interface)Naming.lookup("rmi://localhost:25013/tag3");
                 if(campusName.equals(new String("DVL"))) {
                     bookingid = UUID.randomUUID().toString();
                     System.out.println("bookingid: " + bookingid);
-                    a.get("Monday").get("2").put("9:00","WORKING"); // TODO: catch if cant find. or at sout a.. 
-                    System.out.println("a: " + a);
+
+                    if(a.get("Monday").get("2").get("9:00") == "Available") {
+                        System.out.println("should see this message before 'booked'"); // TODO: use this as a check
+                    }
+                    System.out.println("a (before booking): " + a);
+                    a.get("Monday").get("2").put("9:00","WORKING"); // TODO: catch if cant find. or at sout a..
+                    System.out.println("a (after booking): " + a);
 //                    a.get(date).get(rno).put(timeslot, "sdf");
 //                    String sdf = a.get(date).get(rno).get(timeslot);
 //                    System.out.println("sdf: " + sdf);
