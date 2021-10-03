@@ -39,7 +39,7 @@ public class S1 extends UnicastRemoteObject implements S1_i {
 
         // TODO: FileWriter goes here..
 
-        // time_slot check?
+        // JUST A CHECK
         Set<String> setr = b.keySet();  // set of room_numbers
         Set<String> sett = c.keySet();  // set of time_slots
         Iterator ir = setr.iterator();  // iterating on the set of room_numbers
@@ -65,12 +65,13 @@ public class S1 extends UnicastRemoteObject implements S1_i {
                 }
             }
         }
+        // CHECK END.
 
         c.put(timeslot,"Available");   //  ts: "available"      < String, String >
         b.put(rno, c);   //   rn : { c }
         a.put(date, b);
 
-        System.out.println("server created room. RoomRecords for DVL now looks like -> " + a);
+        System.out.println("DVL server created a room. RoomRecords for DVL now looks like -> " + a);
         return true;
     }
 
