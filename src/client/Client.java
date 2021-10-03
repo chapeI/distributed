@@ -13,7 +13,6 @@ public class Client {
     String ADMIN = "DVLA123";
     String STUDENT = "DVLS123";
 
-
     // start_client starts the client. can access remote objects from here
     void start_client() throws Exception {
         String uid;
@@ -25,12 +24,10 @@ public class Client {
         DVL_i dvl_i = (DVL_i) Naming.lookup("rmi://localhost:35000/tag1");
         KKL_i kkl_i = (KKL_i) Naming.lookup("rmi://localhost:35001/tag2");
 
-
         // determine whether client is a student or an admin
         BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Enter ID");
         uid = br.readLine();
-
 
         if(uid.charAt(3)=='S') {
             student = new Student();
