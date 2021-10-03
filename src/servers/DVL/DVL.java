@@ -33,7 +33,7 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
 
     @Override
     public Boolean createroom(String rno, String date, String timeslot) throws RemoteException, FileNotFoundException, UnsupportedEncodingException {
-        System.out.println("entered S1.createroom()");
+        System.out.println("DVL.createroom()");
 
         // TODO: FileWriter goes here..
 

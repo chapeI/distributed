@@ -31,7 +31,7 @@ public class KKL extends UnicastRemoteObject implements KKL_i {
 
     @Override
     public Boolean createroom(String rno, String date, String timeslot) throws RemoteException, FileNotFoundException, UnsupportedEncodingException {
-        System.out.println("S2.createroom()");
+        System.out.println("KKL.createroom()");
 
         // TODO: FileWriter goes here..
 
@@ -66,7 +66,7 @@ public class KKL extends UnicastRemoteObject implements KKL_i {
         b.put(rno, c);   //   rn : { c }
         a.put(date, b);
 
-        System.out.println("S2 (KKL server) created room. RoomRecords inside KKL now looks like -> " + a);
+        System.out.println("KKL server created room. RoomRecords data structure stored in KKL now looks like -> " + a);
         return true;
     }
 
