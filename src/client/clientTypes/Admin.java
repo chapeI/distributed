@@ -14,7 +14,7 @@ public class Admin {
         System.out.println("Admin()");
     }
 
-    public void run_admin(String uid, DVL_i dvl_i, KKL_i kkl_i)throws IOException {
+    public void run_admin(String uid, DVL_i dvl_i, KKL_i kkl_i) throws IOException {
         String campus = uid.substring(0,3);  // TODO: do this in Client
 //        System.out.println("admin from campus => " + campus);
 

@@ -1,12 +1,19 @@
 package servers.KKL;
 
+import servers.DVL.DVL_i;
+
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
 public class KKL extends UnicastRemoteObject implements KKL_i {
+
+    DVL_i dvl;
 
     public KKL() throws RemoteException {
         super();
@@ -154,5 +161,34 @@ public class KKL extends UnicastRemoteObject implements KKL_i {
 
 //        System.out.println("before return");
 //        return bookingid;
+    }
+
+    public String bookroom2(String campusName,String rno,String date,String timeslot,String UID) throws RemoteException, InterruptedException, MalformedURLException, NotBoundException {
+
+        dvl = (DVL_i) Naming.lookup("rmi://localhost:35000/tag1"); // TODO: move this to the top
+        // wst reference goes here
+
+        if(campusName.equals("KKL")) {
+            bookingid = UUID.randomUUID().toString();
+            System.out.println("bookingid: " + bookingid);
+
+            // TODO: configure check
+            if(a.get("Monday").get("2").get("9:00") == "Available") {
+                System.out.println("should see this message before 'booked'");
+            } else {
+                System.out.println("this shit breaks"); // TODO: handle properly
+            }
+
+            System.out.println("KKL RR (before booking): " + a);
+            a.get("Monday").get("2").put("9:00","WORKING");
+            System.out.println("KKL RR (after booking): " + a);
+
+        } else if(campusName.equals(new String("DVL"))) {
+            bookingid = dvl.bookroom2(campusName, rno, date, timeslot, UID);
+        } else if(campusName.equals(new String("WST"))) {
+            System.out.println("sending request to WST.bookRoom()");
+        }
+
+        return "debug";
     }
 }

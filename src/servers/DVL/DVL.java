@@ -1,12 +1,19 @@
 package servers.DVL;
 
+import servers.KKL.KKL_i;
+
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
 public class DVL extends UnicastRemoteObject implements DVL_i {
+
+    KKL_i kkl;
 
     DVL() throws RemoteException {
         super();
@@ -74,10 +81,12 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
     }
 
     public String bookroom(String campusName,String rno,String date,String timeslot,String UID) throws RemoteException, InterruptedException {
+        System.out.println("ERROR. SHOULDNT BE SEEING THIS. if you see this. mute bookRoom()");
         System.out.println("\n~~ DVL.bookroom()");
 //        System.out.println("UID: " + UID);
         int i = 0;
 
+        // check for
         try {
             if(d.isEmpty()) {
 //                System.out.println("d = 0, no uid's in d . putting (" + UID + ", 'UID') in d)");
@@ -90,7 +99,6 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
             Iterator it = set.iterator();
 
             while(it.hasNext()) {
-
                 String s = (String)it.next();
 //                System.out.println("s: " + s);
 //                System.out.println("UID: " + UID);
@@ -103,7 +111,7 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
 
 //            System.out.println("expecting i = 1. i = " + i);
 
-            if(i == 0) {
+            if(i == 0) {  // java trick for reference check
                 System.out.println("i = 0");
                 e.add("UID");
                 d.put(UID, e);
@@ -122,6 +130,8 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
                 if(campusName.equals(new String("DVL"))) {
                     bookingid = UUID.randomUUID().toString();
                     System.out.println("bookingid: " + bookingid);
+
+                    // ACTUAL BOOKING CODE (the checks above have all passed) so look here when booking.
 
                     if(a.get("Monday").get("2").get("9:00") == "Available") {
                         System.out.println("should see this message before 'booked'"); // TODO: use this as a check
@@ -157,5 +167,39 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
 
 //        System.out.println("before return");
 //        return bookingid;
+    }
+
+
+    public String bookroom2(String campusName,String rno,String date,String timeslot,String UID)
+            throws RemoteException, InterruptedException, MalformedURLException, NotBoundException {
+        System.out.println("\n~~ DVL.bookroom2()");
+
+        kkl = (KKL_i) Naming.lookup("rmi://localhost:35001/tag2"); // TODO: move this to the top
+        // wst reference goes here
+
+        if(campusName.equals("DVL")) {
+            bookingid = UUID.randomUUID().toString();
+            System.out.println("bookingid: " + bookingid);
+
+            // TODO: configure check
+            if(a.get("Monday").get("2").get("9:00") == "Available") {
+                System.out.println("should see this message before 'booked'");
+            } else {
+                System.out.println("this shit breaks"); // TODO: handle properly
+            }
+
+            System.out.println("DVL RR (before booking): " + a);
+            a.get("Monday").get("2").put("9:00","WORKING");
+            System.out.println("DVL RR (after booking): " + a);
+
+        } else if(campusName.equals(new String("KKL"))) {
+            bookingid = kkl.bookroom(campusName, rno, date, timeslot, UID);
+        } else if(campusName.equals(new String("WST"))) {
+            System.out.println("sending request to WST.bookRoom()");
+        }
+
+        System.out.println("~~ DVL.bookroom2() done");
+
+        return "DEBUG";
     }
 }
