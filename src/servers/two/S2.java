@@ -31,7 +31,7 @@ public class S2 extends UnicastRemoteObject implements S2_i {
 
     @Override
     public Boolean createroom(String rno, String date, String timeslot) throws RemoteException, FileNotFoundException, UnsupportedEncodingException {
-        System.out.println("entered S2.createroom()");
+        System.out.println("S2.createroom()");
 
         // TODO: FileWriter goes here..
 
@@ -80,7 +80,7 @@ public class S2 extends UnicastRemoteObject implements S2_i {
 //                System.out.println("d = 0, no uid's in d . putting (" + UID + ", 'UID') in d)");
                 e.add("UID");
                 d.put(UID, e);
-//                System.out.println("confirming d: " + d);
+//                System.out.println("d: " + d);
             }
 
             Set<String> set = d.keySet();

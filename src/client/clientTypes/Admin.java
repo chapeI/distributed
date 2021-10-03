@@ -11,7 +11,7 @@ public class Admin {
     BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
 
     public Admin() {
-        System.out.println("admin authorized");
+        System.out.println("Admin()");
     }
 
     public void setup(String uid, S1_i s1_i, S2_i s2_i)throws IOException {
@@ -27,31 +27,31 @@ public class Admin {
 //        timeslot = br.readLine();
 
         // for testing
-        campus = "DVL";
         rno = "2";
         date = "Monday";
         timeslot = "9:00";
 
         // testing end
 
-        System.out.println("admin wants to book [Room Number: " + rno + "] on [Day " + date + "] for [timeslot " + timeslot + "]");
+        System.out.println(campus + " admin creates following RoomRecord =>  [Room Number: " + rno + "] on [Day " + date + "] for [timeslot " + timeslot + "]");
 
         if(campus.equals("DVL")) {
-//            System.out.println("'campus.equals = DVL' check");
+            System.out.println("DVL server attempting to create room");
             boolean response = s1_i.createroom(rno, date, timeslot);  // TODO: rename s1_i to DVI_i
 //            System.out.println("response: " + response);
             if(response) {
-                System.out.println("DVL created room. that room->'Available'");
+                System.out.println("DVL created room.");
             } else {
                 System.out.println("error. room not created");
             }
         } else if (campus.equals("KKL")) {
-//            boolean response = s2_i.createroom(rno, date, timeslot);  // TODO: rename s1_i to DVI_i
-//            if(response) {
-//                System.out.println("KKL created room");
-//            } else {
-//                System.out.println("room not created");
-//            }
+            System.out.println("KKL server attempting to create room");
+            boolean response = s2_i.createroom(rno, date, timeslot);  // TODO: rename s1_i to DVI_i
+            if(response) {
+                System.out.println("KKL created room");
+            } else {
+                System.out.println("room not created");
+            }
         }
     }
 }
