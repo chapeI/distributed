@@ -2,7 +2,7 @@ package client;
 import client.clientTypes.Admin;
 import client.clientTypes.Student;
 import servers.DVL.DVL_i;
-import servers.two.S2_i;
+import servers.KKL.KKL_i;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -23,7 +23,7 @@ public class Client {
         Student student;
 
         DVL_i dvl_i = (DVL_i) Naming.lookup("rmi://localhost:35000/tag1");
-        S2_i s2_i = (S2_i) Naming.lookup("rmi://localhost:35001/tag2");
+        KKL_i kkl_i = (KKL_i) Naming.lookup("rmi://localhost:35001/tag2");
 
 
         // determine whether client is a student or an admin
@@ -34,10 +34,10 @@ public class Client {
 
         if(uid.charAt(3)=='S') {
             student = new Student();
-            student.setup(uid, dvl_i, s2_i);
+            student.setup(uid, dvl_i, kkl_i);
         } else if(uid.charAt(3)=='A') {
             admin = new Admin();
-            admin.setup(uid, dvl_i, s2_i);
+            admin.setup(uid, dvl_i, kkl_i);
         } else {
             System.out.println("invalid. program terminated");
             return;

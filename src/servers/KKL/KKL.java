@@ -1,4 +1,4 @@
-package servers.two;
+package servers.KKL;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
@@ -6,9 +6,9 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
-public class S2 extends UnicastRemoteObject implements S2_i {
+public class KKL extends UnicastRemoteObject implements KKL_i {
 
-    public S2() throws RemoteException {
+    public KKL() throws RemoteException {
         super();
     }
 

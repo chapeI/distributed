@@ -1,7 +1,7 @@
 package client.clientTypes;
 
 import servers.DVL.DVL_i;
-import servers.two.S2_i;
+import servers.KKL.KKL_i;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +14,7 @@ public class Admin {
         System.out.println("Admin()");
     }
 
-    public void setup(String uid, DVL_i dvl_i, S2_i s2_i)throws IOException {
+    public void setup(String uid, DVL_i dvl_i, KKL_i kkl_i)throws IOException {
         String campus = uid.substring(0,3);  // TODO: do this in Client
 //        System.out.println("admin from campus => " + campus);
 
@@ -46,7 +46,7 @@ public class Admin {
             }
         } else if (campus.equals("KKL")) {
             System.out.println("KKL server attempting to create room");
-            boolean response = s2_i.createroom(rno, date, timeslot);  // TODO: rename s1_i to DVI_i
+            boolean response = kkl_i.createroom(rno, date, timeslot);  // TODO: rename s1_i to DVI_i
             if(response) {
                 System.out.println("KKL created room");
             } else {

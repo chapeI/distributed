@@ -20,6 +20,6 @@ public class DVL_START_SERVER {
 
         // bind powerful object to port, so client can invoke port
         re.rebind("tag1", dvl);
-        System.out.println("server 1 running");
+        System.out.println("DVL Server running");
     }
 }
