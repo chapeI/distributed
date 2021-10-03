@@ -23,6 +23,7 @@ public class Client {
 
         S1_i s1_i = (S1_i) Naming.lookup("rmi://localhost:35000/tag1");
 
+
         // determine whether client is a student or an admin
         BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Enter ID");

@@ -1,22 +1,18 @@
-package servers.one;
+package servers.two;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
-public class S1 extends UnicastRemoteObject implements S1_i {
+public class S2 extends UnicastRemoteObject implements S2_i {
 
-    S1() throws RemoteException {
+    public S2() throws RemoteException {
         super();
     }
 
     String bookingid = "bookingID_debug";
-
-    // "DATABASE"
 
     // 	room_record = Hashmap < date , Hashmap< rno , ts >>
     static HashMap<String,HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();
@@ -35,7 +31,7 @@ public class S1 extends UnicastRemoteObject implements S1_i {
 
     @Override
     public Boolean createroom(String rno, String date, String timeslot) throws RemoteException, FileNotFoundException, UnsupportedEncodingException {
-        System.out.println("entered S1.createroom()");
+        System.out.println("entered S2.createroom()");
 
         // TODO: FileWriter goes here..
 
@@ -70,12 +66,12 @@ public class S1 extends UnicastRemoteObject implements S1_i {
         b.put(rno, c);   //   rn : { c }
         a.put(date, b);
 
-        System.out.println("server created room. RoomRecords for DVL now looks like -> " + a);
+        System.out.println("S2 (KKL server) created room. RoomRecords inside KKL now looks like -> " + a);
         return true;
     }
 
     public String bookroom(String campusName,String rno,String date,String timeslot,String UID) throws RemoteException, InterruptedException {
-        System.out.println("\n~~ DVL.bookroom()");
+        System.out.println("\n~~ KKL.bookroom()");
 //        System.out.println("UID: " + UID);
         int i = 0;
 
@@ -120,7 +116,7 @@ public class S1 extends UnicastRemoteObject implements S1_i {
 //                System.out.println("booking room");
 //                si1 = (s1_i)Naming.lookup("rmi://localhost:25011/tag1");
 //                si3 = (server3interface)Naming.lookup("rmi://localhost:25013/tag3");
-                if(campusName.equals(new String("DVL"))) {
+                if(campusName.equals(new String("KKL"))) {
                     bookingid = UUID.randomUUID().toString();
                     System.out.println("bookingid: " + bookingid);
 
@@ -130,9 +126,9 @@ public class S1 extends UnicastRemoteObject implements S1_i {
                         System.out.println("this shit breaks"); // TODO: handle this properly
                     }
 
-                    System.out.println("DVL RRs -> a (before booking): " + a);
+                    System.out.println("KKL RRs -> a (before booking): " + a);
                     a.get("Monday").get("2").put("9:00","WORKING");
-                    System.out.println("DVL RRs -> a (after booking): " + a);
+                    System.out.println("KKL RRs -> a (after booking): " + a);
 //                    a.get(date).get(rno).put(timeslot, "sdf");
 //                    String sdf = a.get(date).get(rno).get(timeslot);
 //                    System.out.println("sdf: " + sdf);
@@ -140,8 +136,8 @@ public class S1 extends UnicastRemoteObject implements S1_i {
 //                    System.out.println("get_bookingID: " + get_bookingID);
 //                    roomcount--;
                     System.out.println("booked");
-                } else if(campusName.equals(new String("KKL"))) {
-                    System.out.println("sending request to KKL.bookRoom()");
+                } else if(campusName.equals(new String("DVL"))) {
+                    System.out.println("sending request to DVL.bookRoom()");
 //                    bookingid = si1.bookroom(campusName,rno,date,timeslot,UID);
                 } else if(campusName.equals(new String("WST"))) {
                     System.out.println("sending request to WST.bookRoom()");
