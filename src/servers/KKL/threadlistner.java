@@ -43,6 +43,11 @@ public class threadlistner extends Thread {
 
                     DatagramPacket reply = new DatagramPacket(request4.getData(),
                             request4.getLength(), request4.getAddress(), request4.getPort());
+
+                    String s = new String(reply.getData());
+                    System.out.println("s(KKL): " + s.trim());
+
+
                     dSocket.send(reply);
                 }
             }
