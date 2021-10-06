@@ -15,9 +15,9 @@ public class threadlistner extends Thread {
     String date;
 
     threadlistner(int c ,int d, String date) {
-        this.c=c;
-        this.d=d;
-        this.date=date;
+//        this.c=c;
+//        this.d=d;
+//        this.date=date;
     }
 
     public void run() {
@@ -28,6 +28,7 @@ public class threadlistner extends Thread {
             byte[] b = new byte[1000];  // b=Integer.toString(i).getBytes();  // I really don't think you need this mannn
 
             while(true) {
+
                 // RECEIVING
                 DatagramPacket packet = new DatagramPacket(b, b.length);
                 socket.receive(packet);

@@ -217,7 +217,7 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
 
         int sc1=0,sc2=0,sc3=0,cou=0;
 
-        threadsender3 ts1=new threadsender3(cou,2170);
+        DVL_threadsender ts1=new DVL_threadsender(cou,2170);
         Thread t1=new Thread(ts1);
         t1.start();
 

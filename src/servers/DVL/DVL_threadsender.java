@@ -7,16 +7,16 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 
-public class threadsender3 extends Thread {
+public class DVL_threadsender extends Thread {
 
     private int c = 0;
     public int count,d;
     public boolean ready = false;
 
-    public threadsender3(int c, int d)
+    public DVL_threadsender(int c, int d)
     {
-        this.c=c;
-        this.d=d;
+//        this.c=c;
+//        this.d=d;
     }
 
     public void run() {
