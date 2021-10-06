@@ -6,17 +6,23 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
 
 public class threadlistner extends Thread {
 
     public int count;
-    private int c=0;
-    private int d=0;
+//    private int c=0;
+//    private int d=0;
     String date;
     String uid;
     public int count_for_DVLS123_for_DATE1 = 2;
+//    KKL_i kkl;
+    KKL kkl = new KKL();
 
-    threadlistner(int c ,int d, String date, String uid) {
+
+
+    threadlistner(int c ,int d, String date, String uid) throws RemoteException {
 //        this.c=c;
 //        this.d=d;
 //        this.date=date;
@@ -39,7 +45,11 @@ public class threadlistner extends Thread {
 
                 // TESTING
                 String s = new String(packet.getData());
-                System.out.println("expecting to see a date here (monday). in s(KKL) the date is: " + s.trim());
+                System.out.println("expecting to see a date here (Tuesday). in s(KKL) the date is: " + s.trim());
+                this.date = s.trim();
+
+                int c = kkl.get_count(date);
+                System.out.println("c: " + c);
 
                 // PROCESSING: return the count from date we receive from socket. we already have uid
                 int count = this.count_for_DVLS123_for_DATE1;

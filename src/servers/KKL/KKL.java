@@ -206,4 +206,9 @@ public class KKL extends UnicastRemoteObject implements KKL_i {
 
     }
 
+    public int get_count(String date) {
+        System.out.println("date: " + date);
+        return 4;
+    }
+
 }
