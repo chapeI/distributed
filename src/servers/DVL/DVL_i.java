@@ -15,5 +15,6 @@ public interface DVL_i extends Remote {
     public String bookroom2(String campusName,String rno,String date,String timeslot,String UID)
             throws RemoteException, InterruptedException, MalformedURLException, NotBoundException;
 
+    public int getAvailableTimeSlot(String Date) throws RemoteException, InterruptedException;
 
 }

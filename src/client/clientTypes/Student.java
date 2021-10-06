@@ -27,7 +27,7 @@ public class Student {
 //        System.out.println("campus: " + campus);
 
         // prompt Student for room details. (campus, room number, day, timeslot)
-        System.out.println("Enter room number (1-10), day (Monday to Friday), timeslot (8:00 to 16:00)");
+//        System.out.println("Enter room number (1-10), day (Monday to Friday), timeslot (8:00 to 16:00)");
 
         String campus_booking;
         String rno;
@@ -47,8 +47,9 @@ public class Student {
 
         if(campus.equals("DVL")) {
             System.out.println("DVL?");
-            String test = dvl_i.bookroom2(campus_booking, rno, date, timeslot, uid);
-            System.out.println("setup() done. should return DEBUG => " + test);
+//            String test = dvl_i.bookroom2(campus_booking, rno, date, timeslot, uid);
+//            System.out.println("setup() done. should return DEBUG => " + test);
+            dvl_i.getAvailableTimeSlot("Monday");
         } else if (campus.equals("KKL")) {
             System.out.println("KKL?");
             String test = kkl_i.bookroom2(campus_booking, rno, date, timeslot, uid);

@@ -169,7 +169,6 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
 //        return bookingid;
     }
 
-
     public String bookroom2(String campusName,String rno,String date,String timeslot,String UID)
             throws RemoteException, InterruptedException, MalformedURLException, NotBoundException {
         System.out.println("\n~~ DVL.bookroom2()");
@@ -201,5 +200,33 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
         System.out.println("~~ DVL.bookroom2() done");
 
         return "DEBUG";
+    }
+
+    public int getAvailableTimeSlot(String date) throws RemoteException, InterruptedException {
+        System.out.println("DVL.getAvailableTimeSlot()");
+        try
+        {
+            kkl=(KKL_i)Naming.lookup("rmi://localhost:35001/tag2");
+            System.out.println("ok we're going to KKL server now. cool.");
+            kkl.listener(2170,0, date);  // TODO: delete b. b is literally useless.
+        }
+        catch(NotBoundException e )
+        {
+            System.err.println(e);
+        }
+        catch (MalformedURLException e)
+        {
+            System.err.println(e);
+        }
+
+        int sc1=0,sc2=0,sc3=0,cou=0;
+
+        threadsender3 ts1=new threadsender3(cou,2170);
+        Thread t1=new Thread(ts1);
+        t1.start();
+        System.out.println("woah. did i reach this");
+
+
+        return 1;
     }
 }

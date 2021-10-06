@@ -27,7 +27,10 @@ public class Client {
         // determine whether client is a student or an admin
         BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Enter ID");
-        uid = br.readLine();
+//        uid = br.readLine();
+
+        uid = "DVLS123";  // TESTING DVL.getAvailableTimes()
+
 
         if(uid.charAt(3)=='S') {
             student = new Student();

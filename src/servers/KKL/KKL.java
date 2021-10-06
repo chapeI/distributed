@@ -36,6 +36,8 @@ public class KKL extends UnicastRemoteObject implements KKL_i {
     //  can add things like "UID", and what else?
     static ArrayList<String> e = new ArrayList<String>();
 
+    int cou = 0;  // why.
+
     @Override
     public Boolean createroom(String rno, String date, String timeslot) throws RemoteException, FileNotFoundException, UnsupportedEncodingException {
         System.out.println("KKL.createroom()");
@@ -191,4 +193,16 @@ public class KKL extends UnicastRemoteObject implements KKL_i {
 
         return "debug";
     }
+
+    public void listener(int a,int b,String date) throws RemoteException
+    {
+        threadlistner tl1=new threadlistner(cou,a,date);
+        //threadlistner tl2=new threadlistner(cou,b);
+        Thread t3=new Thread(tl1);
+        //Thread t4=new Thread(tl2);
+        t3.start();
+        //t4.start();
+
+    }
+
 }
