@@ -22,49 +22,34 @@ public class threadlistner extends Thread {
 
     public void run() {
         System.out.println("KKL server: listener started");
-        DatagramSocket dSocket = null;
-        try
-        {
-//            int i= DVL_i.roomcount;
+        DatagramSocket socket = null;
+        try {
+            socket = new DatagramSocket(2170);  // hardcoding PORT, instead of reading in d
+            byte[] b = new byte[1000];  // b=Integer.toString(i).getBytes();  // I really don't think you need this mannn
 
-            dSocket = new DatagramSocket(2170);  // hardcoding port, instead of reading from d
-            byte[] buffer4 = new byte[1000];
-//            buffer4=Integer.toString(i).getBytes();  // I really don't think you need this mannn
-            while(true)
-            {
-                {
-//                    DatagramPacket request2 = new DatagramPacket(buffer4, buffer4.length);
-                    DatagramPacket request4 = new DatagramPacket(buffer4, buffer4.length);
-                    System.out.println("yo am I really listening");
+            while(true) {
+                // RECEIVING
+                DatagramPacket packet = new DatagramPacket(b, b.length);
+                socket.receive(packet);
 
-                    dSocket.receive(request4);
-
-                    System.out.println("ok try to reach this.");
-
-                    DatagramPacket reply = new DatagramPacket(request4.getData(),
-                            request4.getLength(), request4.getAddress(), request4.getPort());
-
-                    String s = new String(reply.getData());
-                    System.out.println("s(KKL): " + s.trim());
-
-
-                    dSocket.send(reply);
-                }
+                // SENDING
+                DatagramPacket response = new DatagramPacket(packet.getData(),
+                        packet.getLength(), packet.getAddress(), packet.getPort());
+                // TESTING
+//                String s = new String(response.getData());
+//                System.out.println("s(KKL): " + s.trim());
+                socket.send(response);
             }
         }
-        catch (SocketException e)
-        {
-            System.out.println("Socket: " + e.getMessage());
-        }
-        catch (IOException e)
-        {
+        catch (SocketException e) {
+            System.out.println("SocketException: " + e.getMessage());
+        } catch (IOException e) {
             System.out.println("IO: " + e.getMessage());
-
-        }
-        finally
-        {
-            if(dSocket != null)
-                dSocket.close();
+        } finally {
+            if(socket != null) {
+                socket.close();
+                System.out.println("closing KKL? socket");
+            }
         }
     }
 }

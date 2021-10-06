@@ -19,51 +19,51 @@ public class threadsender3 extends Thread {
         this.d=d;
     }
 
-    public void run()
-    {
-        int e1;
-        System.out.println(" Inside DVL server");
-        DatagramSocket aSocket = null;
+    public void run() {
+//        int e1;
+//        System.out.println(" Inside DVL server");
+
+        DatagramSocket socket = null;
+
         try {
-            System.out.println("did I reach");
+//            System.out.println("did I reach");
 
-            aSocket = new DatagramSocket();
+            socket = new DatagramSocket();
 
-            byte [] m1 = Integer.toString(5).getBytes();  // sending 5 instead of c
-            InetAddress aHost = InetAddress.getByName("localhost");  // do we need localhost? test w s.out. can use getLocalHost()
-            System.out.println("localhost?: " + aHost);
-            int serverPort = 2170;
-            DatagramPacket request =new DatagramPacket(m1, m1.length, aHost, serverPort); // changed _.length
-            aSocket.send(request);
+            // SENDING
+            int n = 2;
+//            byte [] b = Integer.toString(2).getBytes();
+            byte [] b = String.valueOf(2).getBytes();
+//            InetAddress address = InetAddress.getByName("localhost");
+            InetAddress address = InetAddress.getLocalHost();
+            DatagramPacket packet =new DatagramPacket(b, b.length, address, 2170);
+            socket.send(packet);
 
-            System.out.println("where am i getting stuck tho");
-            byte[] buffer1 = new byte[1000];
-            DatagramPacket reply = new DatagramPacket(buffer1, buffer1.length);
-            aSocket.receive(reply);
-            System.out.println("here?");
-
-//            byte  d1[]=(reply.getData());
+            // RECEIVING
+            byte[] r = new byte[1024];
+            DatagramPacket response = new DatagramPacket(r, r.length);
+            socket.receive(response);
+//            byte  d1[]=(response.getData());
 //            e1= ByteBuffer.wrap(d1).getInt();
 //            count=e1;
 //            System.out.println("e1: " + e1);
 
-            String s = new String(reply.getData());
+            String s = new String(response.getData());
             System.out.println("s: " + s.trim());
 
+            // TODO: count = s.toInteger()
             ready =true;
 
         }
-        catch (SocketException e)
-        {	System.out.println("Socket: " + e.getMessage());
-        }
-        catch (IOException e)
-        {
-            System.out.println("IO: " + e.getMessage());
-        }
-        finally
-        {
-            if(aSocket != null)
-                aSocket.close();
+        catch (SocketException e) {
+            System.out.println("SocketException: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("IOException: " + e.getMessage());
+        } finally {
+            if(socket != null) {
+                socket.close();
+                System.out.println("socket(DDL) closed");
+            }
         }
     }
 }
