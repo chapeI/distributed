@@ -38,12 +38,13 @@ public class threadlistner extends Thread {
 
                 // PROCESSING: return the count based on uid+date in the kkl server
 
+                // TESTING
+                String s = new String(packet.getData());
+                System.out.println("expecting to see a date here (monday). in s(KKL) the date is: " + s.trim());
+
                 // SENDING
                 DatagramPacket response = new DatagramPacket(packet.getData(),
                         packet.getLength(), packet.getAddress(), packet.getPort());
-                // TESTING
-//                String s = new String(response.getData());
-//                System.out.println("s(KKL): " + s.trim());
                 socket.send(response);
             }
         }

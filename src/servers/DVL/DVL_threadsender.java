@@ -13,11 +13,13 @@ public class DVL_threadsender extends Thread {
     public int count,d;
     public boolean ready = false;
     int port;
+    String date;
 
-    public DVL_threadsender(int c, int port)
+    public DVL_threadsender(int c, int port, String date)
     {
 //        this.c=c;
 //        this.d=d;  // d was port, delete after
+        this.date = date;
     }
 
     public void run() {
@@ -32,9 +34,11 @@ public class DVL_threadsender extends Thread {
             socket = new DatagramSocket();
 
             // SENDING
-            int n = 2;
+//            int n = 2;  // dont send an int, just send a date..
 //            byte [] b = Integer.toString(2).getBytes();
-            byte [] b = String.valueOf(2).getBytes();
+//            byte [] b = String.valueOf(2).getBytes();
+            byte[] b = this.date.getBytes();  // we should be sending date.
+
 //            InetAddress address = InetAddress.getByName("localhost");
             InetAddress address = InetAddress.getLocalHost();
             DatagramPacket packet =new DatagramPacket(b, b.length, address, 2170);

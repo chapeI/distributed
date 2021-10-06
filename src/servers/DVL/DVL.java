@@ -217,12 +217,14 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
         }
 
 //        int sc1=0,sc2=0,sc3=0,cou=0;
+
+        // send student ID. not an int.
         int DVLS123_count_for_DATE1 = 2;  // assume for testing, that in DVL, for this day, DVLS123 has 2 bookings.
+//        String date = "Monday";
 
         // TODO: make a way for us to generate count for that date
 
-        // send student ID. not an int.
-        DVL_threadsender ts1=new DVL_threadsender(DVLS123_count_for_DATE1,2170);  // sending our count for DATE1 to the listener. wait, don't we then have to send student data as well? yes.. ofc.
+        DVL_threadsender ts1=new DVL_threadsender(0,2170, date);  // sending our count for DATE1 to the listener. wait, don't we then have to send student data as well? yes.. ofc.
         Thread t1=new Thread(ts1);
         t1.start();
 
