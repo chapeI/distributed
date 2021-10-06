@@ -194,9 +194,9 @@ public class KKL extends UnicastRemoteObject implements KKL_i {
         return "debug";
     }
 
-    public void listener(int a,int b,String date) throws RemoteException
+    public void listener(int a, int b, String date, String uid) throws RemoteException
     {
-        threadlistner tl1=new threadlistner(cou,a,date);
+        threadlistner tl1=new threadlistner(cou,a,date, uid);
         //threadlistner tl2=new threadlistner(cou,b);
         Thread t3=new Thread(tl1);
         //Thread t4=new Thread(tl2);

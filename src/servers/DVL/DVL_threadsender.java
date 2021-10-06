@@ -12,11 +12,12 @@ public class DVL_threadsender extends Thread {
     private int c = 0;
     public int count,d;
     public boolean ready = false;
+    int port;
 
-    public DVL_threadsender(int c, int d)
+    public DVL_threadsender(int c, int port)
     {
 //        this.c=c;
-//        this.d=d;
+//        this.d=d;  // d was port, delete after
     }
 
     public void run() {

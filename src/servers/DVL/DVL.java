@@ -202,24 +202,34 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
         return "DEBUG";
     }
 
-    public int getAvailableTimeSlot(String date) throws RemoteException, InterruptedException {
+    public int getAvailableTimeSlot(String date, String uid) throws RemoteException, InterruptedException {
         System.out.println("DVL.getAvailableTimeSlot()");
 
         try {
             kkl=(KKL_i)Naming.lookup("rmi://localhost:35001/tag2");
-            System.out.println("ok we're going to KKL server now. cool.");
-            kkl.listener(2170,0, date);  // TODO: delete b. b is literally useless.
+//            System.out.println("ok we're going to KKL server now. cool.");
+            kkl.listener(2170,0, date, uid);  // TODO: delete b. b is literally useless.
+            // wst.listener will be listening as well
         } catch(NotBoundException e ) {
             System.err.println(e);
         } catch (MalformedURLException e) {
             System.err.println(e);
         }
 
-        int sc1=0,sc2=0,sc3=0,cou=0;
+//        int sc1=0,sc2=0,sc3=0,cou=0;
+        int DVLS123_count_for_DATE1 = 2;  // assume for testing, that in DVL, for this day, DVLS123 has 2 bookings.
 
-        DVL_threadsender ts1=new DVL_threadsender(cou,2170);
+        // TODO: make a way for us to generate count for that date
+
+        // send student ID. not an int.
+        DVL_threadsender ts1=new DVL_threadsender(DVLS123_count_for_DATE1,2170);  // sending our count for DATE1 to the listener. wait, don't we then have to send student data as well? yes.. ofc.
         Thread t1=new Thread(ts1);
         t1.start();
+
+        // after, we should be able to invoke, ts1 for like, its count for that day. for student blah.
+        int test = ts1.count;
+
+        System.out.println("test: " + test);
 
         return 1;
     }

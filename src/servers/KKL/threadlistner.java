@@ -13,15 +13,18 @@ public class threadlistner extends Thread {
     private int c=0;
     private int d=0;
     String date;
+    String uid;
 
-    threadlistner(int c ,int d, String date) {
+    threadlistner(int c ,int d, String date, String uid) {
 //        this.c=c;
 //        this.d=d;
 //        this.date=date;
+        this.uid = uid;
     }
 
     public void run() {
         System.out.println("KKL server: listener started");
+        System.out.println("are we getting UID properly, uid: " + uid);
         DatagramSocket socket = null;
         try {
             socket = new DatagramSocket(2170);  // hardcoding PORT, instead of reading in d
@@ -32,6 +35,8 @@ public class threadlistner extends Thread {
                 // RECEIVING
                 DatagramPacket packet = new DatagramPacket(b, b.length);
                 socket.receive(packet);
+
+                // PROCESSING: return the count based on uid+date in the kkl server
 
                 // SENDING
                 DatagramPacket response = new DatagramPacket(packet.getData(),

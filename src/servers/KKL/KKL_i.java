@@ -16,7 +16,7 @@ public interface KKL_i extends Remote {
     public String bookroom2(String campusName,String rno,String date,String timeslot,String UID)
             throws RemoteException, InterruptedException, MalformedURLException, NotBoundException;
 
-    public void listener(int a,int b,String date) throws RemoteException;
+    public void listener(int a,int b,String date, String uid) throws RemoteException;
 
 
 }

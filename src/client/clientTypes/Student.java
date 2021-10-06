@@ -49,7 +49,7 @@ public class Student {
             System.out.println("DVL?");
 //            String test = dvl_i.bookroom2(campus_booking, rno, date, timeslot, uid);
 //            System.out.println("setup() done. should return DEBUG => " + test);
-            dvl_i.getAvailableTimeSlot("Monday");
+            dvl_i.getAvailableTimeSlot("Monday", uid);
         } else if (campus.equals("KKL")) {
             System.out.println("KKL?");
             String test = kkl_i.bookroom2(campus_booking, rno, date, timeslot, uid);
