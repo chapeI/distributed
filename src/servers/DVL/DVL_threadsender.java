@@ -54,7 +54,7 @@ public class DVL_threadsender extends Thread {
 //            System.out.println("e1: " + e1);
 
             String s = new String(response.getData());
-            System.out.println("s: " + s.trim());
+            System.out.println("expecting count number 2, s: " + s.trim());
 
             // TODO: count = s.toInteger()
             ready =true;
