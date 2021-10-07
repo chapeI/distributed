@@ -192,7 +192,7 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
             System.out.println("DVL RR (after booking): " + a);
 
         } else if(campusName.equals(new String("KKL"))) {
-            bookingid = kkl.bookroom(campusName, rno, date, timeslot, UID);
+            bookingid = kkl.bookroom2(campusName, rno, date, timeslot, UID);
         } else if(campusName.equals(new String("WST"))) {
             System.out.println("sending request to WST.bookRoom()");
         }

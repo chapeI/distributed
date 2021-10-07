@@ -30,8 +30,8 @@ public class threadlistner extends Thread {
     }
 
     public void run() {
-        System.out.println("KKL server: listener started");
-        System.out.println("uid: " + uid);
+//        System.out.println("KKL server: listener started");
+//        System.out.println("uid: " + uid);
         DatagramSocket socket = null;
         try {
             socket = new DatagramSocket(2170);  // hardcoding PORT, instead of reading in d
@@ -45,11 +45,11 @@ public class threadlistner extends Thread {
 
                 // TESTING
                 String s = new String(packet.getData());
-                System.out.println("expecting to see a date here (Tuesday). in s(KKL) the date is: " + s.trim());
+//                System.out.println("expecting to see a date here (Tuesday). in s(KKL) the date is: " + s.trim());
                 this.date = s.trim();
 
                 int c = kkl.get_count(date);
-                System.out.println("c: " + c);
+//                System.out.println("c: " + c);
 
                 // PROCESSING: return the count from date we receive from socket. we already have uid
                 int count = this.count_for_DVLS123_for_DATE1;

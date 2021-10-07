@@ -23,7 +23,6 @@ public class DVL_threadsender extends Thread {
     }
 
     public void run() {
-//        int e1;
 //        System.out.println(" Inside DVL server");
 
         DatagramSocket socket = null;

@@ -22,14 +22,14 @@ public class Admin {
         String rno;
         String date;
         String timeslot;
-//        rno = br.readLine();
-//        date = br.readLine();
-//        timeslot = br.readLine();
+        rno = br.readLine();
+        date = br.readLine();
+        timeslot = br.readLine();
 
         // for testing
-        rno = "2";
-        date = "Monday";
-        timeslot = "9:00";
+//        rno = "2";
+//        date = "Monday";
+//        timeslot = "9:00";
 
         // testing end
 
