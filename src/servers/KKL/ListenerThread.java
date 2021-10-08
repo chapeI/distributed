@@ -1,7 +1,5 @@
 package servers.KKL;
 
-import servers.DVL.DVL_i;
-
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -11,20 +9,20 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
-public class threadlistner extends Thread {
+public class ListenerThread extends Thread {
 
     public int count;
     String date;
-    KKL_i k;
+    KKL_i kkl_i;
 
-    threadlistner() throws RemoteException, MalformedURLException, NotBoundException {
-        k = (KKL_i) Naming.lookup("rmi://localhost:35001/tag2");
+    ListenerThread() throws RemoteException, MalformedURLException, NotBoundException {
+        kkl_i = (KKL_i) Naming.lookup("rmi://localhost:35001/tag2");
     }
 
     public void run() {
         DatagramSocket socket = null;
         try {
-            socket = new DatagramSocket(2170);  // listening on 2170
+            socket = new DatagramSocket(2170);  // listening on PORT:2170
             byte[] b = new byte[1000];
 
             while(true) {
@@ -39,7 +37,7 @@ public class threadlistner extends Thread {
                 this.date = s.trim();
 //                System.out.println(date);
 //                int c = kkl.get_count(date);
-                int c = k.get_count(date);
+                int c = kkl_i.get_count(date);
                 System.out.println("kkl attempt to send count " + c + " to DVL");
 
                 // SEND

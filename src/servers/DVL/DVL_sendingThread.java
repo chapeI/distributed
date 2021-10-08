@@ -7,12 +7,12 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 
-public class DVL_sending_thread extends Thread {
+public class DVL_sendingThread extends Thread {
     public int count;
-    public boolean ready = false;
+//    public boolean ready = false;
     String date;
 
-    public DVL_sending_thread(String date) {
+    public DVL_sendingThread(String date) {
         this.date = date;
     }
 
@@ -24,7 +24,7 @@ public class DVL_sending_thread extends Thread {
             // SEND
             byte[] b = this.date.getBytes();
             InetAddress address = InetAddress.getLocalHost();
-            DatagramPacket packet =new DatagramPacket(b, b.length, address, 2170);
+            DatagramPacket packet =new DatagramPacket(b, b.length, address, 2170); // port has to be a variable
             socket.send(packet);
 
             // RECEIVE
@@ -33,9 +33,9 @@ public class DVL_sending_thread extends Thread {
             socket.receive(response);
             String s = new String(response.getData());
             String s_ = s.trim();
-            System.out.println("dvl receiving: " + s_);
+            System.out.println("dvl_sendingThread receiving: " + s_);
             this.count = Integer.parseInt(s_);
-            ready =true;
+//            ready =true;
         }
         catch (SocketException e) {
             System.out.println("SocketException: " + e.getMessage());

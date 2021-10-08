@@ -12,10 +12,12 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
 public class KKL extends UnicastRemoteObject implements KKL_i {
-//    DVL_i dvl;
-// 	HM<date, HM<rno, HM<time, b_id>>>
+
+    DVL_i dvl;
+
+    // 	HM<date, HM<rno, HM<time, b_id>>>
     static HashMap<String,HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();
-    int cou = 0;  // why.
+//    int cou = 0;  // why.
     String bookingid = "bookingID_debug";
 
     public KKL() throws RemoteException {
@@ -26,15 +28,15 @@ public class KKL extends UnicastRemoteObject implements KKL_i {
         make_new_date(a, "Wednesday", "2", "4:00");
         System.out.println("KKL(): " + a);
 //        this.cancelBooking("BOOKINGID_1");
-        this.get_count("Monday");
+//        this.get_count("Monday");
     }
 
     @Override
     public Boolean createroom(String rno, String date, String timeslot) throws RemoteException, FileNotFoundException, UnsupportedEncodingException {
-//        make_new_date(a, "Monday", "1", "3:00");
-//        make_new_date(a, "Monday", "1", "4:00");
-//        make_new_date(a, "Wednesday", "2", "4:00");
-        System.out.println("initializing in constructor. for testing");
+        // muted while testing. these are being initialized in the const'r
+        make_new_date(a, "Monday", "1", "3:00");
+        make_new_date(a, "Monday", "1", "4:00");
+        make_new_date(a, "Wednesday", "2", "4:00");
         return true;
     }
 
@@ -59,7 +61,7 @@ public class KKL extends UnicastRemoteObject implements KKL_i {
     }
 
     public String bookroom2(String campusName,String rno,String date,String timeslot,String UID) throws RemoteException, InterruptedException, MalformedURLException, NotBoundException {
-//        dvl = (DVL_i) Naming.lookup("rmi://localhost:35000/tag1"); // TODO: move to top
+        dvl = (DVL_i) Naming.lookup("rmi://localhost:35000/tag1"); // TODO: move to top
         // add wst
 
         if(campusName.equals("KKL")) {
@@ -73,12 +75,11 @@ public class KKL extends UnicastRemoteObject implements KKL_i {
 //                System.out.println("shit breaks"); // TODO: handle properly
 //            }
 
-//            System.out.println("before booking: " + a);
             a.get("Monday").get("1").put("3:00","BOOKINGID_1");
             System.out.println(a);
 
         } else if(campusName.equals(new String("DVL"))) {
-//            bookingid = dvl.bookroom2(campusName, rno, date, timeslot, UID);
+            bookingid = dvl.bookroom2(campusName, rno, date, timeslot, UID);
         } else if(campusName.equals(new String("WST"))) {
             System.out.println("sending request to WST.bookRoom()");
         }
@@ -87,9 +88,9 @@ public class KKL extends UnicastRemoteObject implements KKL_i {
     }
 
     public void listener() throws RemoteException, MalformedURLException, NotBoundException {
-        threadlistner tl1=new threadlistner();
-        Thread t3=new Thread(tl1);
-        t3.start();
+        ListenerThread lt=new ListenerThread();
+        Thread t1 =new Thread(lt);
+        t1.start();
 
         //Thread t4=new Thread(tl2);
         //threadlistner tl2=new threadlistner(cou,b);

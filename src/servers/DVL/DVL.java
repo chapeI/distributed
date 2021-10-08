@@ -13,67 +13,47 @@ import java.util.*;
 
 public class DVL extends UnicastRemoteObject implements DVL_i {
 
-    KKL_i kkl;
+    KKL_i kkl_i;
+    int dvl_available_count = 0;
 
-    // 	room_record = Hashmap < date , Hashmap< rno , ts >>
+    // 	HM<date, HM<rno, HM<time, b_id>>>
     static HashMap<String,HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();
-
-    //   room_numbers -> { time_slots }
-    static HashMap<String,HashMap<String,String>> b = new HashMap<String,HashMap<String,String>>();
-
-    //  time_slots -> "available"
-    static HashMap<String,String> c = new HashMap<String,String>();
-
-    // HashMap < uid ,  [ bookingId1, bookingId2.. ] >
-    static HashMap<String, ArrayList<String>> d = new HashMap<String,ArrayList<String>>();
-
-    //  can add things like "UID", and what else?
-    static ArrayList<String> e = new ArrayList<String>();
 
     DVL() throws RemoteException {
         super();
+        make_new_date(a, "Tuesday", "5", "6:00");
+        make_new_date(a, "Wednesday", "1", "4:00");
+        make_new_date(a, "Wednesday", "2", "4:00");
+        make_new_date(a, "Thursday", "6", "7:00");
+        System.out.println("DVL(): " + a);
     }
 
     @Override
     public Boolean createroom(String rno, String date, String timeslot) throws RemoteException, FileNotFoundException, UnsupportedEncodingException {
-        System.out.println("DVL.createroom()");
-
-        // TODO: FileWriter goes here..
-
-        // JUST A CHECK
-        Set<String> setr = b.keySet();  // set of room_numbers
-        Set<String> sett = c.keySet();  // set of time_slots
-        Iterator ir = setr.iterator();  // iterating on the set of room_numbers
-        Iterator it = sett.iterator();  // iterating on the set of time_slots
-
-        // check if room exists
-        while(ir.hasNext())
-        {
-            String s = (String)ir.next();  // s is room_number
-            System.out.println("s: " + s);
-
-            // if room exists, check if timeslot exists
-            if(s.equals(rno))
-            {
-                while(it.hasNext())
-                {
-                    String s1 = (String)it.next();
-                    if(s1.equals(timeslot))
-                    {
-                        System.out.println("can't book, timeslot Already Exists");
-                        return false;
-                    }
-                }
-            }
-        }
-        // CHECK END.
-
-        c.put(timeslot,"Available");   //  ts: "available"      < String, String >
-        b.put(rno, c);   //   rn : { c }
-        a.put(date, b);
-
-        System.out.println("DVL server created a room. RoomRecords for DVL now looks like -> " + a);
+        make_new_date(a, "Monday", "1", "3:00");
+        make_new_date(a, "Monday", "1", "4:00");
+        make_new_date(a, "Wednesday", "2", "4:00");
         return true;
+    }
+
+    static void make_new_date(HashMap<String, HashMap<String, HashMap<String, String>>> dates, String date, String rno, String time) {
+        if(dates.containsKey(date)) {
+            make_room_available(dates.get(date), rno, time);
+        } else {
+            HashMap<String, HashMap<String, String>> rooms = new HashMap<>();
+            make_room_available(rooms, rno, time);
+            dates.put(date, rooms);
+        }
+    }
+
+    static void make_room_available(HashMap<String, HashMap<String, String>> rooms, String rno, String time) {
+        if(rooms.containsKey(rno)) {  // room exists. just get and put
+            rooms.get(rno).put(time, "available");
+        } else {  // make a room
+            HashMap available = new HashMap();
+            available.put(time, "available");
+            rooms.put(rno, available);
+        }
     }
 
     public String bookroom2(String campusName,String rno,String date,String timeslot,String UID)
@@ -82,26 +62,26 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
         String bookingid;
         System.out.println("\n~~ DVL.bookroom2()");
 
-        kkl = (KKL_i) Naming.lookup("rmi://localhost:35001/tag2"); // TODO: move this to the top
+        kkl_i = (KKL_i) Naming.lookup("rmi://localhost:35001/tag2"); // TODO: move this to the top
         // wst reference goes here
 
         if(campusName.equals("DVL")) {
             bookingid = UUID.randomUUID().toString();
-            System.out.println("bookingid: " + bookingid);
+//            System.out.println("bookingid: " + bookingid);
 
-            // TODO: configure check
-            if(a.get("Monday").get("2").get("9:00") == "Available") {
-                System.out.println("should see this message before 'booked'");
-            } else {
-                System.out.println("this shit breaks"); // TODO: handle properly
-            }
+//            // TODO: put booking in here
+//            if(a.get("Monday").get("2").get("9:00") == "Available") {
+//                System.out.println("should see this message before 'booked'");
+//            } else {
+//                System.out.println("this shit breaks"); // TODO: handle properly
+//            }
 
-            System.out.println("DVL RR (before booking): " + a);
+//            System.out.println(a);
             a.get("Monday").get("2").put("9:00","WORKING");
-            System.out.println("DVL RR (after booking): " + a);
+            System.out.println(a);
 
         } else if(campusName.equals(new String("KKL"))) {
-            bookingid = kkl.bookroom2(campusName, rno, date, timeslot, UID);
+            bookingid = kkl_i.bookroom2(campusName, rno, date, timeslot, UID);
         } else if(campusName.equals(new String("WST"))) {
             System.out.println("sending request to WST.bookRoom()");
         }
@@ -112,25 +92,72 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
     }
 
     public int getAvailableTimeSlot(String date) throws RemoteException, InterruptedException {
-        System.out.println("DVL.getAvailableTimeSlot()");
+
+        this.dvl_available_count += this.get_count(date);
+        System.out.println("dvl_available_count(before): " + dvl_available_count);
 
         try {
-            kkl=(KKL_i)Naming.lookup("rmi://localhost:35001/tag2");
-            kkl.listener(); // thread for listening
+            kkl_i=(KKL_i)Naming.lookup("rmi://localhost:35001/tag2");
+            kkl_i.listener(); // create a listener thread on kkl
+//            wst_i=(WST_i)Naming.lookup("rmi://localhost:25011/tag1");
+
         } catch(NotBoundException e ) {
             System.err.println(e);
         } catch (MalformedURLException e) {
             System.err.println(e);
         }
 
-        // TODO: make a way for us to generate count for that date
-        DVL_sending_thread dvl_st=new DVL_sending_thread(date);  // sending(date) thread
-        Thread t1=new Thread(dvl_st);
+        DVL_sendingThread dvl_st_to_kkl = new DVL_sendingThread(date);  // sending(date) to kkl (port 2170)
+        Thread t1=new Thread(dvl_st_to_kkl);
         t1.start();
         t1.join();
 
-        int dvl_available_room_count= dvl_st.count;
-        System.out.println("dvl_available_room_count: " + dvl_available_room_count);
+        this.dvl_available_count += dvl_st_to_kkl.count;
+        System.out.println("dvl_available_count(after): " + dvl_available_count);
+
         return 1;
+    }
+
+    public int get_count(String date) throws RemoteException {
+        int count = 0;
+        HashMap<String, HashMap<String, String>> day;
+        day = a.get(date);
+//        System.out.println(day);
+
+        for(var r: day.entrySet()) {
+//            System.out.println("rno: " + r.getKey());
+            for(var t : r.getValue().entrySet()) {
+//                System.out.println("t: " + t.getValue());
+                String time = t.getValue();
+                if(time.equals("available")) {
+                    count += 1;
+                }
+            }
+        }
+//        System.out.println("count: " + count);
+        return count;
+    }
+
+    public void cancelBooking(String bookingid) throws RemoteException {
+        for(var d : a.entrySet()) {
+//            System.out.println("1. d: " + d);
+//            System.out.println("2. d: " + d.getKey());
+            for(var rno : d.getValue().entrySet()) {
+//                System.out.println("3. rno: " + rno.getKey());
+                for(var t : rno.getValue().entrySet()) {
+//                    System.out.println("4. t: " + t);
+//                    System.out.println("5. t: " + t.getKey());
+                    String booking = t.getValue();
+                    if(booking.equals(bookingid)) {
+                        System.out.println(bookingid + " found at {" + d.getKey() + " in rno=" + rno.getKey() + " @" + t.getKey() + "} (KKL campus)");
+                        a.get(d.getKey()).get(rno.getKey()).put(t.getKey(), "available");  // cancelling and changing b_id to available
+                        System.out.println("booking_id cancelled and changed to available. check a datastructure for proof");
+                        return;
+                    } else {
+                        System.out.println("no bookings found for " + bookingid);
+                    }
+                }
+            }
+        }
     }
 }

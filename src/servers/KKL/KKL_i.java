@@ -11,8 +11,6 @@ public interface KKL_i extends Remote {
 
     public  Boolean createroom(String rno, String date, String timeslot)throws java.rmi.RemoteException, FileNotFoundException, UnsupportedEncodingException;;
 
-//    public String bookroom(String campusName,String rno,String date,String timeslot,String UID)throws RemoteException, InterruptedException;
-
     public String bookroom2(String campusName,String rno,String date,String timeslot,String UID)
             throws RemoteException, InterruptedException, MalformedURLException, NotBoundException;
 
@@ -21,5 +19,7 @@ public interface KKL_i extends Remote {
     public int get_count(String date) throws RemoteException;
 
     public void cancelBooking(String bookingid) throws RemoteException;
+
+    // getAvailable
 
     }
