@@ -15,14 +15,6 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
 
     KKL_i kkl;
 
-    DVL() throws RemoteException {
-        super();
-    }
-
-    String bookingid = "bookingID_debug";
-
-    // "DATABASE"
-
     // 	room_record = Hashmap < date , Hashmap< rno , ts >>
     static HashMap<String,HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();
 
@@ -37,6 +29,10 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
 
     //  can add things like "UID", and what else?
     static ArrayList<String> e = new ArrayList<String>();
+
+    DVL() throws RemoteException {
+        super();
+    }
 
     @Override
     public Boolean createroom(String rno, String date, String timeslot) throws RemoteException, FileNotFoundException, UnsupportedEncodingException {
@@ -80,97 +76,10 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
         return true;
     }
 
-    public String bookroom(String campusName,String rno,String date,String timeslot,String UID) throws RemoteException, InterruptedException {
-        System.out.println("ERROR. SHOULDNT BE SEEING THIS. if you see this. mute bookRoom()");
-        System.out.println("\n~~ DVL.bookroom()");
-//        System.out.println("UID: " + UID);
-        int i = 0;
-
-        // check for
-        try {
-            if(d.isEmpty()) {
-//                System.out.println("d = 0, no uid's in d . putting (" + UID + ", 'UID') in d)");
-                e.add("UID");
-                d.put(UID, e);
-//                System.out.println("confirming d: " + d);
-            }
-
-            Set<String> set = d.keySet();
-            Iterator it = set.iterator();
-
-            while(it.hasNext()) {
-                String s = (String)it.next();
-//                System.out.println("s: " + s);
-//                System.out.println("UID: " + UID);
-//                System.out.println("does " + s + " == " + UID);
-                if(UID == s) {
-                    System.out.println("HIT");
-                    i++;
-                }
-            }
-
-//            System.out.println("expecting i = 1. i = " + i);
-
-            if(i == 0) {  // java trick for reference check
-                System.out.println("i = 0");
-                e.add("UID");
-                d.put(UID, e);
-                System.out.println("e: " + e);
-                System.out.println("d " + d);
-                i = 0;
-            }
-
-            if(d.get(UID).size() > 3) {
-                System.out.println("You have reached the booking limit already");
-                return "limit reached";
-            } else {
-//                System.out.println("booking room");
-//                si1 = (s1_i)Naming.lookup("rmi://localhost:25011/tag1");
-//                si3 = (server3interface)Naming.lookup("rmi://localhost:25013/tag3");
-                if(campusName.equals(new String("DVL"))) {
-                    bookingid = UUID.randomUUID().toString();
-                    System.out.println("bookingid: " + bookingid);
-
-                    // ACTUAL BOOKING CODE (the checks above have all passed) so look here when booking.
-
-                    if(a.get("Monday").get("2").get("9:00") == "Available") {
-                        System.out.println("should see this message before 'booked'"); // TODO: use this as a check
-                    } else {
-                        System.out.println("this shit breaks"); // TODO: handle this properly
-                    }
-
-                    System.out.println("DVL RRs -> a (before booking): " + a);
-                    a.get("Monday").get("2").put("9:00","WORKING");
-                    System.out.println("DVL RRs -> a (after booking): " + a);
-//                    a.get(date).get(rno).put(timeslot, "sdf");
-//                    String sdf = a.get(date).get(rno).get(timeslot);
-//                    System.out.println("sdf: " + sdf);
-//                    String get_bookingID = a.get(date).get(rno).get(timeslot);
-//                    System.out.println("get_bookingID: " + get_bookingID);
-//                    roomcount--;
-                    System.out.println("booked");
-                } else if(campusName.equals(new String("KKL"))) {
-                    System.out.println("sending request to KKL.bookRoom()");
-//                    bookingid = si1.bookroom(campusName,rno,date,timeslot,UID);
-                } else if(campusName.equals(new String("WST"))) {
-                    System.out.println("sending request to WST.bookRoom()");
-//                    bookingid = si3.bookroom(campusName,rno,date,timeslot,UID);
-                }
-            }
-//            d.get(UID).add((bookingid));
-        } catch (Exception e) { }
-
-        return "DEBUG";
-
-//        catch(NotBoundException e ) { }
-//        catch (MalformedURLException e) { }
-
-//        System.out.println("before return");
-//        return bookingid;
-    }
-
     public String bookroom2(String campusName,String rno,String date,String timeslot,String UID)
             throws RemoteException, InterruptedException, MalformedURLException, NotBoundException {
+
+        String bookingid;
         System.out.println("\n~~ DVL.bookroom2()");
 
         kkl = (KKL_i) Naming.lookup("rmi://localhost:35001/tag2"); // TODO: move this to the top
@@ -198,16 +107,16 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
         }
 
         System.out.println("~~ DVL.bookroom2() done");
-
+        // prolly need to return bookingid
         return "DEBUG";
     }
 
-    public int getAvailableTimeSlot(String date, String uid) throws RemoteException, InterruptedException {
+    public int getAvailableTimeSlot(String date) throws RemoteException, InterruptedException {
         System.out.println("DVL.getAvailableTimeSlot()");
 
         try {
             kkl=(KKL_i)Naming.lookup("rmi://localhost:35001/tag2");
-            kkl.listener(2170,0, date, uid);  // TODO: delete b.
+            kkl.listener(); // thread for listening
         } catch(NotBoundException e ) {
             System.err.println(e);
         } catch (MalformedURLException e) {
@@ -215,12 +124,13 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
         }
 
         // TODO: make a way for us to generate count for that date
-        DVL_sending_thread dvl_st=new DVL_sending_thread(date);  // sending our count for DATE1 to the listener. wait, don't we then have to send student data as well? yes.. ofc.
+        DVL_sending_thread dvl_st=new DVL_sending_thread(date);  // sending(date) thread
         Thread t1=new Thread(dvl_st);
         t1.start();
+        t1.join();
 
-        int dvl_st_count= dvl_st.count;
-        System.out.println("dvl_st_count" + dvl_st_count);
+        int dvl_available_room_count= dvl_st.count;
+        System.out.println("dvl_available_room_count: " + dvl_available_room_count);
         return 1;
     }
 }

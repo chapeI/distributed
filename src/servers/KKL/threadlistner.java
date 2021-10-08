@@ -15,39 +15,35 @@ public class threadlistner extends Thread {
 
     public int count;
     String date;
-    String uid;
-    public int count_for_DVLS123_for_DATE1 = 2;
-//    KKL kkl = new KKL();
     KKL_i k;
 
-    threadlistner(int c ,int d, String date, String uid) throws RemoteException, MalformedURLException, NotBoundException {
-        this.uid = uid;
+    threadlistner() throws RemoteException, MalformedURLException, NotBoundException {
         k = (KKL_i) Naming.lookup("rmi://localhost:35001/tag2");
     }
 
     public void run() {
         DatagramSocket socket = null;
         try {
-            socket = new DatagramSocket(2170);
+            socket = new DatagramSocket(2170);  // listening on 2170
             byte[] b = new byte[1000];
 
             while(true) {
-                // RECEIVING
+
+                // RECEIVE
                 DatagramPacket packet = new DatagramPacket(b, b.length);
                 socket.receive(packet);
+                System.out.println("receiving on 2170");
 
-                // TESTING
+                // PROCESS
                 String s = new String(packet.getData());
                 this.date = s.trim();
 //                System.out.println(date);
 //                int c = kkl.get_count(date);
-                int c = k.get_count("some date");
-                System.out.println("kkl sending " + c);
+                int c = k.get_count(date);
+                System.out.println("kkl attempt to send count " + c + " to DVL");
 
-                // PROCESSING: use date to get count
+                // SEND
                 byte [] reply = Integer.toString(c).getBytes();
-
-                // SENDING
                 DatagramPacket responsePacket = new DatagramPacket(reply,
                         reply.length, packet.getAddress(), packet.getPort());
                 socket.send(responsePacket);

@@ -12,43 +12,29 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
 public class KKL extends UnicastRemoteObject implements KKL_i {
-
 //    DVL_i dvl;
+// 	HM<date, HM<rno, HM<time, b_id>>>
+    static HashMap<String,HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();
+    int cou = 0;  // why.
+    String bookingid = "bookingID_debug";
 
     public KKL() throws RemoteException {
         super();
         make_new_date(a, "Monday", "1", "3:00");
         make_new_date(a, "Monday", "1", "4:00");
+        make_new_date(a, "Monday", "2", "8:00");
         make_new_date(a, "Wednesday", "2", "4:00");
         System.out.println("KKL(): " + a);
-        this.cancelBooking("BOOKINGID_1");
+//        this.cancelBooking("BOOKINGID_1");
+        this.get_count("Monday");
     }
-
-    String bookingid = "bookingID_debug";
-
-    // 	room_record = Hashmap < date , Hashmap< rno , ts >>
-    static HashMap<String,HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();
-
-    //   room_numbers -> { time_slots }
-    static HashMap<String,HashMap<String,String>> b = new HashMap<String,HashMap<String,String>>();
-
-    //  time_slots -> "available"
-    static HashMap<String,String> c = new HashMap<String,String>();
-
-    // HashMap < uid ,  [ bookingId1, bookingId2.. ] >
-//    static HashMap<String, ArrayList<String>> d = new HashMap<String,ArrayList<String>>();
-
-    //  can add things like "UID", and what else?
-//    static ArrayList<String> e = new ArrayList<String>();
-
-    int cou = 0;  // why.
 
     @Override
     public Boolean createroom(String rno, String date, String timeslot) throws RemoteException, FileNotFoundException, UnsupportedEncodingException {
 //        make_new_date(a, "Monday", "1", "3:00");
 //        make_new_date(a, "Monday", "1", "4:00");
 //        make_new_date(a, "Wednesday", "2", "4:00");
-        System.out.println("initializing in constructor. testing");
+        System.out.println("initializing in constructor. for testing");
         return true;
     }
 
@@ -73,7 +59,6 @@ public class KKL extends UnicastRemoteObject implements KKL_i {
     }
 
     public String bookroom2(String campusName,String rno,String date,String timeslot,String UID) throws RemoteException, InterruptedException, MalformedURLException, NotBoundException {
-
 //        dvl = (DVL_i) Naming.lookup("rmi://localhost:35000/tag1"); // TODO: move to top
         // add wst
 
@@ -101,8 +86,8 @@ public class KKL extends UnicastRemoteObject implements KKL_i {
         return "debug";
     }
 
-    public void listener(int a, int b, String date, String uid) throws RemoteException, MalformedURLException, NotBoundException {
-        threadlistner tl1=new threadlistner(cou,a,date, uid);
+    public void listener() throws RemoteException, MalformedURLException, NotBoundException {
+        threadlistner tl1=new threadlistner();
         Thread t3=new Thread(tl1);
         t3.start();
 
@@ -112,15 +97,29 @@ public class KKL extends UnicastRemoteObject implements KKL_i {
     }
 
     public int get_count(String date) throws RemoteException {
-        // TODO: figure out how to get_count from a
-        return 5;
+        int count = 0;
+        HashMap<String, HashMap<String, String>> day;
+        day = a.get(date);
+//        System.out.println(day);
+
+        for(var r: day.entrySet()) {
+//            System.out.println("rno: " + r.getKey());
+            for(var t : r.getValue().entrySet()) {
+//                System.out.println("t: " + t.getValue());
+                String time = t.getValue();
+                if(time.equals("available")) {
+                    count += 1;
+                }
+            }
+        }
+//        System.out.println("count: " + count);
+        return count;
     }
 
     public void cancelBooking(String bookingid) throws RemoteException {
-
         for(var d : a.entrySet()) {
-//            System.out.println("1. e: " + e);
-//            System.out.println("2. e: " + d.getKey());
+//            System.out.println("1. d: " + d);
+//            System.out.println("2. d: " + d.getKey());
             for(var rno : d.getValue().entrySet()) {
 //                System.out.println("3. rno: " + rno.getKey());
                 for(var t : rno.getValue().entrySet()) {

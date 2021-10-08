@@ -21,19 +21,19 @@ public class DVL_sending_thread extends Thread {
         try {
             socket = new DatagramSocket();
 
-            // SENDING
-            byte[] b = this.date.getBytes();  // we should be sending date.
+            // SEND
+            byte[] b = this.date.getBytes();
             InetAddress address = InetAddress.getLocalHost();
             DatagramPacket packet =new DatagramPacket(b, b.length, address, 2170);
             socket.send(packet);
 
-            // RECEIVING
+            // RECEIVE
             byte[] r = new byte[1024];
             DatagramPacket response = new DatagramPacket(r, r.length);
             socket.receive(response);
             String s = new String(response.getData());
             String s_ = s.trim();
-//            System.out.println("dvl receiving: " + s_);
+            System.out.println("dvl receiving: " + s_);
             this.count = Integer.parseInt(s_);
             ready =true;
         }
