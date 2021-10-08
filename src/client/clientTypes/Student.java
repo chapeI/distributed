@@ -18,12 +18,9 @@ public class Student {
     }
 
     public void run_student(String uid, DVL_i dvl_i, KKL_i kkl_i) throws IOException, InterruptedException, NotBoundException {
-//        System.out.println("student.run_student()");
-
         // TODO: distinguish between campus_student_belongs_to and campus_student_wants_to_book
 
         String campus = uid.substring(0,3);  // TODO: do this in Client
-//        System.out.println("campus: " + campus);
 
         // prompt Student for room details. (campus, room number, day, timeslot)
         System.out.println("Enter room number (1-10), day (Monday to Friday), timeslot (8:00 to 16:00)");
@@ -45,14 +42,11 @@ public class Student {
         timeslot = "9:00";
 
         if(campus.equals("DVL")) {
-//            System.out.println("DVL?");
-            String test = dvl_i.bookroom2(campus_booking, rno, date, timeslot, uid);
-//            System.out.println("setup() done. should return DEBUG => " + test);
-//            dvl_i.getAvailableTimeSlot("Tuesday", uid);
+//            String test = dvl_i.bookroom2(campus_booking, rno, date, timeslot, uid);
+            dvl_i.getAvailableTimeSlot("Tuesday", uid);
         } else if (campus.equals("KKL")) {
-//            System.out.println("KKL?");
             String test = kkl_i.bookroom2(campus_booking, rno, date, timeslot, uid);
-//            System.out.println("setup() done. should return DEBUG => " + test);
+            kkl_i.cancelBooking("BOOKINGID_1");
         }
 
     }

@@ -10,13 +10,13 @@ import java.rmi.Naming;
 
 public class Client {
 
-    String ADMIN = "DVLA123";
-    String STUDENT = "DVLS123";
+//    String ADMIN = "DVLA123";
+//    String STUDENT = "DVLS123";
 
     // start_client starts the client. can access remote objects from here
     void start_client() throws Exception {
         String uid;
-//        uid = STUDENT;  // STUDENT OR ADMIN
+//        uid = STUDENT;  // STUDENT OR ADMIN test
 
         Admin admin;
         Student student;
@@ -28,8 +28,6 @@ public class Client {
         BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Enter ID");
         uid = br.readLine();
-
-//        uid = "DVLS123";  // TESTING DVL.getAvailableTimes()
 
         if(uid.charAt(3)=='S') {
             student = new Student();

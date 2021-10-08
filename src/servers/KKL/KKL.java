@@ -13,10 +13,15 @@ import java.util.*;
 
 public class KKL extends UnicastRemoteObject implements KKL_i {
 
-    DVL_i dvl;
+//    DVL_i dvl;
 
     public KKL() throws RemoteException {
         super();
+        make_new_date(a, "Monday", "1", "3:00");
+        make_new_date(a, "Monday", "1", "4:00");
+        make_new_date(a, "Wednesday", "2", "4:00");
+        System.out.println("KKL(): " + a);
+        this.cancelBooking("BOOKINGID_1");
     }
 
     String bookingid = "bookingID_debug";
@@ -40,16 +45,10 @@ public class KKL extends UnicastRemoteObject implements KKL_i {
 
     @Override
     public Boolean createroom(String rno, String date, String timeslot) throws RemoteException, FileNotFoundException, UnsupportedEncodingException {
-
-//        c.put(timeslot, "Available");   //  {timeslot=available}
-//        b.put(rno, c);   //   {rn={timeslot=available}}
-//        a.put(date, b);
-
-        make_new_date(a, "Monday", "1", "3:00");
-        make_new_date(a, "Monday", "1", "4:00");
-        make_new_date(a, "Wednesday", "2", "4:00");
-        System.out.println(a);
-
+//        make_new_date(a, "Monday", "1", "3:00");
+//        make_new_date(a, "Monday", "1", "4:00");
+//        make_new_date(a, "Wednesday", "2", "4:00");
+        System.out.println("initializing in constructor. testing");
         return true;
     }
 
@@ -66,121 +65,35 @@ public class KKL extends UnicastRemoteObject implements KKL_i {
     static void make_room_available(HashMap<String, HashMap<String, String>> rooms, String rno, String time) {
         if(rooms.containsKey(rno)) {  // room exists. just get and put
             rooms.get(rno).put(time, "available");
-        } else {  // make a room first
+        } else {  // make a room
             HashMap available = new HashMap();
             available.put(time, "available");
             rooms.put(rno, available);
         }
     }
 
-//    public String bookroom(String campusName,String rno,String date,String timeslot,String UID) throws RemoteException, InterruptedException {
-//        System.out.println("\n~~ KKL.bookroom()");
-////        System.out.println("UID: " + UID);
-//        int i = 0;
-//
-//        try {
-//            if(d.isEmpty()) {
-////                System.out.println("d = 0, no uid's in d . putting (" + UID + ", 'UID') in d)");
-//                e.add("UID");
-//                d.put(UID, e);
-////                System.out.println("d: " + d);
-//            }
-//
-//            Set<String> set = d.keySet();
-//            Iterator it = set.iterator();
-//
-//            while(it.hasNext()) {
-//
-//                String s = (String)it.next();
-////                System.out.println("s: " + s);
-////                System.out.println("UID: " + UID);
-////                System.out.println("does " + s + " == " + UID);
-//                if(UID == s) {
-//                    System.out.println("HIT");
-//                    i++;
-//                }
-//            }
-//
-////            System.out.println("expecting i = 1. i = " + i);
-//
-//            if(i == 0) {
-//                System.out.println("i = 0");
-//                e.add("UID");
-//                d.put(UID, e);
-//                System.out.println("e: " + e);
-//                System.out.println("d " + d);
-//                i = 0;
-//            }
-//
-//            if(d.get(UID).size() > 3) {
-//                System.out.println("You have reached the booking limit already");
-//                return "limit reached";
-//            } else {
-////                System.out.println("booking room");
-////                si1 = (s1_i)Naming.lookup("rmi://localhost:25011/tag1");
-////                si3 = (server3interface)Naming.lookup("rmi://localhost:25013/tag3");
-//                if(campusName.equals(new String("KKL"))) {
-//                    bookingid = UUID.randomUUID().toString();
-//                    System.out.println("bookingid: " + bookingid);
-//
-//                    if(a.get("Monday").get("2").get("9:00") == "Available") {
-//                        System.out.println("should see this message before 'booked'"); // TODO: use this as a check
-//                    } else {
-//                        System.out.println("this shit breaks"); // TODO: handle this properly
-//                    }
-//
-//                    System.out.println("KKL RRs -> a (before booking): " + a);
-//                    a.get("Monday").get("2").put("9:00","WORKING");
-//                    System.out.println("KKL RRs -> a (after booking): " + a);
-////                    a.get(date).get(rno).put(timeslot, "sdf");
-////                    String sdf = a.get(date).get(rno).get(timeslot);
-////                    System.out.println("sdf: " + sdf);
-////                    String get_bookingID = a.get(date).get(rno).get(timeslot);
-////                    System.out.println("get_bookingID: " + get_bookingID);
-////                    roomcount--;
-//                    System.out.println("booked");
-//                } else if(campusName.equals(new String("DVL"))) {
-//                    System.out.println("sending request to DVL.bookRoom()");
-////                    bookingid = si1.bookroom(campusName,rno,date,timeslot,UID);
-//                } else if(campusName.equals(new String("WST"))) {
-//                    System.out.println("sending request to WST.bookRoom()");
-////                    bookingid = si3.bookroom(campusName,rno,date,timeslot,UID);
-//                }
-//            }
-////            d.get(UID).add((bookingid));
-//        } catch (Exception e) { }
-//
-//        return "DEBUG";
-//
-////        catch(NotBoundException e ) { }
-////        catch (MalformedURLException e) { }
-//
-////        System.out.println("before return");
-////        return bookingid;
-//    }
-
     public String bookroom2(String campusName,String rno,String date,String timeslot,String UID) throws RemoteException, InterruptedException, MalformedURLException, NotBoundException {
 
-        dvl = (DVL_i) Naming.lookup("rmi://localhost:35000/tag1"); // TODO: move this to the top
-        // wst reference goes here
+//        dvl = (DVL_i) Naming.lookup("rmi://localhost:35000/tag1"); // TODO: move to top
+        // add wst
 
         if(campusName.equals("KKL")) {
             bookingid = UUID.randomUUID().toString();
 //            System.out.println("bookingid: " + bookingid);
 
             // TODO: put the actual booking lines into the if
-            if(a.get("Monday").get("1").get("9:00") == "Available") {
-                System.out.println("should see this message before 'booked'");
-            } else {
-                System.out.println("shit breaks"); // TODO: handle properly
-            }
+//            if(a.get("Monday").get("1").get("9:00") == "Available") {
+//                System.out.println("should see this message before 'booked'");
+//            } else {
+//                System.out.println("shit breaks"); // TODO: handle properly
+//            }
 
-            System.out.println("before booking: " + a);
-            a.get("Monday").get("1").put("3:00","BOOKED");
-            System.out.println("after booking: " + a);
+//            System.out.println("before booking: " + a);
+            a.get("Monday").get("1").put("3:00","BOOKINGID_1");
+            System.out.println(a);
 
         } else if(campusName.equals(new String("DVL"))) {
-            bookingid = dvl.bookroom2(campusName, rno, date, timeslot, UID);
+//            bookingid = dvl.bookroom2(campusName, rno, date, timeslot, UID);
         } else if(campusName.equals(new String("WST"))) {
             System.out.println("sending request to WST.bookRoom()");
         }
@@ -188,20 +101,42 @@ public class KKL extends UnicastRemoteObject implements KKL_i {
         return "debug";
     }
 
-    public void listener(int a, int b, String date, String uid) throws RemoteException
-    {
+    public void listener(int a, int b, String date, String uid) throws RemoteException, MalformedURLException, NotBoundException {
         threadlistner tl1=new threadlistner(cou,a,date, uid);
-        //threadlistner tl2=new threadlistner(cou,b);
         Thread t3=new Thread(tl1);
-        //Thread t4=new Thread(tl2);
         t3.start();
+
+        //Thread t4=new Thread(tl2);
+        //threadlistner tl2=new threadlistner(cou,b);
         //t4.start();
-
     }
 
-    public int get_count(String date) {
-//        System.out.println("date: " + date);
-        return 4;
+    public int get_count(String date) throws RemoteException {
+        // TODO: figure out how to get_count from a
+        return 5;
     }
 
+    public void cancelBooking(String bookingid) throws RemoteException {
+
+        for(var d : a.entrySet()) {
+//            System.out.println("1. e: " + e);
+//            System.out.println("2. e: " + d.getKey());
+            for(var rno : d.getValue().entrySet()) {
+//                System.out.println("3. rno: " + rno.getKey());
+                for(var t : rno.getValue().entrySet()) {
+//                    System.out.println("4. t: " + t);
+//                    System.out.println("5. t: " + t.getKey());
+                    String booking = t.getValue();
+                    if(booking.equals(bookingid)) {
+                        System.out.println(bookingid + " found at {" + d.getKey() + " in rno=" + rno.getKey() + " @" + t.getKey() + "} (KKL campus)");
+                        a.get(d.getKey()).get(rno.getKey()).put(t.getKey(), "available");  // cancelling and changing b_id to available
+                        System.out.println("booking_id cancelled and changed to available. check a datastructure for proof");
+                        return;
+                    } else {
+                        System.out.println("no bookings found for " + bookingid);
+                    }
+                }
+            }
+        }
+    }
 }

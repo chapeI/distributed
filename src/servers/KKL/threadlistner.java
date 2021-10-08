@@ -5,56 +5,47 @@ import servers.DVL.DVL_i;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 public class threadlistner extends Thread {
 
     public int count;
-//    private int c=0;
-//    private int d=0;
     String date;
     String uid;
     public int count_for_DVLS123_for_DATE1 = 2;
-//    KKL_i kkl;
-    KKL kkl = new KKL();
+//    KKL kkl = new KKL();
+    KKL_i k;
 
-
-
-    threadlistner(int c ,int d, String date, String uid) throws RemoteException {
-//        this.c=c;
-//        this.d=d;
-//        this.date=date;
+    threadlistner(int c ,int d, String date, String uid) throws RemoteException, MalformedURLException, NotBoundException {
         this.uid = uid;
+        k = (KKL_i) Naming.lookup("rmi://localhost:35001/tag2");
     }
 
     public void run() {
-//        System.out.println("KKL server: listener started");
-//        System.out.println("uid: " + uid);
         DatagramSocket socket = null;
         try {
-            socket = new DatagramSocket(2170);  // hardcoding PORT, instead of reading in d
-            byte[] b = new byte[1000];  // b=Integer.toString(i).getBytes();  // I really don't think you need this mannn
+            socket = new DatagramSocket(2170);
+            byte[] b = new byte[1000];
 
             while(true) {
-
                 // RECEIVING
                 DatagramPacket packet = new DatagramPacket(b, b.length);
                 socket.receive(packet);
 
                 // TESTING
                 String s = new String(packet.getData());
-//                System.out.println("expecting to see a date here (Tuesday). in s(KKL) the date is: " + s.trim());
                 this.date = s.trim();
+//                System.out.println(date);
+//                int c = kkl.get_count(date);
+                int c = k.get_count("some date");
+                System.out.println("kkl sending " + c);
 
-                int c = kkl.get_count(date);
-//                System.out.println("c: " + c);
-
-                // PROCESSING: return the count from date we receive from socket. we already have uid
-                int count = this.count_for_DVLS123_for_DATE1;
-                byte [] reply = Integer.toString(2).getBytes();
-
+                // PROCESSING: use date to get count
+                byte [] reply = Integer.toString(c).getBytes();
 
                 // SENDING
                 DatagramPacket responsePacket = new DatagramPacket(reply,
@@ -69,7 +60,7 @@ public class threadlistner extends Thread {
         } finally {
             if(socket != null) {
                 socket.close();
-                System.out.println("closing KKL? socket");
+                System.out.println("closing KKL socket. probably should never see this");
             }
         }
     }
