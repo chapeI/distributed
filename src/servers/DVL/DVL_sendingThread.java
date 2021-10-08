@@ -11,9 +11,11 @@ public class DVL_sendingThread extends Thread {
     public int count;
 //    public boolean ready = false;
     String date;
+    int port;
 
-    public DVL_sendingThread(String date) {
+    public DVL_sendingThread(String date, int port) {
         this.date = date;
+        this.port = port;
     }
 
     public void run() {
@@ -24,7 +26,7 @@ public class DVL_sendingThread extends Thread {
             // SEND
             byte[] b = this.date.getBytes();
             InetAddress address = InetAddress.getLocalHost();
-            DatagramPacket packet =new DatagramPacket(b, b.length, address, 2170); // port has to be a variable
+            DatagramPacket packet =new DatagramPacket(b, b.length, address, port); // port has to be a variable
             socket.send(packet);
 
             // RECEIVE

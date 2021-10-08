@@ -107,7 +107,7 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
             System.err.println(e);
         }
 
-        DVL_sendingThread dvl_st_to_kkl = new DVL_sendingThread(date);  // sending(date) to kkl (port 2170)
+        DVL_sendingThread dvl_st_to_kkl = new DVL_sendingThread(date, 2170);  // sending(date) to kkl (port 2170)
         Thread t1=new Thread(dvl_st_to_kkl);
         t1.start();
         t1.join();
