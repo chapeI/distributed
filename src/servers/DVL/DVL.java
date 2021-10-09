@@ -32,9 +32,8 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
 
     @Override
     public Boolean createroom(String rno, String date, String timeslot) throws RemoteException, FileNotFoundException, UnsupportedEncodingException {
-//        make_new_date(a, "Monday", "1", "3:00");
-//        make_new_date(a, "Monday", "1", "4:00");
-//        make_new_date(a, "Wednesday", "2", "4:00");
+        make_new_date(a, date, rno, timeslot);
+        System.out.println(a);
         return true;
     }
 
@@ -58,39 +57,26 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
         }
     }
 
-    public String bookroom2(String campusName,String rno,String date,String timeslot,String UID)
+    public String bookroom(String campusName, String rno, String date, String timeslot, String UID)
             throws RemoteException, InterruptedException, MalformedURLException, NotBoundException {
-
         String bookingid;
-        System.out.println("\n~~ DVL.bookroom2()");
-
-        kkl_i = (KKL_i) Naming.lookup("rmi://localhost:35001/tag2"); // TODO: move this to the top
-        // wst reference goes here
+        kkl_i = (KKL_i) Naming.lookup("rmi://localhost:35001/tag2");
+        wst_i = (WST_i) Naming.lookup("rmi://localhost:35002/tag3");
 
         if(campusName.equals("DVL")) {
             bookingid = UUID.randomUUID().toString();
-//            System.out.println("bookingid: " + bookingid);
-
-//            // TODO: put booking in here
-//            if(a.get("Monday").get("2").get("9:00") == "Available") {
-//                System.out.println("should see this message before 'booked'");
-//            } else {
-//                System.out.println("this shit breaks"); // TODO: handle properly
-//            }
-
-//            System.out.println(a);
-            a.get("Monday").get("2").put("9:00","WORKING");
-            System.out.println(a);
-
-        } else if(campusName.equals(new String("KKL"))) {
+            if(a.get(date).get(rno).get(timeslot) == "available") {
+                a.get(date).get(rno).put(timeslot,"WORKING");
+                System.out.println(a);
+            } else {
+                System.out.println("CRASH");
+            }
+        } else if(campusName.equals("KKL")) {
             bookingid = kkl_i.bookroom(campusName, rno, date, timeslot, UID);
-        } else if(campusName.equals(new String("WST"))) {
-            System.out.println("sending request to WST.bookRoom()");
+        } else if(campusName.equals("WST")) {
+            bookingid = wst_i.bookroom(campusName, rno, date, timeslot, UID);
         }
-
-        System.out.println("~~ DVL.bookroom2() done");
-        // prolly need to return bookingid
-        return "DEBUG";
+        return "WORKING";
     }
 
     public int getAvailableTimeSlot(String date) throws RemoteException, InterruptedException {
@@ -162,7 +148,8 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
                     if(booking.equals(bookingid)) {
                         System.out.println(bookingid + " found at {" + d.getKey() + " in rno=" + rno.getKey() + " @" + t.getKey() + "} (KKL campus)");
                         a.get(d.getKey()).get(rno.getKey()).put(t.getKey(), "available");  // cancelling and changing b_id to available
-                        System.out.println("booking_id cancelled and changed to available. check a datastructure for proof");
+                        System.out.println("booking_id cancelled and changed to available. check data-structure 'a' for proof");
+                        System.out.println(a);
                         return;
                     } else {
                         System.out.println("no bookings found for " + bookingid);

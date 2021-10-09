@@ -34,10 +34,8 @@ public class WST extends UnicastRemoteObject implements WST_i {
 
     @Override
     public Boolean createroom(String rno, String date, String timeslot) throws RemoteException, FileNotFoundException, UnsupportedEncodingException {
-        // muted while testing. these are being initialized in the const'r
-//        make_new_date(a, "Monday", "1", "3:00");
-//        make_new_date(a, "Monday", "1", "4:00");
-//        make_new_date(a, "Wednesday", "2", "4:00");
+        make_new_date(a, date, rno, timeslot);
+        System.out.println(a);
         return true;
     }
 
@@ -63,26 +61,20 @@ public class WST extends UnicastRemoteObject implements WST_i {
 
     public String bookroom(String campusName, String rno, String date, String timeslot, String UID) throws RemoteException, InterruptedException, MalformedURLException, NotBoundException {
         dvl_i = (DVL_i) Naming.lookup("rmi://localhost:35000/tag1"); // TODO: move to top
-        // add kkl
+        kkl_i = (KKL_i) Naming.lookup("rmi://localhost:35001/tag2");
 
         if(campusName.equals("WST")) {
             bookingid = UUID.randomUUID().toString();
-//            System.out.println("bookingid: " + bookingid);
-
-            // TODO: put the actual booking lines into the if
-//            if(a.get("Monday").get("1").get("9:00") == "Available") {
-//                System.out.println("should see this message before 'booked'");
-//            } else {
-//                System.out.println("shit breaks"); // TODO: handle properly
-//            }
-
-            a.get("Monday").get("1").put("3:00","BOOKINGID_1");
-            System.out.println(a);
-
+            if(a.get(date).get(rno).get(timeslot) == "available") {
+                a.get(date).get(rno).put(timeslot,"WORKING");
+                System.out.println(a);
+            } else {
+                System.out.println("CRASH");
+            }
         } else if(campusName.equals(new String("DVL"))) {
-            bookingid = dvl_i.bookroom2(campusName, rno, date, timeslot, UID);
+            bookingid = dvl_i.bookroom(campusName, rno, date, timeslot, UID);
         } else if(campusName.equals(new String("KKL"))) {
-            System.out.println("sending request to KKL.bookRoom()");
+            bookingid = kkl_i.bookroom(campusName, rno, date, timeslot, UID);
         }
 
         return "debug";
@@ -127,7 +119,8 @@ public class WST extends UnicastRemoteObject implements WST_i {
                     if(booking.equals(bookingid)) {
                         System.out.println(bookingid + " found at {" + d.getKey() + " in rno=" + rno.getKey() + " @" + t.getKey() + "} (KKL campus)");
                         a.get(d.getKey()).get(rno.getKey()).put(t.getKey(), "available");  // cancelling and changing b_id to available
-                        System.out.println("booking_id cancelled and changed to available. check a datastructure for proof");
+                        System.out.println("booking_id cancelled and changed to available. check data-structure 'a' for proof");
+                        System.out.println(a);
                         return;
                     } else {
                         System.out.println("no bookings found for " + bookingid);

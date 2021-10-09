@@ -36,7 +36,7 @@ public class Client {
             student.run_student(uid, dvl_i, kkl_i, wst_i);
         } else if(uid.charAt(3)=='A') {
             admin = new Admin();
-            admin.run_admin(uid, dvl_i, kkl_i);
+            admin.run_admin(uid, dvl_i, kkl_i, wst_i);
         } else {
             System.out.println("invalid uid. terminating program");
             return;

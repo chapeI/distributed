@@ -20,6 +20,7 @@ public interface KKL_i extends Remote {
 
     public void cancelBooking(String bookingid) throws RemoteException;
 
-    // getAvailable
+    public int getAvailableTimeSlot(String date) throws RemoteException, InterruptedException;
+
 
     }
