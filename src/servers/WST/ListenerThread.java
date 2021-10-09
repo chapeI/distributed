@@ -1,4 +1,6 @@
-package servers.KKL;
+package servers.WST;
+
+import servers.KKL.KKL_i;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -13,17 +15,16 @@ public class ListenerThread extends Thread {
 
     public int count;
     String date;
-    KKL_i kkl_i;
+    WST_i wst_i;
 
     ListenerThread() throws RemoteException, MalformedURLException, NotBoundException {
-        kkl_i = (KKL_i) Naming.lookup("rmi://localhost:35001/tag2");
+        wst_i = (WST_i) Naming.lookup("rmi://localhost:35002/tag3");
     }
 
     public void run() {
-        System.out.println("reach?");
         DatagramSocket socket = null;
         try {
-            socket = new DatagramSocket(2170);  // listening on PORT:2170
+            socket = new DatagramSocket(2171);
             byte[] b = new byte[1000];
 
             while(true) {
@@ -31,13 +32,13 @@ public class ListenerThread extends Thread {
                 // RECEIVE
                 DatagramPacket packet = new DatagramPacket(b, b.length);
                 socket.receive(packet);
-                System.out.println("receiving on KKL PORT 2170");
+                System.out.println("receiving on WST PORT 2171");
 
                 // PROCESS
                 String s = new String(packet.getData());
                 this.date = s.trim();
-                int c = kkl_i.get_count(date);
-                System.out.println("kkl attempt to send count " + c);
+                int c = wst_i.get_count(date);
+                System.out.println("wst attempt to send count " + c);
 
                 // SEND
                 byte [] reply = Integer.toString(c).getBytes();
@@ -53,7 +54,7 @@ public class ListenerThread extends Thread {
         } finally {
             if(socket != null) {
                 socket.close();
-                System.out.println("closing KKL socket. probably should never see this");
+                System.out.println("closing WST socket. probably should never see this");
             }
         }
     }

@@ -1,7 +1,7 @@
-package servers.DVL;
+package servers.WST;
 
+import servers.DVL.DVL_i;
 import servers.KKL.KKL_i;
-import servers.WST.WST_i;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
@@ -10,28 +10,30 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.*;
+import java.util.HashMap;
+import java.util.UUID;
 
-public class DVL extends UnicastRemoteObject implements DVL_i {
-
+public class WST extends UnicastRemoteObject implements WST_i {
+    DVL_i dvl_i;
     KKL_i kkl_i;
-    WST_i wst_i;
-    int dvl_available_count = 0;
 
     // 	HM<date, HM<rno, HM<time, b_id>>>
     static HashMap<String,HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();
+    String bookingid = "bookingID_debug";
 
-    DVL() throws RemoteException {
+    public WST() throws RemoteException {
         super();
-        make_new_date(a, "Tuesday", "5", "6:00");
-        make_new_date(a, "Wednesday", "1", "4:00");
-        make_new_date(a, "Wednesday", "2", "4:00");
-        make_new_date(a, "Thursday", "6", "7:00");
-        System.out.println("DVL(): " + a);
+        make_new_date(a, "Friday", "4", "1:00");
+        make_new_date(a, "Wednesday", "3", "6:00");
+        make_new_date(a, "Wednesday", "4", "6:00");
+        make_new_date(a, "Wednesday", "5", "6:00");
+        make_new_date(a, "Wednesday", "6", "6:00");
+        System.out.println("WST(): " + a);
     }
 
     @Override
     public Boolean createroom(String rno, String date, String timeslot) throws RemoteException, FileNotFoundException, UnsupportedEncodingException {
+        // muted while testing. these are being initialized in the const'r
 //        make_new_date(a, "Monday", "1", "3:00");
 //        make_new_date(a, "Monday", "1", "4:00");
 //        make_new_date(a, "Wednesday", "2", "4:00");
@@ -58,87 +60,41 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
         }
     }
 
-    public String bookroom2(String campusName,String rno,String date,String timeslot,String UID)
-            throws RemoteException, InterruptedException, MalformedURLException, NotBoundException {
+    public String bookroom(String campusName, String rno, String date, String timeslot, String UID) throws RemoteException, InterruptedException, MalformedURLException, NotBoundException {
+        dvl_i = (DVL_i) Naming.lookup("rmi://localhost:35000/tag1"); // TODO: move to top
+        // add kkl
 
-        String bookingid;
-        System.out.println("\n~~ DVL.bookroom2()");
-
-        kkl_i = (KKL_i) Naming.lookup("rmi://localhost:35001/tag2"); // TODO: move this to the top
-        // wst reference goes here
-
-        if(campusName.equals("DVL")) {
+        if(campusName.equals("WST")) {
             bookingid = UUID.randomUUID().toString();
 //            System.out.println("bookingid: " + bookingid);
 
-//            // TODO: put booking in here
-//            if(a.get("Monday").get("2").get("9:00") == "Available") {
+            // TODO: put the actual booking lines into the if
+//            if(a.get("Monday").get("1").get("9:00") == "Available") {
 //                System.out.println("should see this message before 'booked'");
 //            } else {
-//                System.out.println("this shit breaks"); // TODO: handle properly
+//                System.out.println("shit breaks"); // TODO: handle properly
 //            }
 
-//            System.out.println(a);
-            a.get("Monday").get("2").put("9:00","WORKING");
+            a.get("Monday").get("1").put("3:00","BOOKINGID_1");
             System.out.println(a);
 
+        } else if(campusName.equals(new String("DVL"))) {
+            bookingid = dvl_i.bookroom2(campusName, rno, date, timeslot, UID);
         } else if(campusName.equals(new String("KKL"))) {
-            bookingid = kkl_i.bookroom(campusName, rno, date, timeslot, UID);
-        } else if(campusName.equals(new String("WST"))) {
-            System.out.println("sending request to WST.bookRoom()");
+            System.out.println("sending request to KKL.bookRoom()");
         }
 
-        System.out.println("~~ DVL.bookroom2() done");
-        // prolly need to return bookingid
-        return "DEBUG";
+        return "debug";
     }
 
-    public int getAvailableTimeSlot(String date) throws RemoteException, InterruptedException {
-        this.dvl_available_count += this.get_count(date);
-        System.out.println("dvl_available_count(before): " + dvl_available_count);
-
-        try {
-            kkl_i=(KKL_i)Naming.lookup("rmi://localhost:35001/tag2");
-            kkl_i.listener(); // create a listener thread on kkl
-            wst_i=(WST_i)Naming.lookup("rmi://localhost:35002/tag3");
-            wst_i.listener();
-
-        } catch(NotBoundException e ) {
-            System.err.println(e);
-        } catch (MalformedURLException e) {
-            System.err.println(e);
-        }
-
-        // KKL
-        DVL_sendingThread dvl_st_to_kkl = new DVL_sendingThread(date, 2170);  // sending(date) to kkl (port 2170)
-        DVL_sendingThread dvl_st_to_wst = new DVL_sendingThread(date, 2171);
-
-        Thread t1=new Thread(dvl_st_to_kkl);
-        Thread t2 = new Thread(dvl_st_to_wst);
-        System.out.println("reach");
-
+    public void listener() throws RemoteException, MalformedURLException, NotBoundException {
+        ListenerThread lt=new ListenerThread();
+        Thread t1 =new Thread(lt);
         t1.start();
-        t2.start();
 
-        t1.join();
-        t2.join();
-
-        this.dvl_available_count += dvl_st_to_kkl.count;
-        this.dvl_available_count += dvl_st_to_wst.count;
-
-        System.out.println("available rooms: " + dvl_available_count);
-
-//        System.out.println("dvl_available_count(after KKL): " + dvl_available_count);
-
-        // WST
-//        DVL_sendingThread dvl_st_to_wst = new DVL_sendingThread(date, 2171);
-//        Thread t2 = new Thread(dvl_st_to_wst);
-//        t2.start();
-//        t2.join();
-//        this.dvl_available_count += dvl_st_to_wst.count;
-//        System.out.println("dvl_available_count(after WST): " + dvl_available_count);
-
-        return 1;
+        //Thread t4=new Thread(tl2);
+        //threadlistner tl2=new threadlistner(cou,b);
+        //t4.start();
     }
 
     public int get_count(String date) throws RemoteException {

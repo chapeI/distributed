@@ -13,7 +13,7 @@ import java.util.*;
 
 public class KKL extends UnicastRemoteObject implements KKL_i {
 
-    DVL_i dvl;
+    DVL_i dvl_i;
 
     // 	HM<date, HM<rno, HM<time, b_id>>>
     static HashMap<String,HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();
@@ -34,9 +34,9 @@ public class KKL extends UnicastRemoteObject implements KKL_i {
     @Override
     public Boolean createroom(String rno, String date, String timeslot) throws RemoteException, FileNotFoundException, UnsupportedEncodingException {
         // muted while testing. these are being initialized in the const'r
-        make_new_date(a, "Monday", "1", "3:00");
-        make_new_date(a, "Monday", "1", "4:00");
-        make_new_date(a, "Wednesday", "2", "4:00");
+//        make_new_date(a, "Monday", "1", "3:00");
+//        make_new_date(a, "Monday", "1", "4:00");
+//        make_new_date(a, "Wednesday", "2", "4:00");
         return true;
     }
 
@@ -60,8 +60,8 @@ public class KKL extends UnicastRemoteObject implements KKL_i {
         }
     }
 
-    public String bookroom2(String campusName,String rno,String date,String timeslot,String UID) throws RemoteException, InterruptedException, MalformedURLException, NotBoundException {
-        dvl = (DVL_i) Naming.lookup("rmi://localhost:35000/tag1"); // TODO: move to top
+    public String bookroom(String campusName, String rno, String date, String timeslot, String UID) throws RemoteException, InterruptedException, MalformedURLException, NotBoundException {
+        dvl_i = (DVL_i) Naming.lookup("rmi://localhost:35000/tag1"); // TODO: move to top
         // add wst
 
         if(campusName.equals("KKL")) {
@@ -79,7 +79,7 @@ public class KKL extends UnicastRemoteObject implements KKL_i {
             System.out.println(a);
 
         } else if(campusName.equals(new String("DVL"))) {
-            bookingid = dvl.bookroom2(campusName, rno, date, timeslot, UID);
+            bookingid = dvl_i.bookroom2(campusName, rno, date, timeslot, UID);
         } else if(campusName.equals(new String("WST"))) {
             System.out.println("sending request to WST.bookRoom()");
         }

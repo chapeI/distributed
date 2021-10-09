@@ -41,7 +41,7 @@ public class Student {
 //            String test = dvl_i.bookroom2(campus_booking, rno, date, timeslot, uid);
             dvl_i.getAvailableTimeSlot("Wednesday");
         } else if (campus.equals("KKL")) {
-            String test = kkl_i.bookroom2(campus_booking, rno, date, timeslot, uid);
+            String test = kkl_i.bookroom(campus_booking, rno, date, timeslot, uid);
             kkl_i.cancelBooking("BOOKINGID_1");
         }
 

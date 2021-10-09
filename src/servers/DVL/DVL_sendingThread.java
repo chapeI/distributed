@@ -19,6 +19,7 @@ public class DVL_sendingThread extends Thread {
     }
 
     public void run() {
+        System.out.println("reach dvl_sendingThread");
         DatagramSocket socket = null;
         try {
             socket = new DatagramSocket();
