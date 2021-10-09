@@ -26,9 +26,9 @@ public class KKL extends UnicastRemoteObject implements KKL_i {
     public KKL() throws RemoteException {
         super();
         make_new_date(a, "Monday", "1", "3:00");
-        make_new_date(a, "Monday", "1", "4:00");
-        make_new_date(a, "Monday", "2", "8:00");
-        make_new_date(a, "Wednesday", "2", "4:00");
+        make_new_date(a, "Tuesday", "1", "4:00");
+        make_new_date(a, "Wednesday", "2", "8:00");
+        make_new_date(a, "Thursday", "2", "4:00");
         System.out.println("KKL(): " + a);
 //        this.cancelBooking("BOOKINGID_1");
 //        this.get_count("Monday");

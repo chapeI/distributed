@@ -24,9 +24,9 @@ public class WST extends UnicastRemoteObject implements WST_i {
 
     public WST() throws RemoteException {
         super();
-        make_new_date(a, "Friday", "4", "1:00");
+        make_new_date(a, "Thursday", "4", "1:00");
         make_new_date(a, "Wednesday", "3", "6:00");
-        make_new_date(a, "Wednesday", "4", "6:00");
+        make_new_date(a, "Tuesday", "4", "6:00");
         make_new_date(a, "Monday", "5", "6:00");
         make_new_date(a, "Wednesday", "6", "6:00");
         System.out.println("WST(): " + a);
@@ -171,10 +171,6 @@ public class WST extends UnicastRemoteObject implements WST_i {
         System.out.println("available rooms: " + wst_available_count);
 
         return wst_available_count;
-    }
-
-    public void test() throws RemoteException {
-        System.out.println("am I reaching wst.test()");
     }
 
 }

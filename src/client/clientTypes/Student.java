@@ -15,15 +15,13 @@ import java.rmi.RemoteException;
 public class Student {
 
     BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
-    WST_i wst_i;
 
     public Student() throws MalformedURLException, NotBoundException, RemoteException {
 //        System.out.println("Student login");
-        wst_i = (WST_i) Naming.lookup("rmi://localhost:35002/tag3");
 
     }
 
-    public void run_student(String uid, DVL_i dvl_i, KKL_i kkl_i, WST_i wst_i_DEBUG) throws IOException, InterruptedException, NotBoundException {
+    public void run_student(String uid, DVL_i dvl_i, KKL_i kkl_i, WST_i wst_i) throws IOException, InterruptedException, NotBoundException {
         String campus = uid.substring(0,3);  // TODO: do this in Client
         System.out.println("Enter room number (1-10), day (Monday to Friday), timeslot (8:00 to 16:00)");
 
@@ -50,7 +48,6 @@ public class Student {
 //            String test = kkl_i.bookroom(campus_booking, rno, date, timeslot, uid);
             kkl_i.cancelBooking("BOOKINGID_1");
         } else if (campus.equals("WST")) {
-            System.out.println("reach");
             wst_i.getAvailableTimeSlot("Wednesday");
         }
 
