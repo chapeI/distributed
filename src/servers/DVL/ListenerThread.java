@@ -1,4 +1,4 @@
-package servers.WST;
+package servers.DVL;
 
 import servers.KKL.KKL_i;
 
@@ -14,16 +14,16 @@ import java.rmi.RemoteException;
 public class ListenerThread extends Thread {
 
     String date;
-    WST_i wst_i;
+    DVL_i dvl_i;
 
     ListenerThread() throws RemoteException, MalformedURLException, NotBoundException {
-        wst_i = (WST_i) Naming.lookup("rmi://localhost:35002/tag3");
+        dvl_i = (DVL_i) Naming.lookup("rmi://localhost:35000/tag1");
     }
 
     public void run() {
         DatagramSocket socket = null;
         try {
-            socket = new DatagramSocket(2171);
+            socket = new DatagramSocket(2172);
             byte[] b = new byte[1000];
 
             while(true) {
@@ -31,13 +31,13 @@ public class ListenerThread extends Thread {
                 // RECEIVE
                 DatagramPacket packet = new DatagramPacket(b, b.length);
                 socket.receive(packet);
-                System.out.println("receiving on WST PORT 2171");
+                System.out.println("receiving on DVL PORT 2172");
 
                 // PROCESS
                 String s = new String(packet.getData());
                 this.date = s.trim();
-                int c = wst_i.get_count(date);
-                System.out.println("wst attempt to send count " + c);
+                int c = dvl_i.get_count(date);
+                System.out.println("dvl attempt to send count " + c);
 
                 // SEND
                 byte [] reply = Integer.toString(c).getBytes();
@@ -53,7 +53,7 @@ public class ListenerThread extends Thread {
         } finally {
             if(socket != null) {
                 socket.close();
-                System.out.println("closing WST socket. probably should never see this");
+                System.out.println("closing DVL socket. probably should never see this");
             }
         }
     }

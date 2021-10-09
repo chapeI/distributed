@@ -11,7 +11,6 @@ import java.rmi.RemoteException;
 
 public class ListenerThread extends Thread {
 
-    public int count;
     String date;
     KKL_i kkl_i;
 
@@ -20,10 +19,9 @@ public class ListenerThread extends Thread {
     }
 
     public void run() {
-        System.out.println("reach?");
         DatagramSocket socket = null;
         try {
-            socket = new DatagramSocket(2170);  // listening on PORT:2170
+            socket = new DatagramSocket(2170);
             byte[] b = new byte[1000];
 
             while(true) {

@@ -9,6 +9,8 @@ import java.rmi.RemoteException;
 
 public interface WST_i extends Remote {
 
+    public void test() throws RemoteException;
+
     public  Boolean createroom(String rno, String date, String timeslot)throws java.rmi.RemoteException, FileNotFoundException, UnsupportedEncodingException;;
 
     public String bookroom(String campusName, String rno, String date, String timeslot, String UID)
@@ -20,5 +22,6 @@ public interface WST_i extends Remote {
 
     public void cancelBooking(String bookingid) throws RemoteException;
 
-    // get avail
+    public int getAvailableTimeSlot(String date) throws RemoteException, InterruptedException;
+
 }

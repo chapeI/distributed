@@ -13,7 +13,7 @@ public interface DVL_i extends Remote {
     public String bookroom2(String campusName,String rno,String date,String timeslot,String UID)
             throws RemoteException, InterruptedException, MalformedURLException, NotBoundException;
 
-//    public void listener() throws RemoteException, MalformedURLException, NotBoundException;
+    public void listener() throws RemoteException, MalformedURLException, NotBoundException;
 
     public int get_count(String date) throws RemoteException;
 

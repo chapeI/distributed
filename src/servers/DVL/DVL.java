@@ -102,7 +102,6 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
             kkl_i.listener(); // create a listener thread on kkl
             wst_i=(WST_i)Naming.lookup("rmi://localhost:35002/tag3");
             wst_i.listener();
-
         } catch(NotBoundException e ) {
             System.err.println(e);
         } catch (MalformedURLException e) {
@@ -115,7 +114,6 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
 
         Thread t1=new Thread(dvl_st_to_kkl);
         Thread t2 = new Thread(dvl_st_to_wst);
-        System.out.println("reach");
 
         t1.start();
         t2.start();
@@ -128,17 +126,7 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
 
         System.out.println("available rooms: " + dvl_available_count);
 
-//        System.out.println("dvl_available_count(after KKL): " + dvl_available_count);
-
-        // WST
-//        DVL_sendingThread dvl_st_to_wst = new DVL_sendingThread(date, 2171);
-//        Thread t2 = new Thread(dvl_st_to_wst);
-//        t2.start();
-//        t2.join();
-//        this.dvl_available_count += dvl_st_to_wst.count;
-//        System.out.println("dvl_available_count(after WST): " + dvl_available_count);
-
-        return 1;
+        return dvl_available_count;
     }
 
     public int get_count(String date) throws RemoteException {
@@ -182,5 +170,11 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
                 }
             }
         }
+    }
+
+    public void listener() throws RemoteException, MalformedURLException, NotBoundException {
+        ListenerThread lt=new ListenerThread();
+        Thread t =new Thread(lt);
+        t.start();
     }
 }

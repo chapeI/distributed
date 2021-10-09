@@ -1,18 +1,17 @@
-package servers.DVL;
+package servers.WST;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.nio.ByteBuffer;
 
-public class DVL_sendingThread extends Thread {
+public class WST_sendingThread extends Thread {
     public int count;
     String date;
     int port;
 
-    public DVL_sendingThread(String date, int port) {
+    WST_sendingThread(String date, int port) {
         this.date = date;
         this.port = port;
     }
@@ -34,7 +33,7 @@ public class DVL_sendingThread extends Thread {
             socket.receive(response);
             String s = new String(response.getData());
             String s_ = s.trim();
-            System.out.println("dvl_sendingThread receiving: " + s_);
+            System.out.println("wst_sendingThread receiving: " + s_);
             this.count = Integer.parseInt(s_);
         }
         catch (SocketException e) {
@@ -44,7 +43,7 @@ public class DVL_sendingThread extends Thread {
         } finally {
             if(socket != null) {
                 socket.close();
-                System.out.println("closing DVL sending socket");
+                System.out.println("closing WST sending socket");
             }
         }
     }

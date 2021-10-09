@@ -16,6 +16,7 @@ import java.util.UUID;
 public class WST extends UnicastRemoteObject implements WST_i {
     DVL_i dvl_i;
     KKL_i kkl_i;
+    int wst_available_count = 0;
 
     // 	HM<date, HM<rno, HM<time, b_id>>>
     static HashMap<String,HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();
@@ -26,7 +27,7 @@ public class WST extends UnicastRemoteObject implements WST_i {
         make_new_date(a, "Friday", "4", "1:00");
         make_new_date(a, "Wednesday", "3", "6:00");
         make_new_date(a, "Wednesday", "4", "6:00");
-        make_new_date(a, "Wednesday", "5", "6:00");
+        make_new_date(a, "Monday", "5", "6:00");
         make_new_date(a, "Wednesday", "6", "6:00");
         System.out.println("WST(): " + a);
     }
@@ -89,31 +90,27 @@ public class WST extends UnicastRemoteObject implements WST_i {
 
     public void listener() throws RemoteException, MalformedURLException, NotBoundException {
         ListenerThread lt=new ListenerThread();
-        Thread t1 =new Thread(lt);
-        t1.start();
-
-        //Thread t4=new Thread(tl2);
-        //threadlistner tl2=new threadlistner(cou,b);
-        //t4.start();
+        Thread t =new Thread(lt);
+        t.start();
     }
 
     public int get_count(String date) throws RemoteException {
         int count = 0;
         HashMap<String, HashMap<String, String>> day;
         day = a.get(date);
-//        System.out.println(day);
+        System.out.println(day);
 
         for(var r: day.entrySet()) {
-//            System.out.println("rno: " + r.getKey());
+            System.out.println("rno: " + r.getKey());
             for(var t : r.getValue().entrySet()) {
-//                System.out.println("t: " + t.getValue());
+                System.out.println("t: " + t.getValue());
                 String time = t.getValue();
                 if(time.equals("available")) {
                     count += 1;
                 }
             }
         }
-//        System.out.println("count: " + count);
+        System.out.println("count: " + count);
         return count;
     }
 
@@ -139,4 +136,45 @@ public class WST extends UnicastRemoteObject implements WST_i {
             }
         }
     }
+
+    public int getAvailableTimeSlot(String date) throws RemoteException, InterruptedException {
+        this.wst_available_count += this.get_count(date);
+        System.out.println("wst_available_count(before): " + wst_available_count);
+
+        try {
+            dvl_i=(DVL_i) Naming.lookup("rmi://localhost:35000/tag1");
+            dvl_i.listener(); // create a listener thread on dvl
+            kkl_i=(KKL_i) Naming.lookup("rmi://localhost:35001/tag2");
+            kkl_i.listener();
+        } catch(NotBoundException e ) {
+            System.err.println(e);
+        } catch (MalformedURLException e) {
+            System.err.println(e);
+        }
+
+
+        WST_sendingThread wst_dvl = new WST_sendingThread(date, 2172);
+        WST_sendingThread wst_kkl = new WST_sendingThread(date, 2170);
+
+        Thread t1 = new Thread(wst_dvl);
+        Thread t2 = new Thread(wst_kkl);
+
+        t1.start();
+        t2.start();
+
+        t1.join();
+        t2.join();
+
+        this.wst_available_count += wst_dvl.count;
+        this.wst_available_count += wst_kkl.count;
+
+        System.out.println("available rooms: " + wst_available_count);
+
+        return wst_available_count;
+    }
+
+    public void test() throws RemoteException {
+        System.out.println("am I reaching wst.test()");
+    }
+
 }

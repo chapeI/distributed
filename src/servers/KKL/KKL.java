@@ -1,6 +1,7 @@
 package servers.KKL;
 
 import servers.DVL.DVL_i;
+import servers.WST.WST_i;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
@@ -14,6 +15,8 @@ import java.util.*;
 public class KKL extends UnicastRemoteObject implements KKL_i {
 
     DVL_i dvl_i;
+    WST_i wst_i;
+    int kkl_available_count = 0;
 
     // 	HM<date, HM<rno, HM<time, b_id>>>
     static HashMap<String,HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();
@@ -89,12 +92,8 @@ public class KKL extends UnicastRemoteObject implements KKL_i {
 
     public void listener() throws RemoteException, MalformedURLException, NotBoundException {
         ListenerThread lt=new ListenerThread();
-        Thread t1 =new Thread(lt);
-        t1.start();
-
-        //Thread t4=new Thread(tl2);
-        //threadlistner tl2=new threadlistner(cou,b);
-        //t4.start();
+        Thread t =new Thread(lt);
+        t.start();
     }
 
     public int get_count(String date) throws RemoteException {
@@ -138,5 +137,41 @@ public class KKL extends UnicastRemoteObject implements KKL_i {
                 }
             }
         }
+    }
+
+    public int getAvailableTimeSlot(String date) throws RemoteException, InterruptedException {
+        this.kkl_available_count += this.get_count(date);
+        System.out.println("kkl_available_count(before): " + kkl_available_count);
+
+        try {
+            dvl_i=(DVL_i) Naming.lookup("rmi://localhost:35000/tag1");
+            dvl_i.listener(); // create a listener thread on dvl
+            wst_i=(WST_i)Naming.lookup("rmi://localhost:35002/tag3");
+            wst_i.listener();
+        } catch(NotBoundException e ) {
+            System.err.println(e);
+        } catch (MalformedURLException e) {
+            System.err.println(e);
+        }
+
+
+        KKL_sendingThread kkl_dvl = new KKL_sendingThread(date, 2172);  // sending(date) to kkl (port 2170)
+        KKL_sendingThread kkl_wst = new KKL_sendingThread(date, 2171);
+
+        Thread t1 = new Thread(kkl_dvl);
+        Thread t2 = new Thread(kkl_wst);
+
+        t1.start();
+        t2.start();
+
+        t1.join();
+        t2.join();
+
+        this.kkl_available_count += kkl_dvl.count;
+        this.kkl_available_count += kkl_wst.count;
+
+        System.out.println("available rooms: " + kkl_available_count);
+
+        return kkl_available_count;
     }
 }
