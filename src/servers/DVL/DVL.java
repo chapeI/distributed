@@ -13,14 +13,10 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
 public class DVL extends UnicastRemoteObject implements DVL_i {
-
     KKL_i kkl_i;
     WST_i wst_i;
-    int dvl_available_count = 0;
-
-    // 	HM<date, HM<rno, HM<time, b_id>>>
-    static HashMap<String,HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();
-
+    int dvl_available_count = 0;  // available rooms in DVL
+    static HashMap<String,HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();  // 	HM<date, HM<rno, HM<time, b_id>>>
     DVL() throws RemoteException {
         super();
         make_new_date(a, "Tuesday", "5", "6:00");
@@ -30,13 +26,11 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
         System.out.println("DVL(): " + a);
     }
 
-    @Override
-    public Boolean createroom(String rno, String date, String timeslot) throws RemoteException, FileNotFoundException, UnsupportedEncodingException {
+    public Boolean createroom(String rno, String date, String timeslot) throws Exception {
         make_new_date(a, date, rno, timeslot);
         System.out.println(a);
         return true;
     }
-
     static void make_new_date(HashMap<String, HashMap<String, HashMap<String, String>>> dates, String date, String rno, String time) {
         if(dates.containsKey(date)) {
             make_room_available(dates.get(date), rno, time);
@@ -46,7 +40,6 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
             dates.put(date, rooms);
         }
     }
-
     static void make_room_available(HashMap<String, HashMap<String, String>> rooms, String rno, String time) {
         if(rooms.containsKey(rno)) {  // room exists. just get and put
             rooms.get(rno).put(time, "available");
@@ -80,7 +73,7 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
     }
 
     public int getAvailableTimeSlot(String date) throws RemoteException, InterruptedException {
-        this.dvl_available_count += this.get_count(date);
+//        this.dvl_available_count += this.get_count(date);
         System.out.println("dvl_available_count(before): " + dvl_available_count);
 
         try {
@@ -115,49 +108,49 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
         return dvl_available_count;
     }
 
-    public int get_count(String date) throws RemoteException {
-        int count = 0;
-        HashMap<String, HashMap<String, String>> day;
-        day = a.get(date);
-//        System.out.println(day);
+//    public int get_count(String date) throws RemoteException {
+//        int count = 0;
+//        HashMap<String, HashMap<String, String>> day;
+//        day = a.get(date);
+////        System.out.println(day);
+//
+//        for(var r: day.entrySet()) {
+////            System.out.println("rno: " + r.getKey());
+//            for(var t : r.getValue().entrySet()) {
+////                System.out.println("t: " + t.getValue());
+//                String time = t.getValue();
+//                if(time.equals("available")) {
+//                    count += 1;
+//                }
+//            }
+//        }
+////        System.out.println("count: " + count);
+//        return count;
+//    }
 
-        for(var r: day.entrySet()) {
-//            System.out.println("rno: " + r.getKey());
-            for(var t : r.getValue().entrySet()) {
-//                System.out.println("t: " + t.getValue());
-                String time = t.getValue();
-                if(time.equals("available")) {
-                    count += 1;
-                }
-            }
-        }
-//        System.out.println("count: " + count);
-        return count;
-    }
-
-    public void cancelBooking(String bookingid) throws RemoteException {
-        for(var d : a.entrySet()) {
-//            System.out.println("1. d: " + d);
-//            System.out.println("2. d: " + d.getKey());
-            for(var rno : d.getValue().entrySet()) {
-//                System.out.println("3. rno: " + rno.getKey());
-                for(var t : rno.getValue().entrySet()) {
-//                    System.out.println("4. t: " + t);
-//                    System.out.println("5. t: " + t.getKey());
-                    String booking = t.getValue();
-                    if(booking.equals(bookingid)) {
-                        System.out.println(bookingid + " found at {" + d.getKey() + " in rno=" + rno.getKey() + " @" + t.getKey() + "} (KKL campus)");
-                        a.get(d.getKey()).get(rno.getKey()).put(t.getKey(), "available");  // cancelling and changing b_id to available
-                        System.out.println("booking_id cancelled and changed to available. check data-structure 'a' for proof");
-                        System.out.println(a);
-                        return;
-                    } else {
-                        System.out.println("no bookings found for " + bookingid);
-                    }
-                }
-            }
-        }
-    }
+//    public void cancelBooking(String bookingid) throws RemoteException {
+//        for(var d : a.entrySet()) {
+////            System.out.println("1. d: " + d);
+////            System.out.println("2. d: " + d.getKey());
+//            for(var rno : d.getValue().entrySet()) {
+////                System.out.println("3. rno: " + rno.getKey());
+//                for(var t : rno.getValue().entrySet()) {
+////                    System.out.println("4. t: " + t);
+////                    System.out.println("5. t: " + t.getKey());
+//                    String booking = t.getValue();
+//                    if(booking.equals(bookingid)) {
+//                        System.out.println(bookingid + " found at {" + d.getKey() + " in rno=" + rno.getKey() + " @" + t.getKey() + "} (KKL campus)");
+//                        a.get(d.getKey()).get(rno.getKey()).put(t.getKey(), "available");  // cancelling and changing b_id to available
+//                        System.out.println("booking_id cancelled and changed to available. check data-structure 'a' for proof");
+//                        System.out.println(a);
+//                        return;
+//                    } else {
+//                        System.out.println("no bookings found for " + bookingid);
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     public void listener() throws RemoteException, MalformedURLException, NotBoundException {
         ListenerThread lt=new ListenerThread();

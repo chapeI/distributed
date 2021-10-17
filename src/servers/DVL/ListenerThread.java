@@ -36,14 +36,14 @@ public class ListenerThread extends Thread {
                 // PROCESS
                 String s = new String(packet.getData());
                 this.date = s.trim();
-                int c = dvl_i.get_count(date);
-                System.out.println("dvl attempt to send count " + c);
+//                int c = dvl_i.get_count(date);
+//                System.out.println("dvl attempt to send count " + c);
 
                 // SEND
-                byte [] reply = Integer.toString(c).getBytes();
-                DatagramPacket responsePacket = new DatagramPacket(reply,
-                        reply.length, packet.getAddress(), packet.getPort());
-                socket.send(responsePacket);
+//                byte [] reply = Integer.toString(c).getBytes();
+//                DatagramPacket responsePacket = new DatagramPacket(reply,
+//                        reply.length, packet.getAddress(), packet.getPort());
+//                socket.send(responsePacket);
             }
         }
         catch (SocketException e) {
