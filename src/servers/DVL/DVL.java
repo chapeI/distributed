@@ -28,7 +28,6 @@ public class DVL extends cPOA {
         System.out.println("DVL(): " + a);
     }
 
-    // corba
     private ORB orb;
     public void setORB(ORB orb_val) {
         orb = orb_val;
@@ -113,7 +112,7 @@ public class DVL extends cPOA {
         System.out.println("available rooms: " + dvl_available_count);
 
 //        return dvl_available_count;
-        return "dvl_count";
+        return "fix_dvl_available_count";
     }
 
 //    public int get_count(String date) throws RemoteException {
