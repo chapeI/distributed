@@ -1,7 +1,10 @@
 package servers.DVL;
 
-import servers.KKL.KKL_i;
-import servers.WST.WST_i;
+//import common.cPOA;
+import org.omg.CORBA.ORB;
+import common.*;
+//import servers.KKL.KKL_i;
+//import servers.WST.WST_i;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
@@ -12,9 +15,9 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
-public class DVL extends UnicastRemoteObject implements DVL_i {
-    KKL_i kkl_i;
-    WST_i wst_i;
+public class DVL extends cPOA {
+//    KKL_i kkl_i;
+//    WST_i wst_i;
     int dvl_available_count = 0;  // available rooms in DVL
     static HashMap<String,HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();  // 	HM<date, HM<rno, HM<time, b_id>>>
     DVL() throws RemoteException {
@@ -26,7 +29,13 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
         System.out.println("DVL(): " + a);
     }
 
-    public Boolean createroom(String rno, String date, String timeslot) throws Exception {
+    // corba
+    private ORB orb;
+    public void setORB(ORB orb_val) {
+        orb = orb_val;
+    }
+
+    public boolean createroom(String rno, String date, String timeslot) {
         make_new_date(a, date, rno, timeslot);
         System.out.println(a);
         return true;
@@ -50,11 +59,10 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
         }
     }
 
-    public String bookroom(String campusName, String rno, String date, String timeslot, String UID)
-            throws RemoteException, InterruptedException, MalformedURLException, NotBoundException {
+    public String bookroom(String campusName, String rno, String date, String timeslot, String UID) {
         String bookingid;
-        kkl_i = (KKL_i) Naming.lookup("rmi://localhost:35001/tag2");
-        wst_i = (WST_i) Naming.lookup("rmi://localhost:35002/tag3");
+//        kkl_i = (KKL_i) Naming.lookup("rmi://localhost:35001/tag2");
+//        wst_i = (WST_i) Naming.lookup("rmi://localhost:35002/tag3");
 
         if(campusName.equals("DVL")) {
             bookingid = UUID.randomUUID().toString();
@@ -65,27 +73,27 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
                 System.out.println("CRASH");
             }
         } else if(campusName.equals("KKL")) {
-            bookingid = kkl_i.bookroom(campusName, rno, date, timeslot, UID);
+//            bookingid = kkl_i.bookroom(campusName, rno, date, timeslot, UID);
         } else if(campusName.equals("WST")) {
-            bookingid = wst_i.bookroom(campusName, rno, date, timeslot, UID);
+//            bookingid = wst_i.bookroom(campusName, rno, date, timeslot, UID);
         }
         return "WORKING";
     }
 
-    public int getAvailableTimeSlot(String date) throws RemoteException, InterruptedException {
+    public String getAvailableTimeSlot(String date) {
 //        this.dvl_available_count += this.get_count(date);
         System.out.println("dvl_available_count(before): " + dvl_available_count);
 
-        try {
-            kkl_i=(KKL_i)Naming.lookup("rmi://localhost:35001/tag2");
-            kkl_i.listener(); // create a listener thread on kkl
-            wst_i=(WST_i)Naming.lookup("rmi://localhost:35002/tag3");
-            wst_i.listener();
-        } catch(NotBoundException e ) {
-            System.err.println(e);
-        } catch (MalformedURLException e) {
-            System.err.println(e);
-        }
+//        try {
+//            kkl_i=(KKL_i)Naming.lookup("rmi://localhost:35001/tag2");
+//            kkl_i.listener(); // create a listener thread on kkl
+//            wst_i=(WST_i)Naming.lookup("rmi://localhost:35002/tag3");
+//            wst_i.listener();
+//        } catch(NotBoundException e ) {
+//            System.err.println(e);
+//        } catch (MalformedURLException e) {
+//            System.err.println(e);
+//        }
 
         // KKL
         DVL_sendingThread dvl_st_to_kkl = new DVL_sendingThread(date, 2170);  // sending(date) to kkl (port 2170)
@@ -97,15 +105,16 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
         t1.start();
         t2.start();
 
-        t1.join();
-        t2.join();
+//        t1.join();
+//        t2.join();
 
         this.dvl_available_count += dvl_st_to_kkl.count;
         this.dvl_available_count += dvl_st_to_wst.count;
 
         System.out.println("available rooms: " + dvl_available_count);
 
-        return dvl_available_count;
+//        return dvl_available_count;
+        return "dvl_count";
     }
 
 //    public int get_count(String date) throws RemoteException {
@@ -157,4 +166,19 @@ public class DVL extends UnicastRemoteObject implements DVL_i {
         Thread t =new Thread(lt);
         t.start();
     }
+
+
+    public boolean deleteroom (String rno, String date, String timeslot) {
+        return false;
+    };
+
+    public String cancelBooking (String bookingID, String userid) {
+        return "DEBUG";
+    };
+
+    public String changeReservation (String studentid, String booking_id, String new_date, String new_campus_name, String new_room_no, String new_time_slot) {
+        return "DEBUG";
+    };
+
+
 }

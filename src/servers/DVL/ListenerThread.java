@@ -1,6 +1,6 @@
 package servers.DVL;
 
-import servers.KKL.KKL_i;
+//import servers.KKL.KKL_i;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -14,10 +14,10 @@ import java.rmi.RemoteException;
 public class ListenerThread extends Thread {
 
     String date;
-    DVL_i dvl_i;
+//    DVL_i dvl_i;
 
     ListenerThread() throws RemoteException, MalformedURLException, NotBoundException {
-        dvl_i = (DVL_i) Naming.lookup("rmi://localhost:35000/tag1");
+//        dvl_i = (DVL_i) Naming.lookup("rmi://localhost:35000/tag1");
     }
 
     public void run() {

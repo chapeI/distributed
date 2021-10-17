@@ -2,9 +2,9 @@ package client;
 import client.clientTypes.Admin;
 import client.clientTypes.Student;
 import org.omg.CORBA.ORBPackage.InvalidName;
-import servers.DVL.DVL_i;
-import servers.KKL.KKL_i;
-import servers.WST.WST_i;
+//import servers.DVL.DVL_i;
+//import servers.KKL.KKL_i;
+//import servers.WST.WST_i;
 
 import java.io.BufferedReader;
 import java.io.IOException;
