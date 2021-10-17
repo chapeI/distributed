@@ -22,10 +22,9 @@ import common.*;
 
 public class DVL_START_SERVER {
     public static void main(String args[]) throws Exception {
-        // why do we need a listening thread here
-        ListenerThread lt = new ListenerThread();
-        Thread t1 = new Thread(lt);
-        t1.start();
+//        ListenerThread lt = new ListenerThread();
+//        Thread t1 = new Thread(lt);
+//        t1.start();
 
         // timer code
 
@@ -63,7 +62,7 @@ public class DVL_START_SERVER {
             String name = "Hello1";
             NameComponent path[] = ncRef.to_name( name );
             ncRef.rebind(path, href);
-            System.out.println("HelloServer ready and waiting ...");
+            System.out.println("DVL Server ready and waiting ...");
             // wait for invocations from clients
             orb.run();
 

@@ -2,9 +2,6 @@ package client;
 import client.clientTypes.Admin;
 import client.clientTypes.Student;
 import org.omg.CORBA.ORBPackage.InvalidName;
-//import servers.DVL.DVL_i;
-//import servers.KKL.KKL_i;
-//import servers.WST.WST_i;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,17 +32,17 @@ public class Client {
         org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
         NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
         c1 = cHelper.narrow(ncRef.resolve_str("Hello1"));
-        c2 = cHelper.narrow(ncRef.resolve_str("Hello2"));
-        c3 = cHelper.narrow(ncRef.resolve_str("Hello3"));
+//        c2 = cHelper.narrow(ncRef.resolve_str("Hello2"));
+//        c3 = cHelper.narrow(ncRef.resolve_str("Hello3"));
 
         BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Enter ID");
         uid = br.readLine();
 
-
         if(uid.charAt(3)=='S') {
             student = new Student();
-//            student.run_student(uid, c1, c2, c3);
+            System.out.println("student initialized");
+            student.run_student(uid, c1, c1, c1);  // change to c2 and c3
         } else if(uid.charAt(3)=='A') {
             admin = new Admin();
 //            admin.run_admin(uid, c1, c2, c3);
@@ -53,16 +50,9 @@ public class Client {
             System.out.println("invalid uid. terminating program");
             return;
         }
-
-
-
     }
 
     void start_client() throws Exception {
-
-
-
-
 
     }
 }

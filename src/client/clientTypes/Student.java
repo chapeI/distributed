@@ -18,7 +18,7 @@ public class Student {
     BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
     public Student() throws MalformedURLException, NotBoundException, RemoteException {}
 
-    public void run_student(String uid, c dvl_i, c kkl_i, c wst_i) throws IOException, InterruptedException, NotBoundException {
+    public void run_student(String uid, c c1, c c2, c c3) throws IOException, InterruptedException, NotBoundException {
         String campus = uid.substring(0,3);
 
         System.out.println("1) book room 2) get available times  3) cancel booking");
@@ -40,11 +40,11 @@ public class Student {
                 timeslot = br.readLine();
 
                 if(campus.equals("DVL")) {
-                    String booking_id = dvl_i.bookroom(booking_campus, rno, date, timeslot, uid);
+                    String booking_id = c1.bookroom(booking_campus, rno, date, timeslot, uid);
                 } else if (campus.equals("KKL")) {
-                    String booking_id = kkl_i.bookroom(booking_campus, rno, date, timeslot, uid);
+                    String booking_id = c2.bookroom(booking_campus, rno, date, timeslot, uid);
                 } else if (campus.equals("WST")) {
-                    String booking_id = kkl_i.bookroom(booking_campus, rno, date, timeslot, uid);
+                    String booking_id = c2.bookroom(booking_campus, rno, date, timeslot, uid);
                 }
 
                 break;
@@ -54,11 +54,11 @@ public class Student {
                 date=br.readLine();
 
                 if(campus.equals("DVL")) {
-                    dvl_i.getAvailableTimeSlot(date);
+                    c1.getAvailableTimeSlot(date);
                 } else if (campus.equals("KKL")) {
-                    kkl_i.getAvailableTimeSlot(date);
+                    c2.getAvailableTimeSlot(date);
                 } else if (campus.equals("WST")) {
-                    wst_i.getAvailableTimeSlot(date);
+                    c3.getAvailableTimeSlot(date);
                 }
 
                 break;
@@ -68,11 +68,11 @@ public class Student {
                 booking_id=br.readLine();
 
                 if(campus.equals("DVL")) {
-//                    dvl_i.cancelBooking(booking_id);
+//                    c1.cancelBooking(booking_id);
                 } else if (campus.equals("KKL")) {
-//                    kkl_i.cancelBooking(booking_id);
+//                    c2.cancelBooking(booking_id);
                 } else if (campus.equals("WST")) {
-//                    wst_i.cancelBooking(booking_id);
+//                    c3.cancelBooking(booking_id);
                 }
 
                 break;

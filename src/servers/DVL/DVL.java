@@ -3,8 +3,7 @@ package servers.DVL;
 //import common.cPOA;
 import org.omg.CORBA.ORB;
 import common.*;
-//import servers.KKL.KKL_i;
-//import servers.WST.WST_i;
+
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
