@@ -1,8 +1,10 @@
 package client.clientTypes;
 
-import servers.DVL.DVL_i;
-import servers.KKL.KKL_i;
-import servers.WST.WST_i;
+//import servers.DVL.DVL_i;
+//import servers.KKL.KKL_i;
+//import servers.WST.WST_i;
+
+import common.c;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,12 +17,12 @@ public class Admin {
         System.out.println("Admin()");
     }
 
-    public void run_admin(String uid, DVL_i dvl_i, KKL_i kkl_i, WST_i wst_i) throws IOException {
+    public void run_admin(String uid, c dvl_i, c kkl_i, c wst_i) throws IOException {
         String campus = uid.substring(0,3);
-
         String rno;
         String date;
         String timeslot;
+
         System.out.println("Enter room number (1-10)");
         rno = br.readLine();
         System.out.println("Enter day (Monday to Friday)");

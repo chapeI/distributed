@@ -1,8 +1,11 @@
 package client.clientTypes;
 
-import servers.DVL.DVL_i;
-import servers.KKL.KKL_i;
-import servers.WST.WST_i;
+//import servers.DVL.DVL_i;
+//import servers.KKL.KKL_i;
+//import servers.WST.WST_i;
+
+import common.c;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +18,7 @@ public class Student {
     BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
     public Student() throws MalformedURLException, NotBoundException, RemoteException {}
 
-    public void run_student(String uid, DVL_i dvl_i, KKL_i kkl_i, WST_i wst_i) throws IOException, InterruptedException, NotBoundException {
+    public void run_student(String uid, c dvl_i, c kkl_i, c wst_i) throws IOException, InterruptedException, NotBoundException {
         String campus = uid.substring(0,3);
 
         System.out.println("1) book room 2) get available times  3) cancel booking");
@@ -65,11 +68,11 @@ public class Student {
                 booking_id=br.readLine();
 
                 if(campus.equals("DVL")) {
-                    dvl_i.cancelBooking(booking_id);
+//                    dvl_i.cancelBooking(booking_id);
                 } else if (campus.equals("KKL")) {
-                    kkl_i.cancelBooking(booking_id);
+//                    kkl_i.cancelBooking(booking_id);
                 } else if (campus.equals("WST")) {
-                    wst_i.cancelBooking(booking_id);
+//                    wst_i.cancelBooking(booking_id);
                 }
 
                 break;
