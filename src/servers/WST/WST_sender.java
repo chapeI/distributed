@@ -6,11 +6,11 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
-public class sender extends Thread {
+public class WST_sender extends Thread {
     public int count;
     String date;
     int port;
-    public sender(String date, int port) {
+    public WST_sender(String date, int port) {
         this.date = date;
         this.port = port;
     }

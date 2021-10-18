@@ -37,13 +37,13 @@ public class Student {
                 if(campus.equals("DVL")) {
                     String booking_id = DVL.bookroom(campus_for_booking, rno, date, timeslot, uid);
                 } else if (campus.equals("KKL")) {
-                    System.out.println("reached-0");
                     String booking_id = KKL.bookroom(campus_for_booking, rno, date, timeslot, uid);
                 } else if (campus.equals("WST")) {
-//                    String booking_id = WST.bookroom(campus_for_booking, rno, date, timeslot, uid);
+                    String booking_id = WST.bookroom(campus_for_booking, rno, date, timeslot, uid);
                 }
                 break;
-            } case 2: {
+            }
+            case 2: {
                 String date;
                 System.out.println("enter date");
                 date=br.readLine();
@@ -57,7 +57,8 @@ public class Student {
                 }
 
                 break;
-            } case 3: {
+            }
+            case 3: {
                 String booking_id;
                 System.out.println("enter booking_id");
                 booking_id=br.readLine();

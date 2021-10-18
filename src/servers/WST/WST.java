@@ -5,6 +5,7 @@ import org.omg.CORBA.ORB;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class WST extends cPOA {
     private ORB orb;
@@ -50,8 +51,37 @@ public class WST extends cPOA {
     }
 
     // following methods need to be synchronized
-    public String bookroom(String campusName, String rno, String date, String timeslot, String UID) {
-        return null;
+    public String bookroom(String campus_for_booking, String rno, String date, String timeslot, String UID) {
+        String bookingid;
+        switch (campus_for_booking) {
+            case "WST":
+                bookingid = UUID.randomUUID().toString();
+                if (a.get(date).get(rno).get(timeslot) == "available") {
+                    a.get(date).get(rno).put(timeslot, "BOOKED");
+                    System.out.println(a);
+                } else {
+                    System.out.println("CRASH");
+                }
+                break;
+            case "DVL":
+                String s = serialize_("BR", campus_for_booking, rno, date, timeslot);
+                WST_sender bookroom_in_dvl = new WST_sender(s, 2172);
+                Thread t = new Thread(bookroom_in_dvl);
+                t.start();
+                break;
+            case "KKL":
+                String s1 = serialize_("BR", campus_for_booking, rno, date, timeslot);
+                WST_sender bookroom_in_kkl = new WST_sender(s1, 2170);
+                Thread t1 = new Thread(bookroom_in_kkl);
+                t1.start();
+                break;
+        }
+        return "WORKING";
+    }
+    String serialize_(String op, String campus, String rno, String date, String timeslot) {
+        String s = op.concat(campus).concat(rno).concat(date).concat(timeslot);
+        System.out.println("s: " + s);
+        return s;
     }
 
     public String getAvailableTimeSlot(String date) throws InterruptedException {
@@ -59,10 +89,13 @@ public class WST extends cPOA {
         this.wst_available_count += this.get_count(date);
         System.out.println("\nWST: (before) just available rooms in wst : " + wst_available_count);
 
-        sender s = new sender(date, 2172);
+        // append GA (get-available) before each date
+        String date_ = "GA".concat(date);
+
+        WST_sender s = new WST_sender(date_, 2172);
         System.out.println("WST: sending request to DVL-Listener for number of available rooms for " + date);
 
-        sender s2 = new sender(date, 2170);
+        WST_sender s2 = new WST_sender(date_, 2170);
         System.out.println("WST: sending request to KKL-Listener for number of available rooms for " + date);
 
         Thread t1=new Thread(s);

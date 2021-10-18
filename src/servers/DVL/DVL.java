@@ -51,23 +51,31 @@ public class DVL extends cPOA {
     // synchronize
     public String bookroom(String campus_for_booking, String rno, String date, String timeslot, String UID) {
         String bookingid;
-
-        if(campus_for_booking.equals("DVL")) {
-            System.out.println("reached-5");
-            bookingid = UUID.randomUUID().toString();
-            if(a.get(date).get(rno).get(timeslot) == "available") {
-                a.get(date).get(rno).put(timeslot,"BOOKED");
-                System.out.println(a);
-            } else {
-                System.out.println("CRASH");
+        switch (campus_for_booking) {
+            case "DVL":
+                System.out.println("reached-5");
+                bookingid = UUID.randomUUID().toString();
+                if (a.get(date).get(rno).get(timeslot) == "available") {
+                    a.get(date).get(rno).put(timeslot, "BOOKED");
+                    System.out.println(a);
+                } else {
+                    System.out.println("CRASH");
+                }
+                break;
+            case "KKL": {
+                String s = serialize_("BR", campus_for_booking, rno, date, timeslot);
+                DVL_sender bookroom_in_kkl = new DVL_sender(s, 2170);
+                Thread t = new Thread(bookroom_in_kkl);
+                t.start();
+                break;
             }
-        } else if(campus_for_booking.equals("KKL")) {
-            String s = serialize_("BR", campus_for_booking, rno, date, timeslot);
-            DVL_sender bookroom_in_kkl = new DVL_sender(s, 2170);
-            Thread t = new Thread(bookroom_in_kkl);
-            t.start();
-        } else if(campus_for_booking.equals("WST")) {
-//            bookingid = wst_i.bookroom(campus_for_booking, rno, date, timeslot, UID);
+            case "WST": {
+                String s1 = serialize_("BR", campus_for_booking, rno, date, timeslot);
+                DVL_sender bookroom_in_wst = new DVL_sender(s1, 2171);
+                Thread t1 = new Thread(bookroom_in_wst);
+                t1.start();
+                break;
+            }
         }
         return "WORKING";
     }
@@ -88,24 +96,24 @@ public class DVL extends cPOA {
         DVL_sender s1 = new DVL_sender(date_, 2170);  // sending(date) to kkl (thread opened on port 2170)
         System.out.println("DVL: sending request to KKL-Listener for number of available rooms for " + date);
 
-//        DVL_sender s2 = new DVL_sender(date_, 2171);
-//        System.out.println("DVL: sending request to WST-Listener for number of available rooms for " + date);
+        DVL_sender s2 = new DVL_sender(date_, 2171);
+        System.out.println("DVL: sending request to WST-Listener for number of available rooms for " + date);
 
         Thread t1=new Thread(s1);
-//        Thread t2 = new Thread(s2);
+        Thread t2 = new Thread(s2);
 
         t1.start();
-//        t2.start();
+        t2.start();
         t1.join();
-//        t2.join();
+        t2.join();
 
         System.out.println("DVL: request processed from KKL-Listener. count stored in thread");
         System.out.println("DVL: kkl has: " + s1.count + " available room(s)");
         this.dvl_available_count += s1.count;
 
-//        System.out.println("DVL: request processed from WST-Listener. count stored in thread");
-//        System.out.println("DVL: wst has: " + s2.count + " available room(s)");
-//        this.dvl_available_count += s2.count;
+        System.out.println("DVL: request processed from WST-Listener. count stored in thread");
+        System.out.println("DVL: wst has: " + s2.count + " available room(s)");
+        this.dvl_available_count += s2.count;
 
         System.out.println("DVL: (after) Total amount of available rooms for " + date +", across all three campuses is => " + dvl_available_count);
 

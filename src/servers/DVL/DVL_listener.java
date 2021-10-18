@@ -16,7 +16,6 @@ public class DVL_listener extends Thread {
     public void run() {
         DatagramSocket socket = null;
         try {
-//            System.out.println("DVL-Listener: run()");
             socket = new DatagramSocket(2172);  //  DVL: 2172, KKL: 2170, WST: 2171
             byte[] b = new byte[1000];
 
@@ -26,7 +25,6 @@ public class DVL_listener extends Thread {
                 DatagramPacket request = new DatagramPacket(b, b.length);
                 socket.receive(request);
                 System.out.println("\nDVL-Listener: request received (dunno from who)");
-                System.out.println("reached-4");
 
                 // PROCESS
                 String r = new String(request.getData());
