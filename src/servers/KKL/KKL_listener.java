@@ -6,9 +6,9 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 
 
-public class listener extends Thread {
+public class KKL_listener extends Thread {
     String date;
-    listener() {}
+    KKL_listener() {}
     KKL kkl = new KKL();
 
     public void run() {

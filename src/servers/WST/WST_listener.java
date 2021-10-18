@@ -5,9 +5,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
-public class listener extends Thread {
+public class WST_listener extends Thread {
     String date;
-    listener() {}
+    WST_listener() {}
     WST wst = new WST();
 
     public void run() {

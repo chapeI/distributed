@@ -7,11 +7,11 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 
-public class sender extends Thread {
+public class DVL_sender extends Thread {
     public int count;
     String date;
     int port;
-    public sender(String date, int port) {
+    public DVL_sender(String date, int port) {
         this.date = date;
         this.port = port;
     }

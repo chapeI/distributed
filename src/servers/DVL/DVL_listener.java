@@ -6,9 +6,9 @@ import java.net.DatagramSocket;
 import java.net.MalformedURLException;
 import java.net.SocketException;
 
-public class listener extends Thread {
+public class DVL_listener extends Thread {
     String date;
-    listener() {
+    DVL_listener() {
         System.out.println("starting a thread for listening. opening PORT 2172 (DVL-listener listening for requests)");  // <-- CHANGE CODE
     }
     DVL dvl = new DVL();
@@ -29,9 +29,13 @@ public class listener extends Thread {
 
                 // PROCESS
                 String r = new String(request.getData());
-                System.out.println("r: " + r.trim());
+                String req = r.substring(0,2);
+                System.out.println("req: " + req);
 
-
+                if(req.equals("BR")) {
+                    System.out.println("bookroom requested");
+                    dvl.bookroom("DVL", "2", "Monday", "4:00", "DVLSTEST");
+                }
 
 //                this.date = r.trim();
 //                System.out.println("DVL-Listener: processing request for available rooms on: " + this.date);

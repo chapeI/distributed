@@ -51,29 +51,29 @@ public class KKL extends cPOA {
     }
 
     // synchronize
-    public String bookroom(String campusName, String rno, String date, String timeslot, String UID) {
+    public String bookroom(String campus_for_booking, String rno, String date, String timeslot, String UID) {
         System.out.println("reached-1");
         String bookingid;
 
-        if(campusName.equals("KKL")) {
+        if(campus_for_booking.equals("KKL")) {
             bookingid = UUID.randomUUID().toString();
-            if(a.get(date).get(rno).get(timeslot) == "available") {
-                a.get(date).get(rno).put(timeslot,"WORKING");
-                System.out.println(a);
-            } else {
-                System.out.println("CRASH");
-            }
-        } else if(campusName.equals("DVL")) {
+//            if(a.get(date).get(rno).get(timeslot) == "available") {
+//                a.get(date).get(rno).put(timeslot,"WORKING");
+//                System.out.println(a);
+//            } else {
+//                System.out.println("CRASH");
+//            }
+        } else if(campus_for_booking.equals("DVL")) {
             System.out.println("reached-2");
             String test = "BR";
-            sender s = new sender(test, 2172);
+            KKL_sender s = new KKL_sender(test, 2172);
             Thread t = new Thread(s);
             t.start();
 //            int test2 = s.count;
 //            System.out.println("reached-4: " + test2);
-//            bookingid = kkl_i.bookroom(campusName, rno, date, timeslot, UID);
-        } else if(campusName.equals("WST")) {
-//            bookingid = wst_i.bookroom(campusName, rno, date, timeslot, UID);
+//            bookingid = kkl_i.bookroom(campus_for_booking, rno, date, timeslot, UID);
+        } else if(campus_for_booking.equals("WST")) {
+//            bookingid = wst_i.bookroom(campus_for_booking, rno, date, timeslot, UID);
         }
         return "WORKING";
     }
@@ -83,10 +83,10 @@ public class KKL extends cPOA {
         this.kkl_available_count += this.get_count(date);
         System.out.println("\nKKL: (before) just available rooms in kkl : " + kkl_available_count);
 
-        sender s1 = new sender(date, 2172);
+        KKL_sender s1 = new KKL_sender(date, 2172);
         System.out.println("KKL: sending request to DVL-Listener for number of available rooms for " + date);
 
-        sender s2 = new sender(date, 2171);
+        KKL_sender s2 = new KKL_sender(date, 2171);
         System.out.println("KKL: sending request to WST-Listener for number of available rooms for " + date);
 
         Thread t1=new Thread(s1);

@@ -49,21 +49,22 @@ public class DVL extends cPOA {
     };
 
     // synchronize
-    public String bookroom(String campusName, String rno, String date, String timeslot, String UID) {
+    public String bookroom(String campus_for_booking, String rno, String date, String timeslot, String UID) {
         String bookingid;
 
-        if(campusName.equals("DVL")) {
+        if(campus_for_booking.equals("DVL")) {
+            System.out.println("reached-5");
             bookingid = UUID.randomUUID().toString();
             if(a.get(date).get(rno).get(timeslot) == "available") {
-                a.get(date).get(rno).put(timeslot,"WORKING");
+                a.get(date).get(rno).put(timeslot,"BOOKED");
                 System.out.println(a);
             } else {
                 System.out.println("CRASH");
             }
-        } else if(campusName.equals("KKL")) {
-//            bookingid = kkl_i.bookroom(campusName, rno, date, timeslot, UID);
-        } else if(campusName.equals("WST")) {
-//            bookingid = wst_i.bookroom(campusName, rno, date, timeslot, UID);
+        } else if(campus_for_booking.equals("KKL")) {
+//            bookingid = kkl_i.bookroom(campus_for_booking, rno, date, timeslot, UID);
+        } else if(campus_for_booking.equals("WST")) {
+//            bookingid = wst_i.bookroom(campus_for_booking, rno, date, timeslot, UID);
         }
         return "WORKING";
     }
@@ -73,10 +74,10 @@ public class DVL extends cPOA {
         this.dvl_available_count += this.get_count(date);
         System.out.println("\nDVL: (before) just available rooms in dvl : " + dvl_available_count);
 
-        sender s1 = new sender(date, 2170);  // sending(date) to kkl (thread opened on port 2170)
+        DVL_sender s1 = new DVL_sender(date, 2170);  // sending(date) to kkl (thread opened on port 2170)
         System.out.println("DVL: sending request to KKL-Listener for number of available rooms for " + date);
 
-        sender s2 = new sender(date, 2171);
+        DVL_sender s2 = new DVL_sender(date, 2171);
         System.out.println("DVL: sending request to WST-Listener for number of available rooms for " + date);
 
         Thread t1=new Thread(s1);

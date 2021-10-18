@@ -11,7 +11,7 @@ import org.omg.PortableServer.POAHelper;
 
 public class start {
     public static void main(String[] args) {
-        listener l=new listener();
+        WST_listener l=new WST_listener();
         Thread t =new Thread(l);
         t.start();
 
