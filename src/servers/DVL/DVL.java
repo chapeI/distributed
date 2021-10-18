@@ -1,24 +1,20 @@
 package servers.DVL;
 
-//import common.cPOA;
 import org.omg.CORBA.ORB;
 import common.*;
 
-
-import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
 public class DVL extends cPOA {
 //    KKL_i kkl_i;
 //    WST_i wst_i;
     int dvl_available_count = 0;  // available rooms in DVL
-    static HashMap<String,HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();  // 	HM<date, HM<rno, HM<time, b_id>>>
+    static HashMap<String,
+            HashMap<String,
+                    HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();  // 	HM<date, HM<rno, HM<time, b_id>>>
     DVL() throws RemoteException {
         super();
         make_new_date(a, "Tuesday", "5", "6:00");
@@ -57,6 +53,17 @@ public class DVL extends cPOA {
         }
     }
 
+    public void listener() throws RemoteException, MalformedURLException, NotBoundException {
+        ListenerThread lt=new ListenerThread();
+        Thread t =new Thread(lt);
+        t.start();
+    }
+
+    public String changeReservation (String studentid, String booking_id, String new_date, String new_campus_name, String new_room_no, String new_time_slot) {
+        return "DEBUG";
+    };
+
+    // things to synchronize
     public String bookroom(String campusName, String rno, String date, String timeslot, String UID) {
         String bookingid;
 //        kkl_i = (KKL_i) Naming.lookup("rmi://localhost:35001/tag2");
@@ -79,7 +86,7 @@ public class DVL extends cPOA {
     }
 
     public String getAvailableTimeSlot(String date) {
-//        this.dvl_available_count += this.get_count(date);
+        this.dvl_available_count += this.get_count(date);
         System.out.println("dvl_available_count(before): " + dvl_available_count);
 
 //        try {
@@ -114,69 +121,48 @@ public class DVL extends cPOA {
 //        return dvl_available_count;
         return "fix_dvl_available_count";
     }
+    public int get_count(String date) {
+        int count = 0;
+        HashMap<String, HashMap<String, String>> day;
+        day = a.get(date);
+//        System.out.println(day);
 
-//    public int get_count(String date) throws RemoteException {
-//        int count = 0;
-//        HashMap<String, HashMap<String, String>> day;
-//        day = a.get(date);
-////        System.out.println(day);
-//
-//        for(var r: day.entrySet()) {
-////            System.out.println("rno: " + r.getKey());
-//            for(var t : r.getValue().entrySet()) {
-////                System.out.println("t: " + t.getValue());
-//                String time = t.getValue();
-//                if(time.equals("available")) {
-//                    count += 1;
-//                }
-//            }
-//        }
-////        System.out.println("count: " + count);
-//        return count;
-//    }
-
-//    public void cancelBooking(String bookingid) throws RemoteException {
-//        for(var d : a.entrySet()) {
-////            System.out.println("1. d: " + d);
-////            System.out.println("2. d: " + d.getKey());
-//            for(var rno : d.getValue().entrySet()) {
-////                System.out.println("3. rno: " + rno.getKey());
-//                for(var t : rno.getValue().entrySet()) {
-////                    System.out.println("4. t: " + t);
-////                    System.out.println("5. t: " + t.getKey());
-//                    String booking = t.getValue();
-//                    if(booking.equals(bookingid)) {
-//                        System.out.println(bookingid + " found at {" + d.getKey() + " in rno=" + rno.getKey() + " @" + t.getKey() + "} (KKL campus)");
-//                        a.get(d.getKey()).get(rno.getKey()).put(t.getKey(), "available");  // cancelling and changing b_id to available
-//                        System.out.println("booking_id cancelled and changed to available. check data-structure 'a' for proof");
-//                        System.out.println(a);
-//                        return;
-//                    } else {
-//                        System.out.println("no bookings found for " + bookingid);
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-    public void listener() throws RemoteException, MalformedURLException, NotBoundException {
-        ListenerThread lt=new ListenerThread();
-        Thread t =new Thread(lt);
-        t.start();
+        for(Map.Entry<String, HashMap<String, String>> rno : day.entrySet()) {
+            // System.out.println("rno: " + rno.getKey());
+            for(Map.Entry<String, String> t : rno.getValue().entrySet()) {
+                // System.out.println("t: " + t.getValue());
+                String time = t.getValue();
+                if(time.equals("available")) {
+                    count += 1;
+                }
+            }
+        }
+//        System.out.println("count: " + count);
+        return count;
     }
 
+    public String cancelBooking(String bookingid, String userid) {
+        for(Map.Entry<String, HashMap<String, HashMap<String, String>>> d : a.entrySet()) {
+            for(Map.Entry<String, HashMap<String, String>> rno : d.getValue().entrySet()) {
+                for(Map.Entry<String, String> t : rno.getValue().entrySet()) {
+                    String booking = t.getValue();
+                    if(booking.equals(bookingid)) {
+                        System.out.println(bookingid + " found at {" + d.getKey() + " in rno=" + rno.getKey() + " @" + t.getKey() + "} (DVL campus)");
+                        a.get(d.getKey()).get(rno.getKey()).put(t.getKey(), "available");  // cancelling and changing b_id to available
+                        System.out.println("booking_id cancelled and changed to available. check data-structure 'a' for proof");
+                        System.out.println(a);
+                        return "canceled and made available";
+                    } else {
+                        System.out.println("no bookings found for " + bookingid);
+                        return "ugh. debug";
+                    }
+                }
+            }
+        }
+        return "debug_cancel_booking";
+    }
 
     public boolean deleteroom (String rno, String date, String timeslot) {
         return false;
     };
-
-    public String cancelBooking (String bookingID, String userid) {
-        return "DEBUG";
-    };
-
-    public String changeReservation (String studentid, String booking_id, String new_date, String new_campus_name, String new_room_no, String new_time_slot) {
-        return "DEBUG";
-    };
-
-
 }
