@@ -11,6 +11,9 @@ import org.omg.PortableServer.POAHelper;
 
 public class start {
     public static void main(String[] args) {
+        listener l=new listener();
+        Thread t =new Thread(l);
+        t.start();
 
         try{
             ORB orb = ORB.init(args, null);

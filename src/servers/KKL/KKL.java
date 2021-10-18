@@ -71,32 +71,37 @@ public class KKL extends cPOA {
     }
 
     public String getAvailableTimeSlot(String date) throws InterruptedException {
+        this.kkl_available_count = 0;
         this.kkl_available_count += this.get_count(date);
         System.out.println("\nKKL: (before) just available rooms in kkl : " + kkl_available_count);
 
-        sender sending_request_to_DVL_listener = new sender(date, 2172);
+        sender s1 = new sender(date, 2172);
         System.out.println("KKL: sending request to DVL-Listener for number of available rooms for " + date);
-//        SendingThread_KKL kkl_to_wst = new SendingThread_KKL(date, 2171);
 
-        Thread t1=new Thread(sending_request_to_DVL_listener);
-//        Thread t2 = new Thread(kkl_to_wst);
+        sender s2 = new sender(date, 2171);
+        System.out.println("KKL: sending request to WST-Listener for number of available rooms for " + date);
+
+        Thread t1=new Thread(s1);
+        Thread t2 = new Thread(s2);
 
         t1.start();
-//        t2.start();
-
+        t2.start();
         t1.join();
-//        t2.join();
+        t2.join();
 
-        System.out.println("KKL: sending request processed. count saved in sending thread. retrieving count KKL_Sender");
-        System.out.println("KKL: dvl has: " + sending_request_to_DVL_listener.count + " available room(s)");
+        System.out.println("KKL: request processed from DVL-Listener. count stored in thread");
+        System.out.println("KKL: dvl has: " + s1.count + " available room(s)");
+        this.kkl_available_count += s1.count;
 
-        this.kkl_available_count += sending_request_to_DVL_listener.count;  // can access kkl count?
-//        this.kkl_available_count += kkl_to_wst.count;
+        System.out.println("KKL: request processed from WST-Listener. count stored in thread");
+        System.out.println("KKL: wst has: " + s2.count + " available room(s)");
+        this.kkl_available_count += s2.count;
 
         System.out.println("KKL: (after) Total amount of available rooms for " + date +", across all three campuses is => " + kkl_available_count);
 
-//        return kkl_available_count;
         return "fix_kkl_available_count";
+
+
     }
     public int get_count(String date) {
         int count = 0;

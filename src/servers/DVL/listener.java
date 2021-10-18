@@ -6,13 +6,13 @@ import java.net.DatagramSocket;
 import java.net.MalformedURLException;
 import java.net.SocketException;
 
-public class Listener extends Thread {
+public class listener extends Thread {
     String date;
-    Listener() {}
+    listener() {}
     DVL dvl = new DVL();
 
     public void run() {
-        System.out.println("DVL PORT 2172: open (listening for requests)");  // <-- CHANGE CODE
+        System.out.println("starting a thread for listening. opening PORT 2172 (DVL-listener listening for requests)");  // <-- CHANGE CODE
         DatagramSocket socket = null;
         try {
             socket = new DatagramSocket(2172);  //  DVL: 2172, KKL: 2170, WST: 2171

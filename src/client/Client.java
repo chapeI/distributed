@@ -37,11 +37,10 @@ public class Client {
 
         if(uid.charAt(3)=='S') {
             student = new Student();
-            System.out.println("student initialized");
             student.run_student(uid, c1, c2, c3);
         } else if(uid.charAt(3)=='A') {
             admin = new Admin();
-//            admin.run_admin(uid, c1, c2, c3);
+            admin.run_admin(uid, c1, c2, c3);
         } else {
             System.out.println("invalid uid. terminating program");
             return;

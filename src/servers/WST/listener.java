@@ -1,44 +1,41 @@
-package servers.KKL;
+package servers.WST;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
-
-public class Listener extends Thread {
+public class listener extends Thread {
     String date;
-    Listener() {}
-    KKL kkl = new KKL();
+    listener() {}
+    WST wst = new WST();
 
     public void run() {
-        System.out.println("KKL PORT 2170: open (listening for requests)");  // <-- CHANGE CODE
+        System.out.println("starting a thread for listening. opening PORT 2171 (WST-listener listening for requests)");  // <-- CHANGE CODE
         DatagramSocket socket = null;
         try {
-            socket = new DatagramSocket(2170);  // (D-FIX-VL: 2172, KKL: 2170, WST: 2171)
+            socket = new DatagramSocket(2171);  //  DVL: 2172, KKL: 2170, WST: 2171
             byte[] b = new byte[1000];
 
             while(true) {
                 // RECEIVE
                 DatagramPacket packet = new DatagramPacket(b, b.length);
                 socket.receive(packet);
-                System.out.println("\nKKL-Listener: request received (dunno from who)");
+                System.out.println("\nWST-Listener: request received (dunno from who)");
 
                 // PROCESS
                 String s = new String(packet.getData());
                 this.date = s.trim();
-
-                System.out.println("KKL-Listener: processing request for available rooms on: " + this.date);
-                int c = kkl.get_count(date);
-                System.out.println("KKL-Listener: Processed. For " + date + ", available rooms is, count => " + c);
+                System.out.println("WST-Listener: processing request for available rooms on: " + this.date);
+                int c = wst.get_count(date);
+                System.out.println("WST-Listener: Processed. For " + date + ", available rooms is, count => " + c);
 
                 // SEND
-
                 byte [] reply = Integer.toString(c).getBytes();
                 DatagramPacket responsePacket = new DatagramPacket(reply,
                         reply.length, packet.getAddress(), packet.getPort());
                 socket.send(responsePacket);
-                System.out.println("KKL-Listener: sending count " + c + " to the requester");
+                System.out.println("WST-Listener: sending count " + c + " to the requester");
             }
         }
         catch (SocketException e) {
@@ -48,7 +45,7 @@ public class Listener extends Thread {
         } finally {
             if(socket != null) {
                 socket.close();
-                System.out.println("KKL-Listener: closing KKL socket. shouldn't see this");
+                System.out.println("WST-Listener: closing WST socket. shouldn't see this");
             }
         }
     }

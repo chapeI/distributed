@@ -51,8 +51,6 @@ public class DVL extends cPOA {
     // synchronize
     public String bookroom(String campusName, String rno, String date, String timeslot, String UID) {
         String bookingid;
-//        kkl_i = (KKL_i) Naming.lookup("rmi://localhost:35001/tag2");
-//        wst_i = (WST_i) Naming.lookup("rmi://localhost:35002/tag3");
 
         if(campusName.equals("DVL")) {
             bookingid = UUID.randomUUID().toString();
@@ -70,29 +68,36 @@ public class DVL extends cPOA {
         return "WORKING";
     }
 
-    public String getAvailableTimeSlot(String date) {
+    public String getAvailableTimeSlot(String date) throws InterruptedException {
+        this.dvl_available_count = 0;
         this.dvl_available_count += this.get_count(date);
-        System.out.println("dvl_available_count(before): " + dvl_available_count);
+        System.out.println("\nDVL: (before) just available rooms in dvl : " + dvl_available_count);
 
-        sender dvl_to_kkl = new sender(date, 2170);  // sending(date) to kkl (thread opened on port 2170)
-//        DVL_sendingThread dvl_st_to_wst = new DVL_sendingThread(date, 2171);
+        sender s1 = new sender(date, 2170);  // sending(date) to kkl (thread opened on port 2170)
+        System.out.println("DVL: sending request to KKL-Listener for number of available rooms for " + date);
 
-        Thread t1=new Thread(dvl_to_kkl);
-//        Thread t2 = new Thread(dvl_st_to_wst);
+        sender s2 = new sender(date, 2171);
+        System.out.println("DVL: sending request to WST-Listener for number of available rooms for " + date);
+
+        Thread t1=new Thread(s1);
+        Thread t2 = new Thread(s2);
 
         t1.start();
-//        t2.start();
+        t2.start();
+        t1.join();
+        t2.join();
 
-//        t1.join();
-//        t2.join();
+        System.out.println("DVL: request processed from KKL-Listener. count stored in thread");
+        System.out.println("DVL: kkl has: " + s1.count + " available room(s)");
+        this.dvl_available_count += s1.count;
 
-        this.dvl_available_count += dvl_to_kkl.count;
-//        this.dvl_available_count += dvl_st_to_wst.count;
+        System.out.println("DVL: request processed from WST-Listener. count stored in thread");
+        System.out.println("DVL: wst has: " + s2.count + " available room(s)");
+        this.dvl_available_count += s2.count;
 
-        System.out.println("available rooms: " + dvl_available_count);
+        System.out.println("DVL: (after) Total amount of available rooms for " + date +", across all three campuses is => " + dvl_available_count);
 
-//        return dvl_available_count;
-        return "fix_dvl_available_count";
+        return "fix_kkl_available_count";
     }
     public int get_count(String date) {
         int count = 0;
