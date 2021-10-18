@@ -34,7 +34,9 @@ public class Student {
                 if(campus.equals("DVL")) {
                     String booking_id = c1.bookroom(booking_campus, rno, date, timeslot, uid);
                 } else if (campus.equals("KKL")) {
+                    System.out.println("reached-0");
                     String booking_id = c2.bookroom(booking_campus, rno, date, timeslot, uid);
+                    System.out.println(booking_id);
                 } else if (campus.equals("WST")) {
                     String booking_id = c2.bookroom(booking_campus, rno, date, timeslot, uid);
                 }

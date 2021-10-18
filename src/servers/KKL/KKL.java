@@ -52,6 +52,7 @@ public class KKL extends cPOA {
 
     // synchronize
     public String bookroom(String campusName, String rno, String date, String timeslot, String UID) {
+        System.out.println("reached-1");
         String bookingid;
 
         if(campusName.equals("KKL")) {
@@ -63,6 +64,13 @@ public class KKL extends cPOA {
                 System.out.println("CRASH");
             }
         } else if(campusName.equals("DVL")) {
+            System.out.println("reached-2");
+            String test = "BR";
+            sender s = new sender(test, 2172);
+            Thread t = new Thread(s);
+            t.start();
+//            int test2 = s.count;
+//            System.out.println("reached-4: " + test2);
 //            bookingid = kkl_i.bookroom(campusName, rno, date, timeslot, UID);
         } else if(campusName.equals("WST")) {
 //            bookingid = wst_i.bookroom(campusName, rno, date, timeslot, UID);

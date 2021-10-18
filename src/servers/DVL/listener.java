@@ -25,20 +25,25 @@ public class listener extends Thread {
                 DatagramPacket request = new DatagramPacket(b, b.length);
                 socket.receive(request);
                 System.out.println("\nDVL-Listener: request received (dunno from who)");
+                System.out.println("reached-4");
 
                 // PROCESS
-                String s = new String(request.getData());
-                this.date = s.trim();
-                System.out.println("DVL-Listener: processing request for available rooms on: " + this.date);
-                int c = dvl.get_count(date);
-                System.out.println("DVL-Listener: Processed. For " + date + ", available rooms is, count => " + c);
+                String r = new String(request.getData());
+                System.out.println("r: " + r.trim());
 
-                // SEND
-                byte [] reply = Integer.toString(c).getBytes();
-                DatagramPacket responsePacket = new DatagramPacket(reply,
-                        reply.length, request.getAddress(), request.getPort());
-                socket.send(responsePacket);
-                System.out.println("DVL-Listener: sending count " + c + " to the requester");
+
+
+//                this.date = r.trim();
+//                System.out.println("DVL-Listener: processing request for available rooms on: " + this.date);
+//                int c = dvl.get_count(date);
+//                System.out.println("DVL-Listener: Processed. For " + date + ", available rooms is, count => " + c);
+//
+//                // SEND
+//                byte [] reply = Integer.toString(c).getBytes();
+//                DatagramPacket responsePacket = new DatagramPacket(reply,
+//                        reply.length, request.getAddress(), request.getPort());
+//                socket.send(responsePacket);
+//                System.out.println("DVL-Listener: sending count " + c + " to the requester");
             }
         }
         catch (SocketException e) {
