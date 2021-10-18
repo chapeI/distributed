@@ -65,16 +65,14 @@ public class KKL extends cPOA {
             }
         } else if(campus_for_booking.equals("DVL")) {
             String s = serialize_("BR", campus_for_booking, rno, date, timeslot);
-            KKL_sender book = new KKL_sender(s, 2172);
-            Thread t = new Thread(book);
+            KKL_sender bookroom_in_dvl = new KKL_sender(s, 2172);
+            Thread t = new Thread(bookroom_in_dvl);
             t.start();
-//            kkl.bookroom(campus_for_booking, rno, date, timeslot, UID);
         } else if(campus_for_booking.equals("WST")) {
 //            bookingid = wst_i.bookroom(campus_for_booking, rno, date, timeslot, UID);
         }
         return "WORKING";
     }
-
     String serialize_(String op, String campus, String rno, String date, String timeslot) {
         String s = op.concat(campus).concat(rno).concat(date).concat(timeslot);
         System.out.println("s: " + s);

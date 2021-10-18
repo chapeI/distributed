@@ -31,7 +31,7 @@ public class DVL_listener extends Thread {
                 // PROCESS
                 String r = new String(request.getData());
                 String op = r.substring(0,2);
-                System.out.println("op: " + op);
+                System.out.println("DVL_Listener: op: " + op);
 
                 // bookRoom()
                 if(op.equals("BR")) {
@@ -61,7 +61,6 @@ public class DVL_listener extends Thread {
                     socket.send(responsePacket);
                     System.out.println("DVL-Listener: sending count " + c + " to the requester");
                 }
-
 
             }
         }

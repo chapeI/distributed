@@ -62,11 +62,19 @@ public class DVL extends cPOA {
                 System.out.println("CRASH");
             }
         } else if(campus_for_booking.equals("KKL")) {
-//            bookingid = kkl_i.bookroom(campus_for_booking, rno, date, timeslot, UID);
+            String s = serialize_("BR", campus_for_booking, rno, date, timeslot);
+            DVL_sender bookroom_in_kkl = new DVL_sender(s, 2170);
+            Thread t = new Thread(bookroom_in_kkl);
+            t.start();
         } else if(campus_for_booking.equals("WST")) {
 //            bookingid = wst_i.bookroom(campus_for_booking, rno, date, timeslot, UID);
         }
         return "WORKING";
+    }
+    String serialize_(String op, String campus, String rno, String date, String timeslot) {
+        String s = op.concat(campus).concat(rno).concat(date).concat(timeslot);
+        System.out.println("s: " + s);
+        return s;
     }
 
     public String getAvailableTimeSlot(String date) throws InterruptedException {
