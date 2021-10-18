@@ -17,7 +17,7 @@ public class Student {
         int n = Integer.parseInt(br.readLine());
         switch(n) {
             case 1: {
-                String booking_campus;
+                String campus_for_booking;
                 String rno;
                 String date;
                 String timeslot;
@@ -26,7 +26,7 @@ public class Student {
 //                String timeslot = "4:00";
 
                 System.out.println("Enter booking campus (KKL, WST, DVL)");
-                booking_campus = br.readLine();
+                campus_for_booking = br.readLine();
                 System.out.println("Enter day (MON, TUE, WED, THU, FRI)");
                 date = br.readLine();
                 System.out.println("Enter room number (1-9)");
@@ -35,12 +35,12 @@ public class Student {
                 timeslot = br.readLine();
 
                 if(campus.equals("DVL")) {
-                    String booking_id = DVL.bookroom(booking_campus, rno, date, timeslot, uid);
+                    String booking_id = DVL.bookroom(campus_for_booking, rno, date, timeslot, uid);
                 } else if (campus.equals("KKL")) {
                     System.out.println("reached-0");
-                    String booking_id = KKL.bookroom(booking_campus, rno, date, timeslot, uid);
+                    String booking_id = KKL.bookroom(campus_for_booking, rno, date, timeslot, uid);
                 } else if (campus.equals("WST")) {
-//                    String booking_id = WST.bookroom(booking_campus, rno, date, timeslot, uid);
+//                    String booking_id = WST.bookroom(campus_for_booking, rno, date, timeslot, uid);
                 }
                 break;
             } case 2: {

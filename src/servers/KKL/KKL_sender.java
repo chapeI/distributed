@@ -7,7 +7,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 
 public class KKL_sender extends Thread {
-    public int count;
+    public int count = 0;
     String date;
     int port;
     public KKL_sender(String date, int port) {
@@ -29,14 +29,14 @@ public class KKL_sender extends Thread {
             System.out.println("sender: sending a request to " + port + ". (go there)");
 
             // RECEIVE
-//            byte[] r = new byte[1024];
-//            DatagramPacket response = new DatagramPacket(r, r.length);
-//            socket.receive(response);
-//            String s = new String(response.getData());
-//            String s_ = s.trim();
-//            System.out.println("sender: receives back: " + s_ + ". Storing in sender. KKL can access sender.count");
-//
-//            this.count = Integer.parseInt(s_);
+            byte[] r = new byte[1024];
+            DatagramPacket response = new DatagramPacket(r, r.length);
+            socket.receive(response);
+            String s = new String(response.getData());
+            String s_ = s.trim();
+            System.out.println("sender: receives back: " + s_ + ". Storing in sender. KKL can access sender.count");
+
+            this.count = Integer.parseInt(s_);
         }
         catch (SocketException e) {
             System.out.println("SocketException: " + e.getMessage());

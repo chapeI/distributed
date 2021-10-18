@@ -57,19 +57,17 @@ public class KKL extends cPOA {
 
         if(campus_for_booking.equals("KKL")) {
             bookingid = UUID.randomUUID().toString();
-//            if(a.get(date).get(rno).get(timeslot) == "available") {
-//                a.get(date).get(rno).put(timeslot,"WORKING");
-//                System.out.println(a);
-//            } else {
-//                System.out.println("CRASH");
-//            }
+            if(a.get(date).get(rno).get(timeslot) == "available") {
+                a.get(date).get(rno).put(timeslot,"BOOKED");
+                System.out.println(a);
+            } else {
+                System.out.println("CRASH");
+            }
         } else if(campus_for_booking.equals("DVL")) {
             String s = serialize_("BR", campus_for_booking, rno, date, timeslot);
             KKL_sender book = new KKL_sender(s, 2172);
             Thread t = new Thread(book);
             t.start();
-//            int test2 = s.count;
-//            System.out.println("reached-4: " + test2);
 //            kkl.bookroom(campus_for_booking, rno, date, timeslot, UID);
         } else if(campus_for_booking.equals("WST")) {
 //            bookingid = wst_i.bookroom(campus_for_booking, rno, date, timeslot, UID);
@@ -88,27 +86,30 @@ public class KKL extends cPOA {
         this.kkl_available_count += this.get_count(date);
         System.out.println("\nKKL: (before) just available rooms in kkl : " + kkl_available_count);
 
-        KKL_sender s1 = new KKL_sender(date, 2172);
+        // append GA (get-available) before each date
+        String date_ = "GA".concat(date);
+
+        KKL_sender GA_dvl = new KKL_sender(date_, 2172);
         System.out.println("KKL: sending request to DVL-Listener for number of available rooms for " + date);
 
-        KKL_sender s2 = new KKL_sender(date, 2171);
-        System.out.println("KKL: sending request to WST-Listener for number of available rooms for " + date);
+//        KKL_sender GA_wst = new KKL_sender(date_, 2171);
+//        System.out.println("KKL: sending request to WST-Listener for number of available rooms for " + date);
 
-        Thread t1=new Thread(s1);
-        Thread t2 = new Thread(s2);
+        Thread t1=new Thread(GA_dvl);
+//        Thread t2 = new Thread(GA_wst);
 
         t1.start();
-        t2.start();
+//        t2.start();
         t1.join();
-        t2.join();
+//        t2.join();
 
         System.out.println("KKL: request processed from DVL-Listener. count stored in thread");
-        System.out.println("KKL: dvl has: " + s1.count + " available room(s)");
-        this.kkl_available_count += s1.count;
+        System.out.println("KKL: dvl has: " + GA_dvl.count + " available room(s)");
+        this.kkl_available_count += GA_dvl.count;
 
-        System.out.println("KKL: request processed from WST-Listener. count stored in thread");
-        System.out.println("KKL: wst has: " + s2.count + " available room(s)");
-        this.kkl_available_count += s2.count;
+//        System.out.println("KKL: request processed from WST-Listener. count stored in thread");
+//        System.out.println("KKL: wst has: " + GA_wst.count + " available room(s)");
+//        this.kkl_available_count += GA_wst.count;
 
         System.out.println("KKL: (after) Total amount of available rooms for " + date +", across all three campuses is => " + kkl_available_count);
         return "fix_kkl_available_count";
