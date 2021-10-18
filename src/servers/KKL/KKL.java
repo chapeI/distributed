@@ -98,10 +98,7 @@ public class KKL extends cPOA {
         this.kkl_available_count += s2.count;
 
         System.out.println("KKL: (after) Total amount of available rooms for " + date +", across all three campuses is => " + kkl_available_count);
-
         return "fix_kkl_available_count";
-
-
     }
     public int get_count(String date) {
         int count = 0;

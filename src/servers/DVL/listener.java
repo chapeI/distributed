@@ -8,24 +8,26 @@ import java.net.SocketException;
 
 public class listener extends Thread {
     String date;
-    listener() {}
+    listener() {
+        System.out.println("starting a thread for listening. opening PORT 2172 (DVL-listener listening for requests)");  // <-- CHANGE CODE
+    }
     DVL dvl = new DVL();
 
     public void run() {
-        System.out.println("starting a thread for listening. opening PORT 2172 (DVL-listener listening for requests)");  // <-- CHANGE CODE
         DatagramSocket socket = null;
         try {
+//            System.out.println("DVL-Listener: run()");
             socket = new DatagramSocket(2172);  //  DVL: 2172, KKL: 2170, WST: 2171
             byte[] b = new byte[1000];
 
             while(true) {
                 // RECEIVE
-                DatagramPacket packet = new DatagramPacket(b, b.length);
-                socket.receive(packet);
+                DatagramPacket request = new DatagramPacket(b, b.length);
+                socket.receive(request);
                 System.out.println("\nDVL-Listener: request received (dunno from who)");
 
                 // PROCESS
-                String s = new String(packet.getData());
+                String s = new String(request.getData());
                 this.date = s.trim();
                 System.out.println("DVL-Listener: processing request for available rooms on: " + this.date);
                 int c = dvl.get_count(date);
@@ -34,7 +36,7 @@ public class listener extends Thread {
                 // SEND
                 byte [] reply = Integer.toString(c).getBytes();
                 DatagramPacket responsePacket = new DatagramPacket(reply,
-                        reply.length, packet.getAddress(), packet.getPort());
+                        reply.length, request.getAddress(), request.getPort());
                 socket.send(responsePacket);
                 System.out.println("DVL-Listener: sending count " + c + " to the requester");
             }

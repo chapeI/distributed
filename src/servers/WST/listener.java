@@ -19,12 +19,12 @@ public class listener extends Thread {
 
             while(true) {
                 // RECEIVE
-                DatagramPacket packet = new DatagramPacket(b, b.length);
-                socket.receive(packet);
+                DatagramPacket request = new DatagramPacket(b, b.length);
+                socket.receive(request);
                 System.out.println("\nWST-Listener: request received (dunno from who)");
 
                 // PROCESS
-                String s = new String(packet.getData());
+                String s = new String(request.getData());
                 this.date = s.trim();
                 System.out.println("WST-Listener: processing request for available rooms on: " + this.date);
                 int c = wst.get_count(date);
@@ -33,7 +33,7 @@ public class listener extends Thread {
                 // SEND
                 byte [] reply = Integer.toString(c).getBytes();
                 DatagramPacket responsePacket = new DatagramPacket(reply,
-                        reply.length, packet.getAddress(), packet.getPort());
+                        reply.length, request.getAddress(), request.getPort());
                 socket.send(responsePacket);
                 System.out.println("WST-Listener: sending count " + c + " to the requester");
             }
