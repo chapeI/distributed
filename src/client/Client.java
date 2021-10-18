@@ -1,12 +1,9 @@
 package client;
 import client.clientTypes.Admin;
 import client.clientTypes.Student;
-import org.omg.CORBA.ORBPackage.InvalidName;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.rmi.Naming;
 import java.lang.*;
 
 import org.omg.CORBA.ORB;
@@ -45,9 +42,5 @@ public class Client {
             System.out.println("invalid uid. terminating program");
             return;
         }
-    }
-
-    void start_client() throws Exception {
-
     }
 }
