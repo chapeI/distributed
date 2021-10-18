@@ -26,9 +26,7 @@ public class KKL_sender extends Thread {
             DatagramPacket packet =new DatagramPacket(b, b.length, address, port); // port has to be a variable
             socket.send(packet);
             System.out.println("reached-3");
-            System.out.println("sender: sending a request to " + port + ". (go here)");
-
-
+            System.out.println("sender: sending a request to " + port + ". (go there)");
 
             // RECEIVE
 //            byte[] r = new byte[1024];

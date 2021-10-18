@@ -16,10 +16,10 @@ public class KKL extends cPOA {
     static HashMap<String, HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();  // 	HM<date, HM<rno, HM<time, b_id>>>
     KKL () {
         super();
-        make_new_date(a, "Monday", "1", "3:00");
-        make_new_date(a, "Tuesday", "1", "4:00");
-        make_new_date(a, "Wednesday", "2", "8:00");
-        make_new_date(a, "Thursday", "2", "4:00");
+        make_new_date(a, "MON", "1", "3:00");
+        make_new_date(a, "TUE", "1", "4:00");
+        make_new_date(a, "WED", "2", "8:00");
+        make_new_date(a, "THU", "2", "4:00");
         System.out.println("KKL(): " + a);
     }
     public boolean createroom(String rno, String date, String timeslot) {
@@ -64,18 +64,23 @@ public class KKL extends cPOA {
 //                System.out.println("CRASH");
 //            }
         } else if(campus_for_booking.equals("DVL")) {
-            System.out.println("reached-2");
-            String test = "BR";
-            KKL_sender s = new KKL_sender(test, 2172);
-            Thread t = new Thread(s);
+            String s = serialize_("BR", campus_for_booking, rno, date, timeslot);
+            KKL_sender book = new KKL_sender(s, 2172);
+            Thread t = new Thread(book);
             t.start();
 //            int test2 = s.count;
 //            System.out.println("reached-4: " + test2);
-//            bookingid = kkl_i.bookroom(campus_for_booking, rno, date, timeslot, UID);
+//            kkl.bookroom(campus_for_booking, rno, date, timeslot, UID);
         } else if(campus_for_booking.equals("WST")) {
 //            bookingid = wst_i.bookroom(campus_for_booking, rno, date, timeslot, UID);
         }
         return "WORKING";
+    }
+
+    String serialize_(String op, String campus, String rno, String date, String timeslot) {
+        String s = op.concat(campus).concat(rno).concat(date).concat(timeslot);
+        System.out.println("s: " + s);
+        return s;
     }
 
     public String getAvailableTimeSlot(String date) throws InterruptedException {

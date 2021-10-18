@@ -14,10 +14,10 @@ public class DVL extends cPOA {
     static HashMap<String, HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();  // 	HM<date, HM<rno, HM<time, b_id>>>
     DVL() {
         super();
-        make_new_date(a, "Tuesday", "5", "6:00");
-        make_new_date(a, "Wednesday", "1", "4:00");
-        make_new_date(a, "Monday", "2", "4:00");
-        make_new_date(a, "Thursday", "6", "7:00");
+        make_new_date(a, "TUE", "5", "6:00");
+        make_new_date(a, "WED", "1", "4:00");
+        make_new_date(a, "MON", "2", "4:00");
+        make_new_date(a, "THU", "6", "7:00");
         System.out.println("DVL(): " + a);
     }
     public boolean createroom(String rno, String date, String timeslot) {

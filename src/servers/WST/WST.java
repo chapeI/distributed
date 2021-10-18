@@ -15,11 +15,11 @@ public class WST extends cPOA {
     static HashMap<String, HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();  // 	HM<date, HM<rno, HM<time, b_id>>>
     WST () {
         super();
-        make_new_date(a, "Thursday", "4", "1:00");
-        make_new_date(a, "Wednesday", "3", "6:00");
-        make_new_date(a, "Tuesday", "4", "6:00");
-        make_new_date(a, "Monday", "5", "6:00");
-        make_new_date(a, "Wednesday", "6", "6:00");
+        make_new_date(a, "THU", "4", "1:00");
+        make_new_date(a, "WED", "3", "6:00");
+        make_new_date(a, "TUE", "4", "6:00");
+        make_new_date(a, "MON", "5", "6:00");
+        make_new_date(a, "WED", "6", "6:00");
         System.out.println("WST(): " + a);
     }
 

@@ -18,21 +18,21 @@ public class Student {
         switch(n) {
             case 1: {
                 String booking_campus;
-//                String rno;
-//                String date;
-//                String timeslot;
-                String rno = "1";
-                String date = "Wednesday";
-                String timeslot = "4:00";
+                String rno;
+                String date;
+                String timeslot;
+//                String rno = "1";
+//                String date = "WED";
+//                String timeslot = "4:00";
 
                 System.out.println("Enter booking campus (KKL, WST, DVL)");
                 booking_campus = br.readLine();
-//                System.out.println("Enter day (Monday to Friday)");
-//                date = br.readLine();
-//                System.out.println("Enter room number (1-10)");
-//                rno = br.readLine();
-//                System.out.println("Enter timeslot (8:00 to 16:00)");
-//                timeslot = br.readLine();
+                System.out.println("Enter day (MON, TUE, WED, THU, FRI)");
+                date = br.readLine();
+                System.out.println("Enter room number (1-9)");
+                rno = br.readLine();
+                System.out.println("Enter timeslot (1:00 to 9:00)");
+                timeslot = br.readLine();
 
                 if(campus.equals("DVL")) {
                     String booking_id = DVL.bookroom(booking_campus, rno, date, timeslot, uid);

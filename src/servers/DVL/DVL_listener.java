@@ -29,12 +29,18 @@ public class DVL_listener extends Thread {
 
                 // PROCESS
                 String r = new String(request.getData());
-                String req = r.substring(0,2);
-                System.out.println("req: " + req);
+                String op = r.substring(0,2);
+                System.out.println("op: " + op);
 
-                if(req.equals("BR")) {
-                    System.out.println("bookroom requested");
-                    dvl.bookroom("DVL", "2", "Monday", "4:00", "DVLSTEST");
+                if(op.equals("BR")) {
+                    String campus = r.substring(2, 5);
+                    System.out.println("campus for booking: " + campus);
+                    String rno = r.substring(5, 6);
+                    String date = r.substring(6, 9);
+                    String time = r.substring(9, 13);
+                    System.out.println("r unwrapped: " + rno + date + time);
+
+                    dvl.bookroom("DVL", rno, date, time, "DVLSTEST");
                 }
 
 //                this.date = r.trim();
