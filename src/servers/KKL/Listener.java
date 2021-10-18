@@ -1,37 +1,26 @@
-package servers.DVL;
-
-//import servers.KKL.KKL_i;
+package servers.KKL;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.MalformedURLException;
 import java.net.SocketException;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 
-public class ListenerThread extends Thread {
 
+public class Listener extends Thread {
     String date;
-//    DVL_i dvl_i;
-
-    ListenerThread() throws RemoteException, MalformedURLException, NotBoundException {
-//        dvl_i = (DVL_i) Naming.lookup("rmi://localhost:35000/tag1");
-    }
+    Listener() {}
 
     public void run() {
         DatagramSocket socket = null;
         try {
-            socket = new DatagramSocket(2172);
+            socket = new DatagramSocket(2170);  // <-- ABSOLUTELY CHANGE PORT  (DVL: 2172, KKL: 2170, WST: 2171)
             byte[] b = new byte[1000];
 
             while(true) {
-
                 // RECEIVE
                 DatagramPacket packet = new DatagramPacket(b, b.length);
                 socket.receive(packet);
-                System.out.println("receiving on DVL PORT 2172");
+                System.out.println("KKL PORT 2170: open (listening for requests)");  // <-- CHANGE CODE
 
                 // PROCESS
                 String s = new String(packet.getData());
@@ -53,7 +42,7 @@ public class ListenerThread extends Thread {
         } finally {
             if(socket != null) {
                 socket.close();
-                System.out.println("closing DVL socket. probably should never see this");
+                System.out.println("closing DVL socket. shouldn't see this");
             }
         }
     }

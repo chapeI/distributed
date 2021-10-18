@@ -1,24 +1,26 @@
-package servers.DVL;
+package servers.KKL;
 
+import common.cPOA;
 import org.omg.CORBA.ORB;
-import common.*;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
-public class DVL extends cPOA {
+public class KKL extends cPOA {
     private ORB orb;
     public void setORB(ORB orb_val) {
         orb = orb_val;
     }
-    int dvl_available_count = 0;
+    int kkl_available_count = 0;
     static HashMap<String, HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();  // 	HM<date, HM<rno, HM<time, b_id>>>
-    DVL() {
+    KKL () {
         super();
-        make_new_date(a, "Tuesday", "5", "6:00");
-        make_new_date(a, "Wednesday", "1", "4:00");
-        make_new_date(a, "Monday", "2", "4:00");
-        make_new_date(a, "Thursday", "6", "7:00");
-        System.out.println("DVL(): " + a);
+        make_new_date(a, "Monday", "1", "3:00");
+        make_new_date(a, "Tuesday", "1", "4:00");
+        make_new_date(a, "Wednesday", "2", "8:00");
+        make_new_date(a, "Thursday", "2", "4:00");
+        System.out.println("KKL(): " + a);
     }
     public boolean createroom(String rno, String date, String timeslot) {
         make_new_date(a, date, rno, timeslot);
@@ -44,17 +46,15 @@ public class DVL extends cPOA {
         }
     }
 
-    public String changeReservation (String studentid, String booking_id, String new_date, String new_campus_name, String new_room_no, String new_time_slot) {
-        return "DEBUG";
-    };
+    public String changeReservation(String studentid, String booking_id, String new_date, String new_campus_name, String new_room_no, String new_time_slot) {
+        return null;
+    }
 
     // synchronize
     public String bookroom(String campusName, String rno, String date, String timeslot, String UID) {
         String bookingid;
-//        kkl_i = (KKL_i) Naming.lookup("rmi://localhost:35001/tag2");
-//        wst_i = (WST_i) Naming.lookup("rmi://localhost:35002/tag3");
 
-        if(campusName.equals("DVL")) {
+        if(campusName.equals("KKL")) {
             bookingid = UUID.randomUUID().toString();
             if(a.get(date).get(rno).get(timeslot) == "available") {
                 a.get(date).get(rno).put(timeslot,"WORKING");
@@ -62,7 +62,7 @@ public class DVL extends cPOA {
             } else {
                 System.out.println("CRASH");
             }
-        } else if(campusName.equals("KKL")) {
+        } else if(campusName.equals("DVL")) {
 //            bookingid = kkl_i.bookroom(campusName, rno, date, timeslot, UID);
         } else if(campusName.equals("WST")) {
 //            bookingid = wst_i.bookroom(campusName, rno, date, timeslot, UID);
@@ -70,29 +70,32 @@ public class DVL extends cPOA {
         return "WORKING";
     }
 
-    public String getAvailableTimeSlot(String date) {
-        this.dvl_available_count += this.get_count(date);
-        System.out.println("dvl_available_count(before): " + dvl_available_count);
+    public String getAvailableTimeSlot(String date) throws InterruptedException {
+        this.kkl_available_count += this.get_count(date);
+        System.out.println("\nKKL: (before) just kkl available rooms : " + kkl_available_count);
 
-        Sender_DVL dvl_to_kkl = new Sender_DVL(date, 2170);  // sending(date) to kkl (thread opened on port 2170)
-//        DVL_sendingThread dvl_st_to_wst = new DVL_sendingThread(date, 2171);
+        // CURRENTLY FIXING.
+        KKL_Sender sending_request_to_DVL_listener = new KKL_Sender(date, 2172);  // send(date) to PORT: 2170
+        System.out.println("KKL: sending request to DVL Listener for number of available rooms");
+//        SendingThread_KKL kkl_to_wst = new SendingThread_KKL(date, 2171);
 
-        Thread t1=new Thread(dvl_to_kkl);
-//        Thread t2 = new Thread(dvl_st_to_wst);
+        Thread t1=new Thread(sending_request_to_DVL_listener);
+//        Thread t2 = new Thread(kkl_to_wst);
 
         t1.start();
 //        t2.start();
 
-//        t1.join();
+        t1.join();
 //        t2.join();
 
-        this.dvl_available_count += dvl_to_kkl.count;
-//        this.dvl_available_count += dvl_st_to_wst.count;
+        System.out.println("KKL: dvl has: " + sending_request_to_DVL_listener.count + " available room(s)");
+        this.kkl_available_count += sending_request_to_DVL_listener.count;  // can access kkl count?
+//        this.kkl_available_count += kkl_to_wst.count;
 
-        System.out.println("available rooms: " + dvl_available_count);
+        System.out.println("KKL: (after) Total amount of available rooms for " + date +", across all three campuses is => " + kkl_available_count);
 
-//        return dvl_available_count;
-        return "fix_dvl_available_count";
+//        return kkl_available_count;
+        return "fix_kkl_available_count";
     }
     public int get_count(String date) {
         int count = 0;
@@ -135,7 +138,7 @@ public class DVL extends cPOA {
         return "debug_cancel_booking";
     }
 
-    public boolean deleteroom (String rno, String date, String timeslot) {
+    public boolean deleteroom(String rno, String date, String timeslot) {
         return false;
-    };
+    }
 }

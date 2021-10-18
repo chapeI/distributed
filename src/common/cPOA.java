@@ -78,7 +78,11 @@ public abstract class cPOA extends org.omg.PortableServer.Servant
        {
          String date = in.read_string ();
          String $result = null;
-         $result = this.getAvailableTimeSlot (date);
+         try {
+           $result = this.getAvailableTimeSlot (date);
+         } catch (InterruptedException e) {
+           e.printStackTrace();
+         }
          out = $rh.createReply();
          out.write_string ($result);
          break;

@@ -1,24 +1,18 @@
 package client.clientTypes;
 
-//import servers.DVL.DVL_i;
-//import servers.KKL.KKL_i;
-//import servers.WST.WST_i;
-
 import common.c;
-
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
+
 
 public class Student {
     BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
-    public Student() throws MalformedURLException, NotBoundException, RemoteException {}
+    public Student() {}
 
-    public void run_student(String uid, c c1, c c2, c c3) throws IOException, InterruptedException, NotBoundException {
+    public void run_student(String uid, c c1, c c2, c c3) throws IOException, InterruptedException {
         String campus = uid.substring(0,3);
 
         System.out.println("1) book room 2) get available times  3) cancel booking");
