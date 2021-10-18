@@ -82,27 +82,30 @@ public class DVL extends cPOA {
         this.dvl_available_count += this.get_count(date);
         System.out.println("\nDVL: (before) just available rooms in dvl : " + dvl_available_count);
 
-        DVL_sender s1 = new DVL_sender(date, 2170);  // sending(date) to kkl (thread opened on port 2170)
+        // append GA (get-available) before each date
+        String date_ = "GA".concat(date);
+
+        DVL_sender s1 = new DVL_sender(date_, 2170);  // sending(date) to kkl (thread opened on port 2170)
         System.out.println("DVL: sending request to KKL-Listener for number of available rooms for " + date);
 
-        DVL_sender s2 = new DVL_sender(date, 2171);
-        System.out.println("DVL: sending request to WST-Listener for number of available rooms for " + date);
+//        DVL_sender s2 = new DVL_sender(date_, 2171);
+//        System.out.println("DVL: sending request to WST-Listener for number of available rooms for " + date);
 
         Thread t1=new Thread(s1);
-        Thread t2 = new Thread(s2);
+//        Thread t2 = new Thread(s2);
 
         t1.start();
-        t2.start();
+//        t2.start();
         t1.join();
-        t2.join();
+//        t2.join();
 
         System.out.println("DVL: request processed from KKL-Listener. count stored in thread");
         System.out.println("DVL: kkl has: " + s1.count + " available room(s)");
         this.dvl_available_count += s1.count;
 
-        System.out.println("DVL: request processed from WST-Listener. count stored in thread");
-        System.out.println("DVL: wst has: " + s2.count + " available room(s)");
-        this.dvl_available_count += s2.count;
+//        System.out.println("DVL: request processed from WST-Listener. count stored in thread");
+//        System.out.println("DVL: wst has: " + s2.count + " available room(s)");
+//        this.dvl_available_count += s2.count;
 
         System.out.println("DVL: (after) Total amount of available rooms for " + date +", across all three campuses is => " + dvl_available_count);
 

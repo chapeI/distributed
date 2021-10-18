@@ -11,7 +11,7 @@ public class KKL_sender extends Thread {
     String date;
     int port;
     public KKL_sender(String date, int port) {
-        this.date = date;
+        this.date = date;  // TODO: change all from date to data
         this.port = port;
     }
 

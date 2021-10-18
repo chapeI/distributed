@@ -44,11 +44,22 @@ public class KKL_listener extends Thread {
                     // do we need to send anything back?
                 }
 
+                // getAvailability()
+                if(op.equals("GA")) {
+                    String date = r.substring(2, 5);
+                    System.out.println("date: " + date);
+                    System.out.println("KKL-Listener: processing request for available rooms on: " + this.date);
+                    int c = kkl.get_count(date);
+                    System.out.println("KKL-Listener: Processed. For " + date + ", available rooms is, count => " + c);
 
+                    // SEND
+                    byte [] reply = Integer.toString(c).getBytes();
+                    DatagramPacket responsePacket = new DatagramPacket(reply,
+                            reply.length, request.getAddress(), request.getPort());
+                    socket.send(responsePacket);
+                    System.out.println("KKL-Listener: sending count " + c + " to the requester");
+                }
 
-
-
-                // TO FIX
 //                String s = new String(request.getData());
 //                this.date = s.trim();
 //
@@ -56,13 +67,7 @@ public class KKL_listener extends Thread {
 //                int c = kkl.get_count(date);
 //                System.out.println("KKL-Listener: Processed. For " + date + ", available rooms is, count => " + c);
 //
-//                // SEND
 //
-//                byte [] reply = Integer.toString(c).getBytes();
-//                DatagramPacket responsePacket = new DatagramPacket(reply,
-//                        reply.length, request.getAddress(), request.getPort());
-//                socket.send(responsePacket);
-//                System.out.println("KKL-Listener: sending count " + c + " to the requester");
             }
         }
         catch (SocketException e) {
