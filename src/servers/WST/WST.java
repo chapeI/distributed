@@ -59,16 +59,28 @@ public class WST extends cPOA {
         this.wst_available_count += this.get_count(date);
         System.out.println("\nWST: (before) just available rooms in wst : " + wst_available_count);
 
-        WST_Sender sender = new WST_Sender(date, 2172);
+        sender s = new sender(date, 2172);
         System.out.println("WST: sending request to DVL-Listener for number of available rooms for " + date);
 
-        Thread t1=new Thread(sender);
-        t1.start();
-        t1.join();
+        sender s2 = new sender(date, 2170);
+        System.out.println("WST: sending request to KKL-Listener for number of available rooms for " + date);
 
-        System.out.println("WST: request processed from DVL-Listener. count stored in sender");
-        System.out.println("WST: dvl has: " + sender.count + " available room(s)");
-        this.wst_available_count += sender.count;
+        Thread t1=new Thread(s);
+        Thread t2 = new Thread(s2);
+
+        t1.start();
+        t2.start();
+        t1.join();
+        t2.join();
+
+        System.out.println("WST: request processed from DVL-Listener. count stored in thread");
+        System.out.println("WST: dvl has: " + s.count + " available room(s)");
+        this.wst_available_count += s.count;
+
+        System.out.println("WST: request processed from KKL-Listener. count stored in thread");
+        System.out.println("WST: kkl has: " + s2.count + " available room(s)");
+        this.wst_available_count += s2.count;
+
         System.out.println("WST: (after) Total amount of available rooms for " + date +", across all three campuses is => " + wst_available_count);
 
         return "fix_kkl_available_count";

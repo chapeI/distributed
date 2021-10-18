@@ -74,7 +74,7 @@ public class DVL extends cPOA {
         this.dvl_available_count += this.get_count(date);
         System.out.println("dvl_available_count(before): " + dvl_available_count);
 
-        Sender_DVL dvl_to_kkl = new Sender_DVL(date, 2170);  // sending(date) to kkl (thread opened on port 2170)
+        sender dvl_to_kkl = new sender(date, 2170);  // sending(date) to kkl (thread opened on port 2170)
 //        DVL_sendingThread dvl_st_to_wst = new DVL_sendingThread(date, 2171);
 
         Thread t1=new Thread(dvl_to_kkl);

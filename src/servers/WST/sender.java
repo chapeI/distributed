@@ -1,18 +1,16 @@
-package servers.DVL;
+package servers.WST;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.nio.ByteBuffer;
 
-public class Sender_DVL extends Thread {
+public class sender extends Thread {
     public int count;
     String date;
     int port;
-
-    public Sender_DVL(String date, int port) {
+    public sender(String date, int port) {
         this.date = date;
         this.port = port;
     }
@@ -27,6 +25,8 @@ public class Sender_DVL extends Thread {
             InetAddress address = InetAddress.getLocalHost();
             DatagramPacket packet =new DatagramPacket(b, b.length, address, port); // port has to be a variable
             socket.send(packet);
+            System.out.println("sender: sending a request to " + port + ". (go here)");
+            System.out.println("--");
 
             // RECEIVE
             byte[] r = new byte[1024];
@@ -34,7 +34,7 @@ public class Sender_DVL extends Thread {
             socket.receive(response);
             String s = new String(response.getData());
             String s_ = s.trim();
-            System.out.println("dvl_sendingThread receiving: " + s_);  // <-- CHANGE CODE
+            System.out.println("sender: receives back: " + s_ + ". Storing in sender. WST can access sender.count");
             this.count = Integer.parseInt(s_);
         }
         catch (SocketException e) {
@@ -44,8 +44,9 @@ public class Sender_DVL extends Thread {
         } finally {
             if(socket != null) {
                 socket.close();
-                System.out.println("closing DVL sending socket");
+                System.out.println("sender: closing WST sending socket");
             }
         }
     }
+
 }

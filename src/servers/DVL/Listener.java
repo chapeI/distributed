@@ -6,7 +6,6 @@ import java.net.DatagramSocket;
 import java.net.MalformedURLException;
 import java.net.SocketException;
 
-
 public class Listener extends Thread {
     String date;
     Listener() {}
@@ -47,7 +46,7 @@ public class Listener extends Thread {
         } finally {
             if(socket != null) {
                 socket.close();
-                System.out.println("closing DVL socket. shouldn't see this");
+                System.out.println("DVL-Listener: closing DVL socket. shouldn't see this");
             }
         }
     }

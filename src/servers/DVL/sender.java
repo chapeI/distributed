@@ -1,17 +1,17 @@
-package servers.KKL;
+package servers.DVL;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.nio.ByteBuffer;
 
-public class KKL_Sender extends Thread {
+public class sender extends Thread {
     public int count;
     String date;
     int port;
-
-    public KKL_Sender(String date, int port) {
+    public sender(String date, int port) {
         this.date = date;
         this.port = port;
     }
@@ -26,8 +26,8 @@ public class KKL_Sender extends Thread {
             InetAddress address = InetAddress.getLocalHost();
             DatagramPacket packet =new DatagramPacket(b, b.length, address, port); // port has to be a variable
             socket.send(packet);
-            System.out.println("KKL-Sender: sending a request somewhere: " + port);
-
+            System.out.println("sender: sending a request to " + port + ". (go here)");
+            System.out.println("--");
 
             // RECEIVE
             byte[] r = new byte[1024];
@@ -35,7 +35,7 @@ public class KKL_Sender extends Thread {
             socket.receive(response);
             String s = new String(response.getData());
             String s_ = s.trim();
-            System.out.println("KKL-Sender: receives back: " + s_ + ". Storing this in KKL-Sender thread itself. access this from KKL");
+            System.out.println("sender: receives back: " + s_ + ". Storing in sender. DVL can access sender.count");
             this.count = Integer.parseInt(s_);
         }
         catch (SocketException e) {
@@ -45,7 +45,7 @@ public class KKL_Sender extends Thread {
         } finally {
             if(socket != null) {
                 socket.close();
-                System.out.println("KKL-Sender: closing KKL sending socket");
+                System.out.println("sender: closing DVL sending socket");
             }
         }
     }
