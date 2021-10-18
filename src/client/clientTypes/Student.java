@@ -5,8 +5,6 @@ import common.c;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-
 
 public class Student {
     BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
@@ -40,7 +38,6 @@ public class Student {
                 } else if (campus.equals("WST")) {
                     String booking_id = c2.bookroom(booking_campus, rno, date, timeslot, uid);
                 }
-
                 break;
             } case 2: {
                 String date;

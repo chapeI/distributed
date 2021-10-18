@@ -74,9 +74,8 @@ public class KKL extends cPOA {
         this.kkl_available_count += this.get_count(date);
         System.out.println("\nKKL: (before) just kkl available rooms : " + kkl_available_count);
 
-        // CURRENTLY FIXING.
-        KKL_Sender sending_request_to_DVL_listener = new KKL_Sender(date, 2172);  // send(date) to PORT: 2170
-        System.out.println("KKL: sending request to DVL Listener for number of available rooms");
+        KKL_Sender sending_request_to_DVL_listener = new KKL_Sender(date, 2172);
+        System.out.println("KKL: sending request to DVL-Listener for number of available rooms for " + date);
 //        SendingThread_KKL kkl_to_wst = new SendingThread_KKL(date, 2171);
 
         Thread t1=new Thread(sending_request_to_DVL_listener);
