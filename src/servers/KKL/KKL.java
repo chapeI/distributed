@@ -72,7 +72,7 @@ public class KKL extends cPOA {
 
     public String getAvailableTimeSlot(String date) throws InterruptedException {
         this.kkl_available_count += this.get_count(date);
-        System.out.println("\nKKL: (before) just kkl available rooms : " + kkl_available_count);
+        System.out.println("\nKKL: (before) just available rooms in kkl : " + kkl_available_count);
 
         KKL_Sender sending_request_to_DVL_listener = new KKL_Sender(date, 2172);
         System.out.println("KKL: sending request to DVL-Listener for number of available rooms for " + date);
@@ -87,7 +87,9 @@ public class KKL extends cPOA {
         t1.join();
 //        t2.join();
 
+        System.out.println("KKL: sending request processed. count saved in sending thread. retrieving count KKL_Sender");
         System.out.println("KKL: dvl has: " + sending_request_to_DVL_listener.count + " available room(s)");
+
         this.kkl_available_count += sending_request_to_DVL_listener.count;  // can access kkl count?
 //        this.kkl_available_count += kkl_to_wst.count;
 

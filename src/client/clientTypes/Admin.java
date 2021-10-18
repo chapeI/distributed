@@ -1,9 +1,5 @@
 package client.clientTypes;
 
-//import servers.DVL.DVL_i;
-//import servers.KKL.KKL_i;
-//import servers.WST.WST_i;
-
 import common.c;
 
 import java.io.BufferedReader;

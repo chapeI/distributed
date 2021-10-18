@@ -17,7 +17,7 @@ import common.c;
 import common.cHelper;
 
 public class Client {
-    static c c1, c2, c3;  // add impl tag?
+    static c c1, c2, c3;  // add impl
 
     public static void main(String[] args) throws Exception {
         String uid;
@@ -29,7 +29,7 @@ public class Client {
         NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
         c1 = cHelper.narrow(ncRef.resolve_str("Hello1"));
         c2 = cHelper.narrow(ncRef.resolve_str("Hello2"));
-//        c3 = cHelper.narrow(ncRef.resolve_str("Hello3"));
+        c3 = cHelper.narrow(ncRef.resolve_str("Hello3"));
 
         BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Enter ID");
@@ -38,7 +38,7 @@ public class Client {
         if(uid.charAt(3)=='S') {
             student = new Student();
             System.out.println("student initialized");
-            student.run_student(uid, c1, c2, c1);  // change to c3
+            student.run_student(uid, c1, c2, c3);
         } else if(uid.charAt(3)=='A') {
             admin = new Admin();
 //            admin.run_admin(uid, c1, c2, c3);

@@ -1,4 +1,4 @@
-package servers.KKL;
+package servers.WST;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -6,12 +6,12 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
-public class KKL_Sender extends Thread {
+public class WST_Sender extends Thread {
     public int count;
     String date;
     int port;
 
-    public KKL_Sender(String date, int port) {
+    public WST_Sender(String date, int port) {
         this.date = date;
         this.port = port;
     }
@@ -26,8 +26,8 @@ public class KKL_Sender extends Thread {
             InetAddress address = InetAddress.getLocalHost();
             DatagramPacket packet =new DatagramPacket(b, b.length, address, port); // port has to be a variable
             socket.send(packet);
-            System.out.println("KKL-Sender: sending a request somewhere: " + port);
-
+            System.out.println("WST-Sender: sending a request somewhere: " + port + ". (go here)");
+            System.out.println("--");
 
             // RECEIVE
             byte[] r = new byte[1024];
@@ -35,7 +35,7 @@ public class KKL_Sender extends Thread {
             socket.receive(response);
             String s = new String(response.getData());
             String s_ = s.trim();
-            System.out.println("KKL-Sender: receives back: " + s_ + ". Storing this in KKL-Sender thread itself. access this from KKL");
+            System.out.println("WST-Sender: receives back: " + s_ + ". Storing in WST-Sender. WST can access count from WST-Sender");
             this.count = Integer.parseInt(s_);
         }
         catch (SocketException e) {
@@ -45,8 +45,9 @@ public class KKL_Sender extends Thread {
         } finally {
             if(socket != null) {
                 socket.close();
-                System.out.println("KKL-Sender: closing KKL sending socket");
+                System.out.println("WST-Sender: closing WST sending socket");
             }
         }
     }
+
 }
