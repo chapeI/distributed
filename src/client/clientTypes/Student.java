@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 
 public class Student {
     BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+    String response = "BAD RESPONSE";
     public Student() {}
 
     public void run_student(String uid, c DVL, c KKL, c WST) throws IOException, InterruptedException {
@@ -59,18 +60,22 @@ public class Student {
                 break;
             }
             case 3: {
+
                 String booking_id;
+                String campus_for_cancelling;
                 System.out.println("enter booking_id");
                 booking_id=br.readLine();
+                System.out.println("enter campus");
+                campus_for_cancelling=br.readLine();
 
                 if(campus.equals("DVL")) {
-                    DVL.cancelBooking(booking_id, "don't need");
+                    response = DVL.cancelBooking(booking_id, campus_for_cancelling);
                 } else if (campus.equals("KKL")) {
-                    KKL.cancelBooking(booking_id, "don't need");
+                    response = KKL.cancelBooking(booking_id, campus_for_cancelling);
                 } else if (campus.equals("WST")) {
-                    WST.cancelBooking(booking_id, "don't need");
+                    response = WST.cancelBooking(booking_id, campus_for_cancelling);
                 }
-
+                System.out.println("Student.cancel: " + response);
                 break;
             }
         }

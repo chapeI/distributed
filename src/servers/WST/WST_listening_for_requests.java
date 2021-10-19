@@ -5,9 +5,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
-public class WST_listener extends Thread {
+public class WST_listening_for_requests extends Thread {
     String date;
-    WST_listener() {
+    WST_listening_for_requests() {
         System.out.println("WST_listener: starting a thread for listening. opening PORT 2171 (WST-listener listening for requests)");  // <-- CHANGE CODE
     }
     WST wst = new WST();
@@ -23,7 +23,7 @@ public class WST_listener extends Thread {
                 // RECEIVE
                 DatagramPacket request = new DatagramPacket(b, b.length);
                 socket.receive(request);
-                System.out.println("\nWST-Listener: request received (dunno from who)");
+                System.out.println("\nWST-Listener: a request was received (dunno from who)");
 
                 // PROCESS
                 String r = new String(request.getData());
@@ -56,6 +56,13 @@ public class WST_listener extends Thread {
                             reply.length, request.getAddress(), request.getPort());
                     socket.send(responsePacket);
                     System.out.println("WST-Listener: sending count " + c + " to the requester");
+                }
+
+                if(op.equals("CB")) {
+                    String bookingid = r.substring(2, 38);
+                    System.out.println("WST_Listener: bookingid: " + bookingid);
+
+                    String response = wst.cancelBooking(bookingid, "WST");
                 }
             }
         }

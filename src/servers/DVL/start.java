@@ -11,7 +11,7 @@ import common.*;
 
 public class start {
     public static void main(String args[]) {
-        DVL_listener lt=new DVL_listener();
+        DVL_listening_for_requests lt=new DVL_listening_for_requests();
         Thread t =new Thread(lt);
         t.start();
 

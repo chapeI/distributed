@@ -6,9 +6,9 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 
 
-public class KKL_listener extends Thread {
+public class KKL_listening_for_requests extends Thread {
     String date;
-    KKL_listener() {
+    KKL_listening_for_requests() {
         System.out.println("KKL_listener: starting a thread for listening. opening PORT 2170 (KKL-listener listening for requests)");  // <-- CHANGE CODE
     }
     KKL kkl = new KKL();
@@ -24,7 +24,7 @@ public class KKL_listener extends Thread {
                 // RECEIVE
                 DatagramPacket request = new DatagramPacket(b, b.length);
                 socket.receive(request);
-                System.out.println("\nKKL-Listener: request received (dunno from who)");
+                System.out.println("\nKKL-Listener: a request was received (dunno from who)");
 
                 // PROCESS
                 String r = new String(request.getData());

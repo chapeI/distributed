@@ -62,7 +62,7 @@ public class DVL extends cPOA {
                 }
             case "KKL": {
                 String s = serialize_("BR", campus_for_booking, rno, date, timeslot);
-                DVL_sender st = new DVL_sender(s, 2170);
+                DVL_send_request st = new DVL_send_request(s, 2170);
                 Thread t = new Thread(st);
                 t.start();
                 try {
@@ -77,7 +77,7 @@ public class DVL extends cPOA {
             }
             case "WST": {
                 String s1 = serialize_("BR", campus_for_booking, rno, date, timeslot);
-                DVL_sender st2 = new DVL_sender(s1, 2171);
+                DVL_send_request st2 = new DVL_send_request(s1, 2171);
                 Thread t1 = new Thread(st2);
                 t1.start();
                 try {
@@ -106,10 +106,10 @@ public class DVL extends cPOA {
         // append GA (get-available) before each date
         String date_ = "GA".concat(date);
 
-        DVL_sender st1 = new DVL_sender(date_, 2170);  // sending(date) to kkl (thread opened on port 2170)
+        DVL_send_request st1 = new DVL_send_request(date_, 2170);  // sending(date) to kkl (thread opened on port 2170)
         System.out.println("DVL: sending request to KKL-Listener for number of available rooms for " + date);
 
-        DVL_sender st2 = new DVL_sender(date_, 2171);
+        DVL_send_request st2 = new DVL_send_request(date_, 2171);
         System.out.println("DVL: sending request to WST-Listener for number of available rooms for " + date);
 
         Thread t1=new Thread(st1);
@@ -152,26 +152,41 @@ public class DVL extends cPOA {
         return count;
     }
 
-    public String cancelBooking(String bookingid, String userid) {
-        System.out.println("\nDVL(): canceling");
-        for(Map.Entry<String, HashMap<String, HashMap<String, String>>> d : a.entrySet()) {
-            for(Map.Entry<String, HashMap<String, String>> rno : d.getValue().entrySet()) {
-                for(Map.Entry<String, String> t : rno.getValue().entrySet()) {
-                    String booking = t.getValue();
-                    System.out.println(booking);
-                    if(booking.equals(bookingid)) {
-                        System.out.println("\n" + bookingid + " found at {" + d.getKey() + " in rno=" + rno.getKey() + " @" + t.getKey() + "} (DVL campus)");
-                        a.get(d.getKey()).get(rno.getKey()).put(t.getKey(), "available");  // cancelling and changing b_id to available
-                        System.out.println("booking_id cancelled and changed to available. check data-structure 'a' for proof");
-                        System.out.println(a);
-                        return "canceled and made available";
-                    } else {
-                        System.out.println("no bookings found for " + bookingid);
+    public String cancelBooking(String bookingid, String campus) {
+        String cancellation = "DVL: initial cancellation (shouldnt see this)";
+        switch(campus) {
+            case "DVL":
+                for(Map.Entry<String, HashMap<String, HashMap<String, String>>> d : a.entrySet()) {
+                    System.out.println(d.getValue());
+                    for(Map.Entry<String, HashMap<String, String>> rno : d.getValue().entrySet()) {
+                        System.out.println(rno.getValue());
+                        for(Map.Entry<String, String> t : rno.getValue().entrySet()) {
+                            System.out.println(t.getValue());
+                            String booking = t.getValue();
+                            if(booking.equals(bookingid)) {
+                                System.out.println(bookingid + " found at {" + d.getKey() + " in rno=" + rno.getKey() + " @" + t.getKey() + "} (DVL campus)");
+                                a.get(d.getKey()).get(rno.getKey()).put(t.getKey(), "available");
+                                System.out.println("booking_id cancelled and changed to available. check data-structure 'a' for proof");
+                                System.out.println(a);
+                                cancellation = "cancelled";
+                            } else {
+                                System.out.println("no bookings found for " + bookingid);
+                                cancellation = "not cancelled <- TESTING (DVL.cancel)";
+                            }
+                        }
                     }
                 }
+                break;
+            case "WST":
+                String request = "CB".concat(bookingid);
+                DVL_send_request sr = new DVL_send_request(request, 2171);
+                Thread t = new Thread(sr);
+                t.start();
+                // go to wst.
+                cancellation = "DVL.cancel WST DEBUGGING";
             }
-        }
-        return "debug_cancel_booking";
+
+        return cancellation;
     }
 
     public boolean deleteroom (String rno, String date, String timeslot) {

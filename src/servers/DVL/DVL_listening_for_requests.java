@@ -6,9 +6,9 @@ import java.net.DatagramSocket;
 import java.net.MalformedURLException;
 import java.net.SocketException;
 
-public class DVL_listener extends Thread {
+public class DVL_listening_for_requests extends Thread {
     String date;
-    DVL_listener() {
+    DVL_listening_for_requests() {
         System.out.println("DVL-Listener: starting a thread for listening. opening PORT 2172 (DVL-listener listening for requests)");  // <-- CHANGE CODE
     }
     DVL dvl = new DVL();
@@ -21,10 +21,12 @@ public class DVL_listener extends Thread {
 
             while(true) {
 
+                String response = "DVL_listening: see comment"; // if you're seeing this, the response in one of the methods is incomplete
+
                 // RECEIVE
                 DatagramPacket request = new DatagramPacket(b, b.length);
                 socket.receive(request);
-                System.out.println("\nDVL-Listener: request received (dunno from who)");
+                System.out.println("\nDVL-Listener: a request was received (dunno from who)");
 
                 // PROCESS
                 String r = new String(request.getData());
@@ -39,13 +41,13 @@ public class DVL_listener extends Thread {
                     String date = r.substring(6, 9);
                     String time = r.substring(9, 13);
                     System.out.println("DVL_listener: r unwrapped: " + rno + date + time);
-                    String response = dvl.bookroom("DVL", rno, date, time, "DVLSTEST");
+                    response = dvl.bookroom("DVL", rno, date, time, "DVLSTEST");
 
-                    byte [] reply = response.getBytes();
-                    DatagramPacket responsePacket = new DatagramPacket(reply,
-                            reply.length, request.getAddress(), request.getPort());
-                    socket.send(responsePacket);
-                    System.out.println("DVL-Listener: sending response " + response + " to the requester");
+                    //                    byte [] reply = response.getBytes();
+//                    DatagramPacket responsePacket = new DatagramPacket(reply,
+//                            reply.length, request.getAddress(), request.getPort());
+//                    socket.send(responsePacket);
+//                    System.out.println("DVL-Listener: sending response " + response + " to the requester");
                 }
 
                 // getAvailability()
@@ -56,7 +58,6 @@ public class DVL_listener extends Thread {
                     int c = dvl.get_count(date);
                     System.out.println("DVL-Listener: Processed. For " + date + ", available rooms is, count => " + c);
 
-                    // SEND
                     // TODO: change to string
 //                    byte [] reply = Integer.toString(c).getBytes();
 //                    DatagramPacket responsePacket = new DatagramPacket(reply,
@@ -64,6 +65,19 @@ public class DVL_listener extends Thread {
 //                    socket.send(responsePacket);
 //                    System.out.println("DVL-Listener: sending count " + c + " to the requester");
                 }
+
+                if(op.equals("CB")) {
+                    String bookingid = r.substring(2, 38);
+                    System.out.println("DVL_Listener: bookingid: " + bookingid);
+                    response = dvl.cancelBooking(bookingid, "DVL");
+                }
+
+                // SEND
+                byte [] reply = response.getBytes();
+                DatagramPacket responsePacket = new DatagramPacket(reply,
+                        reply.length, request.getAddress(), request.getPort());
+                socket.send(responsePacket);
+                System.out.println("DVL-Listener: processed request. sending response back " + response + " to sender");
 
             }
         }

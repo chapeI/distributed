@@ -11,7 +11,7 @@ import org.omg.PortableServer.POAHelper;
 
 public class start {
     public static void main(String args[]) {
-        KKL_listener lt=new KKL_listener();
+        KKL_listening_for_requests lt=new KKL_listening_for_requests();
         Thread t =new Thread(lt);
         t.start();
 

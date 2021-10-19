@@ -66,7 +66,7 @@ public class KKL extends cPOA {
                 break;
             case "DVL":
                 String s = serialize_("BR", campus_for_booking, rno, date, timeslot);
-                KKL_sender st = new KKL_sender(s, 2172);
+                KKL_send_request st = new KKL_send_request(s, 2172);
                 Thread t = new Thread(st);
                 t.start();
                 try {
@@ -80,7 +80,7 @@ public class KKL extends cPOA {
                 break;
             case "WST":
                 String s1 = serialize_("BR", campus_for_booking, rno, date, timeslot);
-                KKL_sender st2 = new KKL_sender(s1, 2171);
+                KKL_send_request st2 = new KKL_send_request(s1, 2171);
                 Thread t1 = new Thread(st2);
                 t1.start();
                 try {
@@ -108,10 +108,10 @@ public class KKL extends cPOA {
         // append GA (get-available) before each date
         String date_ = "GA".concat(date);
 
-        KKL_sender GA_dvl = new KKL_sender(date_, 2172);
+        KKL_send_request GA_dvl = new KKL_send_request(date_, 2172);
         System.out.println("KKL: sending request to DVL-Listener for number of available rooms for " + date);
 
-        KKL_sender GA_wst = new KKL_sender(date_, 2171);
+        KKL_send_request GA_wst = new KKL_send_request(date_, 2171);
         System.out.println("KKL: sending request to WST-Listener for number of available rooms for " + date);
 
         Thread t1=new Thread(GA_dvl);
