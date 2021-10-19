@@ -42,12 +42,6 @@ public class DVL_listening_for_requests extends Thread {
                     String time = r.substring(9, 13);
                     System.out.println("DVL_listener: r unwrapped: " + rno + date + time);
                     response = dvl.bookroom("DVL", rno, date, time, "DVLSTEST");
-
-                    //                    byte [] reply = response.getBytes();
-//                    DatagramPacket responsePacket = new DatagramPacket(reply,
-//                            reply.length, request.getAddress(), request.getPort());
-//                    socket.send(responsePacket);
-//                    System.out.println("DVL-Listener: sending response " + response + " to the requester");
                 }
 
                 // getAvailability()
@@ -58,17 +52,11 @@ public class DVL_listening_for_requests extends Thread {
                     int c = dvl.get_count(date);
                     System.out.println("DVL-Listener: Processed. For " + date + ", available rooms is, count => " + c);
 
-                    // TODO: change to string
-//                    byte [] reply = Integer.toString(c).getBytes();
-//                    DatagramPacket responsePacket = new DatagramPacket(reply,
-//                            reply.length, request.getAddress(), request.getPort());
-//                    socket.send(responsePacket);
-//                    System.out.println("DVL-Listener: sending count " + c + " to the requester");
                 }
 
                 if(op.equals("CB")) {
                     String bookingid = r.substring(2, 38);
-                    System.out.println("DVL_Listener: bookingid: " + bookingid);
+//                    System.out.println("DVL_Listener: bookingid: " + bookingid);
                     response = dvl.cancelBooking(bookingid, "DVL");
                 }
 
@@ -77,7 +65,7 @@ public class DVL_listening_for_requests extends Thread {
                 DatagramPacket responsePacket = new DatagramPacket(reply,
                         reply.length, request.getAddress(), request.getPort());
                 socket.send(responsePacket);
-                System.out.println("DVL-Listener: processed request. sending response back " + response + " to sender");
+                System.out.println("DVL-Listener: processed request. sending response (" + response + ") back to sender");
 
             }
         }

@@ -21,6 +21,8 @@ public class KKL_listening_for_requests extends Thread {
 
             while(true) {
 
+                String response = "KKL_listening: see comment"; // if you're seeing this, the response in one of the methods is incomplete
+
                 // RECEIVE
                 DatagramPacket request = new DatagramPacket(b, b.length);
                 socket.receive(request);
@@ -39,14 +41,7 @@ public class KKL_listening_for_requests extends Thread {
                     String date = r.substring(6, 9);
                     String time = r.substring(9, 13);
                     System.out.println("r unwrapped: " + rno + date + time);
-                    String response = kkl.bookroom("KKL", rno, date, time, "DVLSTEST");
-
-                    byte [] reply = response.getBytes();
-                    DatagramPacket responsePacket = new DatagramPacket(reply,
-                            reply.length, request.getAddress(), request.getPort());
-                    socket.send(responsePacket);
-                    System.out.println("KKL-Listener: sending response " + response + " to the requester");
-
+                    response = kkl.bookroom("KKL", rno, date, time, "DVLSTEST");
                 }
 
                 // getAvailability()
@@ -56,23 +51,21 @@ public class KKL_listening_for_requests extends Thread {
                     System.out.println("KKL-Listener: processing request for available rooms on: " + this.date);
                     int c = kkl.get_count(date);
                     System.out.println("KKL-Listener: Processed. For " + date + ", available rooms is, count => " + c);
-
-                    // SEND
-                    byte [] reply = Integer.toString(c).getBytes();
-                    DatagramPacket responsePacket = new DatagramPacket(reply,
-                            reply.length, request.getAddress(), request.getPort());
-                    socket.send(responsePacket);
-                    System.out.println("KKL-Listener: sending count " + c + " to the requester");
                 }
 
-//                String s = new String(request.getData());
-//                this.date = s.trim();
-//
-//                System.out.println("KKL-Listener: processing request for available rooms on: " + this.date);
-//                int c = kkl.get_count(date);
-//                System.out.println("KKL-Listener: Processed. For " + date + ", available rooms is, count => " + c);
-//
-//
+                if(op.equals("CB")) {
+                    String bookingid = r.substring(2, 38);
+//                    System.out.println("KKL_Listener: bookingid: " + bookingid);
+                    response = kkl.cancelBooking(bookingid, "KKL");
+                }
+
+                // SEND
+                byte [] reply = response.getBytes();
+                DatagramPacket responsePacket = new DatagramPacket(reply,
+                        reply.length, request.getAddress(), request.getPort());
+                socket.send(responsePacket);
+                System.out.println("KKL-Listener: Request processed. sending response (" + response + ") back to sender");
+
             }
         }
         catch (SocketException e) {

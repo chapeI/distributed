@@ -2,6 +2,7 @@ package servers.DVL;
 
 import org.omg.CORBA.ORB;
 import common.*;
+import servers.WST.WST_send_request;
 
 import java.util.*;
 
@@ -50,16 +51,18 @@ public class DVL extends cPOA {
 
     // synchronize
     public synchronized String bookroom(String campus_for_booking, String rno, String date, String timeslot, String UID) {
-        String bookingid = "DVL debug";
+        String bookingid = "DVL: bookingid initial. this should change";
         switch (campus_for_booking) {
             case "DVL":
                 bookingid = UUID.randomUUID().toString();
                 if (a.get(date).get(rno).get(timeslot) == "available") {
                     a.get(date).get(rno).put(timeslot, bookingid);
                     System.out.println(a);
+                    break;
                 } else {
                     System.out.println("already booked");
                 }
+                break;
             case "KKL": {
                 String s = serialize_("BR", campus_for_booking, rno, date, timeslot);
                 DVL_send_request st = new DVL_send_request(s, 2170);
@@ -171,7 +174,7 @@ public class DVL extends cPOA {
                                 cancellation = "cancelled";
                             } else {
                                 System.out.println("no bookings found for " + bookingid);
-                                cancellation = "not cancelled <- TESTING (DVL.cancel)";
+                                cancellation = "not cancelled";
                             }
                         }
                     }
@@ -182,10 +185,26 @@ public class DVL extends cPOA {
                 DVL_send_request sr = new DVL_send_request(request, 2171);
                 Thread t = new Thread(sr);
                 t.start();
-                // go to wst.
-                cancellation = "DVL.cancel WST DEBUGGING";
+                try {
+                    t.join();
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+                cancellation = sr.response;
+                break;
+            case "KKL":
+                String request2 = "CB".concat(bookingid);
+                WST_send_request sr2 = new WST_send_request(request2, 2170);
+                Thread t2 = new Thread(sr2);
+                t2.start();
+                try {
+                    t2.join();
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+                cancellation = sr2.response;
+                break;
             }
-
         return cancellation;
     }
 

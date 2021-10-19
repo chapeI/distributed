@@ -59,6 +59,7 @@ public class WST extends cPOA {
                 if (a.get(date).get(rno).get(timeslot) == "available") {
                     a.get(date).get(rno).put(timeslot, bookingid);
                     System.out.println(a);
+                    break;
                 } else {
                     System.out.println("already booked");
                 }
@@ -184,8 +185,6 @@ public class WST extends cPOA {
                 WST_send_request sr = new WST_send_request(request, 2172);
                 Thread t = new Thread(sr);
                 t.start();
-                System.out.println("WST: reached-0");
-                System.out.println("WST: " + cancellation);
                 try {
                     t.join();
                 } catch (InterruptedException e1) {
@@ -194,9 +193,18 @@ public class WST extends cPOA {
                 cancellation = sr.response;
                 break;
             case "KKL":
-                // go to kkl
+                String request2 = "CB".concat(bookingid);
+                WST_send_request sr2 = new WST_send_request(request2, 2170);
+                Thread t2 = new Thread(sr2);
+                t2.start();
+                try {
+                    t2.join();
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+                cancellation = sr2.response;
+                break;
         }
-        System.out.println("WST: reached-1");
         return cancellation;
     }
 

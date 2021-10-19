@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 
 public class Student {
     BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
-    String response = "BAD RESPONSE";
+    String response = "Student: BAD RESPONSE";
     public Student() {}
 
     public void run_student(String uid, c DVL, c KKL, c WST) throws IOException, InterruptedException {
@@ -36,11 +36,11 @@ public class Student {
                 timeslot = br.readLine();
 
                 if(campus.equals("DVL")) {
-                    String booking_id = DVL.bookroom(campus_for_booking, rno, date, timeslot, uid);
+                    response = DVL.bookroom(campus_for_booking, rno, date, timeslot, uid);
                 } else if (campus.equals("KKL")) {
-                    String booking_id = KKL.bookroom(campus_for_booking, rno, date, timeslot, uid);
+                    response = KKL.bookroom(campus_for_booking, rno, date, timeslot, uid);
                 } else if (campus.equals("WST")) {
-                    String booking_id = WST.bookroom(campus_for_booking, rno, date, timeslot, uid);
+                    response = WST.bookroom(campus_for_booking, rno, date, timeslot, uid);
                 }
                 break;
             }
@@ -75,9 +75,9 @@ public class Student {
                 } else if (campus.equals("WST")) {
                     response = WST.cancelBooking(booking_id, campus_for_cancelling);
                 }
-                System.out.println("Student.cancel: " + response);
                 break;
             }
         }
+        System.out.println("response: " + response);
     }
 }

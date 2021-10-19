@@ -2,6 +2,8 @@ package servers.KKL;
 
 import common.cPOA;
 import org.omg.CORBA.ORB;
+import servers.DVL.DVL_send_request;
+import servers.WST.WST_send_request;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,6 +62,7 @@ public class KKL extends cPOA {
                 if (a.get(date).get(rno).get(timeslot) == "available") {
                     a.get(date).get(rno).put(timeslot, bookingid);
                     System.out.println(a);
+                    break;
                 } else {
                     System.out.println("already booked");
                 }
@@ -153,27 +156,59 @@ public class KKL extends cPOA {
         return count;
     }
 
-    public String cancelBooking(String bookingid, String userid) {
-        for(Map.Entry<String, HashMap<String, HashMap<String, String>>> d : a.entrySet()) {
-            System.out.println(d.getValue());
-            for(Map.Entry<String, HashMap<String, String>> rno : d.getValue().entrySet()) {
-                System.out.println(rno.getValue());
-                for(Map.Entry<String, String> t : rno.getValue().entrySet()) {
-                    System.out.println(t.getValue());
-                    String booking = t.getValue();
-                    if(booking.equals(bookingid)) {
-                        System.out.println(bookingid + " found at {" + d.getKey() + " in rno=" + rno.getKey() + " @" + t.getKey() + "} (DVL campus)");
-                        a.get(d.getKey()).get(rno.getKey()).put(t.getKey(), "available");
-                        System.out.println("booking_id cancelled and changed to available. check data-structure 'a' for proof");
-                        System.out.println(a);
-                        return "canceled and made available";
-                    } else {
-                        System.out.println("no bookings found for " + bookingid);
+    public String cancelBooking(String bookingid, String campus) {
+
+        String cancellation = "KKL: initial cancellation (shouldnt see this)";
+
+        switch (campus) {
+            case "KKL":
+                for (Map.Entry<String, HashMap<String, HashMap<String, String>>> d : a.entrySet()) {
+                    System.out.println(d.getValue());
+                    for (Map.Entry<String, HashMap<String, String>> rno : d.getValue().entrySet()) {
+                        System.out.println(rno.getValue());
+                        for (Map.Entry<String, String> t : rno.getValue().entrySet()) {
+                            System.out.println(t.getValue());
+                            String booking = t.getValue();
+                            if (booking.equals(bookingid)) {
+                                System.out.println(bookingid + " found at {" + d.getKey() + " in rno=" + rno.getKey() + " @" + t.getKey() + "} (KKL campus)");
+                                a.get(d.getKey()).get(rno.getKey()).put(t.getKey(), "available");
+                                System.out.println("booking_id cancelled and changed to available. check data-structure 'a' for proof");
+                                System.out.println(a);
+                                cancellation = "cancelled";
+                            } else {
+                                System.out.println("no bookings found for " + bookingid);
+                                cancellation = "not cancelled";
+                            }
+                        }
                     }
                 }
-            }
+                break;
+            case "WST":
+                String request = "CB".concat(bookingid);
+                DVL_send_request sr = new DVL_send_request(request, 2171);
+                Thread t = new Thread(sr);
+                t.start();
+                try {
+                    t.join();
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+                cancellation = sr.response;
+                break;
+            case "DVL":
+                String request2 = "CB".concat(bookingid);
+                WST_send_request sr2 = new WST_send_request(request2, 2172);
+                Thread t2 = new Thread(sr2);
+                t2.start();
+                try {
+                    t2.join();
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+                cancellation = sr2.response;
+                break;
         }
-        return "debug_cancel_booking";
+        return cancellation;
     }
 
     public boolean deleteroom(String rno, String date, String timeslot) {
