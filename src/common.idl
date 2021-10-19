@@ -6,7 +6,7 @@ module common
 		boolean deleteroom(in string rno,in string date,in string timeslot);
 		string bookroom(in string campusName,in string rno,in string date,in string timeslot,in string UID);
     	string getAvailableTimeSlot (in string date);
-    	string cancelBooking(in string bookingID,in string userid);
+    	string cancelBooking(in string bookingid, in string userid);
    		string changeReservation(in string studentid,in string booking_id,in string new_date,in string new_campus_name,in string new_room_no,in string new_time_slot);
 	};
 };

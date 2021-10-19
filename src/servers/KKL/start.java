@@ -14,7 +14,6 @@ public class start {
         KKL_listener lt=new KKL_listener();
         Thread t =new Thread(lt);
         t.start();
-        System.out.println("KKL opening a thread, for listening for requests");
 
         try{
             ORB orb = ORB.init(args, null);

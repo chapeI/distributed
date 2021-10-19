@@ -8,12 +8,11 @@ import java.net.SocketException;
 public class WST_listener extends Thread {
     String date;
     WST_listener() {
-        System.out.println("\nWST-Listener: request received (dunno from who)");
+        System.out.println("WST_listener: starting a thread for listening. opening PORT 2171 (WST-listener listening for requests)");  // <-- CHANGE CODE
     }
     WST wst = new WST();
 
     public void run() {
-        System.out.println("starting a thread for listening. opening PORT 2171 (WST-listener listening for requests)");  // <-- CHANGE CODE
         DatagramSocket socket = null;
         try {
             socket = new DatagramSocket(2171);  //  DVL: 2172, KKL: 2170, WST: 2171

@@ -64,11 +64,11 @@ public class Student {
                 booking_id=br.readLine();
 
                 if(campus.equals("DVL")) {
-//                    DVL.cancelBooking(booking_id);
+                    DVL.cancelBooking(booking_id, "don't need");
                 } else if (campus.equals("KKL")) {
-//                    KKL.cancelBooking(booking_id);
+                    KKL.cancelBooking(booking_id, "don't need");
                 } else if (campus.equals("WST")) {
-//                    WST.cancelBooking(booking_id);
+                    WST.cancelBooking(booking_id, "don't need");
                 }
 
                 break;

@@ -53,7 +53,6 @@ public class DVL extends cPOA {
         String bookingid;
         switch (campus_for_booking) {
             case "DVL":
-                System.out.println("reached-5");
                 bookingid = UUID.randomUUID().toString();
                 if (a.get(date).get(rno).get(timeslot) == "available") {
                     a.get(date).get(rno).put(timeslot, "BOOKED");
@@ -140,19 +139,20 @@ public class DVL extends cPOA {
     }
 
     public String cancelBooking(String bookingid, String userid) {
+        System.out.println("\nDVL(): canceling");
         for(Map.Entry<String, HashMap<String, HashMap<String, String>>> d : a.entrySet()) {
             for(Map.Entry<String, HashMap<String, String>> rno : d.getValue().entrySet()) {
                 for(Map.Entry<String, String> t : rno.getValue().entrySet()) {
                     String booking = t.getValue();
+                    System.out.println(booking);
                     if(booking.equals(bookingid)) {
-                        System.out.println(bookingid + " found at {" + d.getKey() + " in rno=" + rno.getKey() + " @" + t.getKey() + "} (DVL campus)");
+                        System.out.println("\n" + bookingid + " found at {" + d.getKey() + " in rno=" + rno.getKey() + " @" + t.getKey() + "} (DVL campus)");
                         a.get(d.getKey()).get(rno.getKey()).put(t.getKey(), "available");  // cancelling and changing b_id to available
                         System.out.println("booking_id cancelled and changed to available. check data-structure 'a' for proof");
                         System.out.println(a);
                         return "canceled and made available";
                     } else {
                         System.out.println("no bookings found for " + bookingid);
-                        return "ugh. debug";
                     }
                 }
             }

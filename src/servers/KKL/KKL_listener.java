@@ -9,7 +9,7 @@ import java.net.SocketException;
 public class KKL_listener extends Thread {
     String date;
     KKL_listener() {
-        System.out.println("starting a thread for listening. opening PORT 2170 (KKL-listener listening for requests)");  // <-- CHANGE CODE
+        System.out.println("KKL_listener: starting a thread for listening. opening PORT 2170 (KKL-listener listening for requests)");  // <-- CHANGE CODE
     }
     KKL kkl = new KKL();
 

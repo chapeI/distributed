@@ -139,8 +139,27 @@ public class WST extends cPOA {
     }
 
 
-    public String cancelBooking(String bookingID, String userid) {
-        return null;
+    public String cancelBooking(String bookingid, String userid) {
+        for(Map.Entry<String, HashMap<String, HashMap<String, String>>> d : a.entrySet()) {
+            System.out.println(d.getValue());
+            for(Map.Entry<String, HashMap<String, String>> rno : d.getValue().entrySet()) {
+                System.out.println(rno.getValue());
+                for(Map.Entry<String, String> t : rno.getValue().entrySet()) {
+                    System.out.println(t.getValue());
+                    String booking = t.getValue();
+                    if(booking.equals(bookingid)) {
+                        System.out.println(bookingid + " found at {" + d.getKey() + " in rno=" + rno.getKey() + " @" + t.getKey() + "} (DVL campus)");
+                        a.get(d.getKey()).get(rno.getKey()).put(t.getKey(), "available");
+                        System.out.println("booking_id cancelled and changed to available. check data-structure 'a' for proof");
+                        System.out.println(a);
+                        return "canceled and made available";
+                    } else {
+                        System.out.println("no bookings found for " + bookingid);
+                    }
+                }
+            }
+        }
+        return "debug_cancel_booking";
     }
 
     public boolean deleteroom(String rno, String date, String timeslot) {

@@ -9,7 +9,7 @@ import java.net.SocketException;
 public class DVL_listener extends Thread {
     String date;
     DVL_listener() {
-        System.out.println("starting a thread for listening. opening PORT 2172 (DVL-listener listening for requests)");  // <-- CHANGE CODE
+        System.out.println("DVL-Listener: starting a thread for listening. opening PORT 2172 (DVL-listener listening for requests)");  // <-- CHANGE CODE
     }
     DVL dvl = new DVL();
 
@@ -34,11 +34,11 @@ public class DVL_listener extends Thread {
                 // bookRoom()
                 if(op.equals("BR")) {
                     String campus = r.substring(2, 5);
-                    System.out.println("campus for booking: " + campus); // should always be DVL no?
+                    System.out.println("DVL_listener: campus for booking: " + campus); // should always be DVL no?
                     String rno = r.substring(5, 6);
                     String date = r.substring(6, 9);
                     String time = r.substring(9, 13);
-                    System.out.println("r unwrapped: " + rno + date + time);
+                    System.out.println("DVL_listener: r unwrapped: " + rno + date + time);
                     dvl.bookroom("DVL", rno, date, time, "DVLSTEST");
 
                     // do we need to send anything back?
@@ -47,7 +47,7 @@ public class DVL_listener extends Thread {
                 // getAvailability()
                 if(op.equals("GA")) {
                     String date = r.substring(2,5);
-                    System.out.println("date: " + date);
+                    System.out.println("DVL-Listener: date: " + date);
                     System.out.println("DVL-Listener: processing request for available rooms on: " + this.date);
                     int c = dvl.get_count(date);
                     System.out.println("DVL-Listener: Processed. For " + date + ", available rooms is, count => " + c);
