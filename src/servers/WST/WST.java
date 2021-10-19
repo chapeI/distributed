@@ -52,31 +52,46 @@ public class WST extends cPOA {
 
     // following methods need to be synchronized
     public String bookroom(String campus_for_booking, String rno, String date, String timeslot, String UID) {
-        String bookingid;
+        String bookingid = "WST bookingid debug";
         switch (campus_for_booking) {
             case "WST":
                 bookingid = UUID.randomUUID().toString();
                 if (a.get(date).get(rno).get(timeslot) == "available") {
-                    a.get(date).get(rno).put(timeslot, UID);
+                    a.get(date).get(rno).put(timeslot, bookingid);
                     System.out.println(a);
                 } else {
-                    System.out.println("CRASH");
+                    System.out.println("already booked");
                 }
                 break;
             case "DVL":
                 String s = serialize_("BR", campus_for_booking, rno, date, timeslot);
-                WST_sender bookroom_in_dvl = new WST_sender(s, 2172);
-                Thread t = new Thread(bookroom_in_dvl);
+                WST_sender st1 = new WST_sender(s, 2172);
+                Thread t = new Thread(st1);
                 t.start();
+                try {
+                    t.join();
+                } catch (InterruptedException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+                bookingid = st1.response;
+                System.out.println("WST.bookroom(): DVL st.response: "+st1.response);
                 break;
             case "KKL":
                 String s1 = serialize_("BR", campus_for_booking, rno, date, timeslot);
-                WST_sender bookroom_in_kkl = new WST_sender(s1, 2170);
-                Thread t1 = new Thread(bookroom_in_kkl);
+                WST_sender st2 = new WST_sender(s1, 2170);
+                Thread t1 = new Thread(st2);
                 t1.start();
+                try {
+                    t1.join();
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+                bookingid = st2.response;
+                System.out.println("WST.bookroom(): KKL st.response: "+st2.response);
                 break;
         }
-        return "WORKING";
+        return bookingid;
     }
     String serialize_(String op, String campus, String rno, String date, String timeslot) {
         String s = op.concat(campus).concat(rno).concat(date).concat(timeslot);
@@ -106,13 +121,13 @@ public class WST extends cPOA {
         t1.join();
         t2.join();
 
-        System.out.println("WST: request processed from DVL-Listener. count stored in thread");
-        System.out.println("WST: dvl has: " + s.count + " available room(s)");
-        this.wst_available_count += s.count;
-
-        System.out.println("WST: request processed from KKL-Listener. count stored in thread");
-        System.out.println("WST: kkl has: " + s2.count + " available room(s)");
-        this.wst_available_count += s2.count;
+//        System.out.println("WST: request processed from DVL-Listener. count stored in thread");
+//        System.out.println("WST: dvl has: " + s.response + " available room(s)");
+//        this.wst_available_count += s.response;
+//
+//        System.out.println("WST: request processed from KKL-Listener. count stored in thread");
+//        System.out.println("WST: kkl has: " + s2.response + " available room(s)");
+//        this.wst_available_count += s2.response;
 
         System.out.println("WST: (after) Total amount of available rooms for " + date +", across all three campuses is => " + wst_available_count);
 

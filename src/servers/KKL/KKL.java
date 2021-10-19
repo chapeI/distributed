@@ -80,10 +80,16 @@ public class KKL extends cPOA {
                 break;
             case "WST":
                 String s1 = serialize_("BR", campus_for_booking, rno, date, timeslot);
-                KKL_sender bookroom_in_wst = new KKL_sender(s1, 2171);
-                Thread t1 = new Thread(bookroom_in_wst);
+                KKL_sender st2 = new KKL_sender(s1, 2171);
+                Thread t1 = new Thread(st2);
                 t1.start();
-
+                try {
+                    t1.join();
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+                bookingid = st2.response;
+                System.out.println("KKL.bookroom(): WST st.response: "+st2.response);
                 break;
         }
         return bookingid;

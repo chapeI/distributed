@@ -7,11 +7,11 @@ import java.net.InetAddress;
 import java.net.SocketException;
 
 public class WST_sender extends Thread {
-    public int count;
-    String date;
+    public String response;
+    String request;
     int port;
-    public WST_sender(String date, int port) {
-        this.date = date;
+    public WST_sender(String request, int port) {
+        this.request = request;
         this.port = port;
     }
 
@@ -21,7 +21,7 @@ public class WST_sender extends Thread {
             socket = new DatagramSocket();
 
             // SEND
-            byte[] b = this.date.getBytes();
+            byte[] b = this.request.getBytes();
             InetAddress address = InetAddress.getLocalHost();
             DatagramPacket packet =new DatagramPacket(b, b.length, address, port); // port has to be a variable
             socket.send(packet);
@@ -32,10 +32,11 @@ public class WST_sender extends Thread {
             byte[] r = new byte[1024];
             DatagramPacket response = new DatagramPacket(r, r.length);
             socket.receive(response);
-            String s = new String(response.getData());
-            String s_ = s.trim();
-            System.out.println("sender: receives back: " + s_ + ". Storing in sender. WST can access sender.count");
-            this.count = Integer.parseInt(s_);
+            String s = new String(response.getData()).trim();
+            System.out.println("sender: receives back: " + s + ". Storing in sender. WST can access sender.response");
+            synchronized (this) {
+                this.response = s;
+            }
         }
         catch (SocketException e) {
             System.out.println("SocketException: " + e.getMessage());

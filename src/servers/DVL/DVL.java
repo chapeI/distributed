@@ -72,14 +72,21 @@ public class DVL extends cPOA {
                     e1.printStackTrace();
                 }
                 bookingid = st.response;
-                System.out.println("KKL.bookroom(): DVL st.response: "+st.response);
+                System.out.println("DVL.bookroom(): DVL st.response: "+st.response);
                 break;
             }
             case "WST": {
                 String s1 = serialize_("BR", campus_for_booking, rno, date, timeslot);
-                DVL_sender bookroom_in_wst = new DVL_sender(s1, 2171);
-                Thread t1 = new Thread(bookroom_in_wst);
+                DVL_sender st2 = new DVL_sender(s1, 2171);
+                Thread t1 = new Thread(st2);
                 t1.start();
+                try {
+                    t1.join();
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+                bookingid = st2.response;
+                System.out.println("DVL.bookroom(): WST st.response: "+st2.response);
                 break;
             }
         }
