@@ -55,7 +55,7 @@ public class DVL extends cPOA {
             case "DVL":
                 bookingid = UUID.randomUUID().toString();
                 if (a.get(date).get(rno).get(timeslot) == "available") {
-                    a.get(date).get(rno).put(timeslot, "BOOKED");
+                    a.get(date).get(rno).put(timeslot, UID);
                     System.out.println(a);
                 } else {
                     System.out.println("CRASH");
