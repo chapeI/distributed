@@ -8,11 +8,11 @@ import java.net.SocketException;
 import java.nio.ByteBuffer;
 
 public class DVL_sender extends Thread {
-    public int count;
-    String date;
+    public String response;
+    String request;
     int port;
-    public DVL_sender(String date, int port) {
-        this.date = date;
+    public DVL_sender(String request, int port) {
+        this.request = request;
         this.port = port;
     }
 
@@ -22,21 +22,22 @@ public class DVL_sender extends Thread {
             socket = new DatagramSocket();
 
             // SEND
-            byte[] b = this.date.getBytes();
+            byte[] b = this.request.getBytes();
             InetAddress address = InetAddress.getLocalHost();
             DatagramPacket packet =new DatagramPacket(b, b.length, address, port); // port has to be a variable
             socket.send(packet);
-            System.out.println("sender: sending a request to " + port + ". (go here)");
+            System.out.println("DVL_sender: sending a request to " + port + ". (go here)");
             System.out.println("--");
 
             // RECEIVE
             byte[] r = new byte[1024];
-            DatagramPacket response = new DatagramPacket(r, r.length);
-            socket.receive(response);
-            String s = new String(response.getData());
-            String s_ = s.trim();
-            System.out.println("sender: receives back: " + s_ + ". Storing in sender. DVL can access sender.count");
-            this.count = Integer.parseInt(s_);
+            DatagramPacket receiving = new DatagramPacket(r, r.length);
+            socket.receive(receiving);
+            String response = new String(receiving.getData()).trim();
+            System.out.println("DVL_sender: receives back: " + response + ". Storing in sendingThread. DVL can access DVL_sender.response");
+            synchronized (this) {
+                this.response = response;
+            }
         }
         catch (SocketException e) {
             System.out.println("SocketException: " + e.getMessage());
@@ -45,7 +46,7 @@ public class DVL_sender extends Thread {
         } finally {
             if(socket != null) {
                 socket.close();
-                System.out.println("sender: closing DVL sending socket");
+                System.out.println("DVL_sender: closing DVL sending socket");
             }
         }
     }

@@ -39,9 +39,14 @@ public class KKL_listener extends Thread {
                     String date = r.substring(6, 9);
                     String time = r.substring(9, 13);
                     System.out.println("r unwrapped: " + rno + date + time);
-                    kkl.bookroom("KKL", rno, date, time, "DVLSTEST");
+                    String response = kkl.bookroom("KKL", rno, date, time, "DVLSTEST");
 
-                    // do we need to send anything back?
+                    byte [] reply = response.getBytes();
+                    DatagramPacket responsePacket = new DatagramPacket(reply,
+                            reply.length, request.getAddress(), request.getPort());
+                    socket.send(responsePacket);
+                    System.out.println("KKL-Listener: sending response " + response + " to the requester");
+
                 }
 
                 // getAvailability()

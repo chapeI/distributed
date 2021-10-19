@@ -7,11 +7,11 @@ import java.net.InetAddress;
 import java.net.SocketException;
 
 public class KKL_sender extends Thread {
-    public int count = 0;
-    String date;
+    public String response = "initial response";
+    String request;
     int port;
-    public KKL_sender(String date, int port) {
-        this.date = date;  // TODO: change all from date to data
+    public KKL_sender(String request, int port) {
+        this.request = request;  // TODO: change all from request to data
         this.port = port;
     }
 
@@ -21,22 +21,21 @@ public class KKL_sender extends Thread {
             socket = new DatagramSocket();
 
             // SEND
-            byte[] b = this.date.getBytes();
+            byte[] b = this.request.getBytes();
             InetAddress address = InetAddress.getLocalHost();
             DatagramPacket packet =new DatagramPacket(b, b.length, address, port); // port has to be a variable
             socket.send(packet);
-            System.out.println("reached-3");
-            System.out.println("sender: sending a request to " + port + ". (go there)");
+            System.out.println("KKL_sender: sending a request to " + port + ". (go there)");
 
             // RECEIVE
             byte[] r = new byte[1024];
-            DatagramPacket response = new DatagramPacket(r, r.length);
-            socket.receive(response);
-            String s = new String(response.getData());
-            String s_ = s.trim();
-            System.out.println("sender: receives back: " + s_ + ". Storing in sender. KKL can access sender.count");
-
-            this.count = Integer.parseInt(s_);
+            DatagramPacket receiving = new DatagramPacket(r, r.length);
+            socket.receive(receiving);
+            String response = new String(receiving.getData()).trim();
+            System.out.println("KKL_sender: receives back: " + response + ". Storing in sender. KKL can access KKLsender.response");
+            synchronized (this) {
+                this.response = response;
+            }
         }
         catch (SocketException e) {
             System.out.println("SocketException: " + e.getMessage());
@@ -45,7 +44,7 @@ public class KKL_sender extends Thread {
         } finally {
             if(socket != null) {
                 socket.close();
-                System.out.println("sender: closing KKL sending socket");
+                System.out.println("KKL_sender: closing KKL sending socket");
             }
         }
     }

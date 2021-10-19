@@ -80,7 +80,7 @@ public class WST extends cPOA {
     }
     String serialize_(String op, String campus, String rno, String date, String timeslot) {
         String s = op.concat(campus).concat(rno).concat(date).concat(timeslot);
-        System.out.println("s: " + s);
+        System.out.println("WST_serialize: s => " + s);
         return s;
     }
 

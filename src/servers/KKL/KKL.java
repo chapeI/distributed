@@ -51,37 +51,46 @@ public class KKL extends cPOA {
     }
 
     // synchronize
-    public String bookroom(String campus_for_booking, String rno, String date, String timeslot, String UID) {
-        String bookingid;
+    public synchronized String bookroom(String campus_for_booking, String rno, String date, String timeslot, String UID) {
+        String bookingid = "kkl DEBUG";
 
         switch (campus_for_booking) {
             case "KKL":
                 bookingid = UUID.randomUUID().toString();
                 if (a.get(date).get(rno).get(timeslot) == "available") {
-                    a.get(date).get(rno).put(timeslot, UID);
+                    a.get(date).get(rno).put(timeslot, bookingid);
                     System.out.println(a);
                 } else {
-                    System.out.println("CRASH");
+                    System.out.println("already booked");
                 }
                 break;
             case "DVL":
                 String s = serialize_("BR", campus_for_booking, rno, date, timeslot);
-                KKL_sender bookroom_in_dvl = new KKL_sender(s, 2172);
-                Thread t = new Thread(bookroom_in_dvl);
+                KKL_sender st = new KKL_sender(s, 2172);
+                Thread t = new Thread(st);
                 t.start();
+                try {
+                    t.join();
+                } catch (InterruptedException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+                bookingid = st.response;
+                System.out.println("DVL.bookroom(): DVL st.response: "+st.response);
                 break;
             case "WST":
                 String s1 = serialize_("BR", campus_for_booking, rno, date, timeslot);
                 KKL_sender bookroom_in_wst = new KKL_sender(s1, 2171);
                 Thread t1 = new Thread(bookroom_in_wst);
                 t1.start();
+
                 break;
         }
-        return "WORKING";
+        return bookingid;
     }
     String serialize_(String op, String campus, String rno, String date, String timeslot) {
         String s = op.concat(campus).concat(rno).concat(date).concat(timeslot);
-        System.out.println("s: " + s);
+//        System.out.println("KKL_serialize: s => " + s);
         return s;
     }
 
@@ -108,12 +117,12 @@ public class KKL extends cPOA {
         t2.join();
 
         System.out.println("KKL: request processed from DVL-Listener. count stored in thread");
-        System.out.println("KKL: dvl has: " + GA_dvl.count + " available room(s)");
-        this.kkl_available_count += GA_dvl.count;
+        System.out.println("KKL: dvl has: " + GA_dvl.response + " available room(s)");
+//        this.kkl_available_count += GA_dvl.response;
 
         System.out.println("KKL: request processed from WST-Listener. count stored in thread");
-        System.out.println("KKL: wst has: " + GA_wst.count + " available room(s)");
-        this.kkl_available_count += GA_wst.count;
+        System.out.println("KKL: wst has: " + GA_wst.response + " available room(s)");
+//        this.kkl_available_count += GA_wst.response;
 
         System.out.println("KKL: (after) Total amount of available rooms for " + date +", across all three campuses is => " + kkl_available_count);
         return "fix_kkl_available_count";

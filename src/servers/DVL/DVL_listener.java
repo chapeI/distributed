@@ -39,9 +39,13 @@ public class DVL_listener extends Thread {
                     String date = r.substring(6, 9);
                     String time = r.substring(9, 13);
                     System.out.println("DVL_listener: r unwrapped: " + rno + date + time);
-                    dvl.bookroom("DVL", rno, date, time, "DVLSTEST");
+                    String response = dvl.bookroom("DVL", rno, date, time, "DVLSTEST");
 
-                    // do we need to send anything back?
+                    byte [] reply = response.getBytes();
+                    DatagramPacket responsePacket = new DatagramPacket(reply,
+                            reply.length, request.getAddress(), request.getPort());
+                    socket.send(responsePacket);
+                    System.out.println("DVL-Listener: sending response " + response + " to the requester");
                 }
 
                 // getAvailability()
@@ -53,11 +57,12 @@ public class DVL_listener extends Thread {
                     System.out.println("DVL-Listener: Processed. For " + date + ", available rooms is, count => " + c);
 
                     // SEND
-                    byte [] reply = Integer.toString(c).getBytes();
-                    DatagramPacket responsePacket = new DatagramPacket(reply,
-                            reply.length, request.getAddress(), request.getPort());
-                    socket.send(responsePacket);
-                    System.out.println("DVL-Listener: sending count " + c + " to the requester");
+                    // TODO: change to string
+//                    byte [] reply = Integer.toString(c).getBytes();
+//                    DatagramPacket responsePacket = new DatagramPacket(reply,
+//                            reply.length, request.getAddress(), request.getPort());
+//                    socket.send(responsePacket);
+//                    System.out.println("DVL-Listener: sending count " + c + " to the requester");
                 }
 
             }
