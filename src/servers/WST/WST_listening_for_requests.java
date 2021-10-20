@@ -45,10 +45,8 @@ public class WST_listening_for_requests extends Thread {
 
                 // getAvailability()
                 if(op.equals("GA")) {
-                    String date = r.substring(2,5);
-//                    System.out.println("WST-Listener: processing request for available rooms on: " + date);
+                    String date = r.substring(2, 5);
                     int count = wst.get_count(date);
-//                    System.out.println("WST-Listener: Processed. For " + date + ", available rooms is, count => " + c);
                     String c = Integer.toString(count);
                     response = c;
                 }

@@ -46,12 +46,9 @@ public class KKL_listening_for_requests extends Thread {
                 // getAvailability()
                 if(op.equals("GA")) {
                     String date = r.substring(2, 5);
-//                    System.out.println("KKL-Listener: processing request for available rooms on: " + date);
                     int count = kkl.get_count(date);
-//                    System.out.println("KKL-Listener: Processed. For " + date + ", available rooms is, count => " + count);
                     String c = Integer.toString(count);
                     response = c;
-
                 }
 
                 if(op.equals("CB")) {

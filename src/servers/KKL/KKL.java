@@ -14,7 +14,6 @@ public class KKL extends cPOA {
     public void setORB(ORB orb_val) {
         orb = orb_val;
     }
-    int kkl_available_count = 0;
     static HashMap<String, HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();  // 	HM<date, HM<rno, HM<time, b_id>>>
     KKL () {
         super();
@@ -24,6 +23,7 @@ public class KKL extends cPOA {
         make_new_date(a, "THU", "2", "4:00");
         System.out.println("KKL(): " + a);
     }
+
     public boolean createroom(String rno, String date, String timeslot) {
         make_new_date(a, date, rno, timeslot);
         System.out.println(a);
@@ -104,37 +104,32 @@ public class KKL extends cPOA {
     }
 
     public String getAvailableTimeSlot(String date) throws InterruptedException {
-        this.kkl_available_count = 0;
-        this.kkl_available_count += this.get_count(date);
+        String date_ = "GA".concat(date);
+        int kkl_available_count = 0;
+        kkl_available_count += this.get_count(date);
         System.out.println("\nKKL: (before) just available rooms in kkl : " + kkl_available_count);
 
-        // append GA (get-available) before each date
-        String date_ = "GA".concat(date);
+        KKL_send_request st1 = new KKL_send_request(date_, 2172); // DVL
+        KKL_send_request st2 = new KKL_send_request(date_, 2171); // WST
 
-        KKL_send_request GA_dvl = new KKL_send_request(date_, 2172);
-        System.out.println("KKL: sending request to DVL-Listener for number of available rooms for " + date);
-
-        KKL_send_request GA_wst = new KKL_send_request(date_, 2171);
-        System.out.println("KKL: sending request to WST-Listener for number of available rooms for " + date);
-
-        Thread t1=new Thread(GA_dvl);
-        Thread t2 = new Thread(GA_wst);
-
+        Thread t1=new Thread(st1);
+        Thread t2 = new Thread(st2);
         t1.start();
         t2.start();
         t1.join();
         t2.join();
 
-        System.out.println("KKL: request processed from DVL-Listener. count stored in thread");
-        System.out.println("KKL: dvl has: " + GA_dvl.response + " available room(s)");
-//        this.kkl_available_count += GA_dvl.response;
+        String DVL_count = st1.response;
+        System.out.println("DVL: DVL_count: " + DVL_count);
+        String WST_count = st2.response;
+        System.out.println("WST: WST_count: " + WST_count);
+        int c1 = Integer.parseInt(DVL_count);
+        int c2 = Integer.parseInt(WST_count);
+        kkl_available_count += c1 + c2;
 
-        System.out.println("KKL: request processed from WST-Listener. count stored in thread");
-        System.out.println("KKL: wst has: " + GA_wst.response + " available room(s)");
-//        this.kkl_available_count += GA_wst.response;
-
-        System.out.println("KKL: (after) Total amount of available rooms for " + date +", across all three campuses is => " + kkl_available_count);
-        return "fix_kkl_available_count";
+        String s = "KKL: (after) Total amount of available rooms for " + date +", across all three campuses is => " + kkl_available_count;
+        System.out.println(s);
+        return s;
     }
     public int get_count(String date) {
         int count = 0;

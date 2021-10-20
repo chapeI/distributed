@@ -30,7 +30,8 @@ public class DVL_listening_for_requests extends Thread {
                 // PROCESS
                 String r = new String(request.getData());
                 String op = r.substring(0,2);
-                System.out.println("DVL_Listener: operation: " + op);
+                System.out.println("DVL_Listener: operation" +
+                        ": " + op);
 
                 // bookRoom()
                 if(op.equals("BR")) {
@@ -45,12 +46,10 @@ public class DVL_listening_for_requests extends Thread {
 
                 // getAvailability()
                 if(op.equals("GA")) {
-                    String date = r.substring(2,5);
-//                    System.out.println("DVL-Listener: date: " + date);
-                    System.out.println("DVL-Listener: processing request for available rooms on: " + date);
-                    int c = dvl.get_count(date);
-                    System.out.println("DVL-Listener: Processed. For " + date + ", available rooms is, count => " + c);
-
+                    String date = r.substring(2, 5);
+                    int count = dvl.get_count(date);
+                    String c = Integer.toString(count);
+                    response = c;
                 }
 
                 if(op.equals("CB")) {

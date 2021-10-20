@@ -11,7 +11,6 @@ public class DVL extends cPOA {
     public void setORB(ORB orb_val) {
         orb = orb_val;
     }
-//    int dvl_available_count = 0;
     static HashMap<String, HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();  // 	HM<date, HM<rno, HM<time, b_id>>>
     DVL() {
         super();
@@ -21,6 +20,7 @@ public class DVL extends cPOA {
         make_new_date(a, "THU", "6", "7:00");
         System.out.println("DVL(): " + a);
     }
+
     public boolean createroom(String rno, String date, String timeslot) {
         make_new_date(a, date, rno, timeslot);
         System.out.println(a);
@@ -102,22 +102,16 @@ public class DVL extends cPOA {
     }
 
     public synchronized String getAvailableTimeSlot(String date) throws InterruptedException {
-//        String dvl_available_count = "0";
-        int dvl_available_count = 0;
         String date_ = "GA".concat(date);
-
+        int dvl_available_count = 0;
         dvl_available_count += get_count(date);
         System.out.println("\nDVL: (before) just available rooms in dvl : " + dvl_available_count);
 
-        DVL_send_request st1 = new DVL_send_request(date_, 2170);  // sending(date) to kkl (thread opened on port 2170)
-//        System.out.println("DVL: sending a request to KKL-Listener for number of available rooms for " + date);
-
-        DVL_send_request st2 = new DVL_send_request(date_, 2171);
-//        System.out.println("DVL: sending a request to WST-Listener for number of available rooms for " + date);
+        DVL_send_request st1 = new DVL_send_request(date_, 2170); // KKL
+        DVL_send_request st2 = new DVL_send_request(date_, 2171); // WST
 
         Thread t1=new Thread(st1);
         Thread t2 = new Thread(st2);
-
         t1.start();
         t2.start();
         t1.join();
@@ -125,18 +119,14 @@ public class DVL extends cPOA {
 
         String DVL_count = st1.response;
         System.out.println("DVL: DVL_count: " + DVL_count);
-
         String WST_count = st2.response;
         System.out.println("WST: WST_count: " + WST_count);
-
         int c1 = Integer.parseInt(DVL_count);
         int c2 = Integer.parseInt(WST_count);
-
         dvl_available_count += c1 + c2;
 
         String s = "DVL: (after) Total amount of available rooms for " + date +", across all three campuses is => " + dvl_available_count;
         System.out.println(s);
-
         return s;
     }
     public int get_count(String date) {
