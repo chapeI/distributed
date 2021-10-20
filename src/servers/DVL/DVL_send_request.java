@@ -26,15 +26,15 @@ public class DVL_send_request extends Thread {
             InetAddress address = InetAddress.getLocalHost();
             DatagramPacket packet =new DatagramPacket(b, b.length, address, port); // port has to be a variable
             socket.send(packet);
-            System.out.println("DVL_sender: sending a request to " + port + ". (go here)");
-            System.out.println("--");
+            System.out.println("DVL_sender: sending a request to a servers listener @ port:  " + port + ". (DVL-2172, KKL-2170, WST-2171)");
+            System.out.println("~~ PROCESSING ~~");
 
             // RECEIVE
             byte[] r = new byte[1024];
             DatagramPacket receiving = new DatagramPacket(r, r.length);
             socket.receive(receiving);
             String response = new String(receiving.getData()).trim();
-            System.out.println("DVL_sender: receives back: " + response + ". Storing in sendingThread. DVL can access DVL_sender.response");
+            System.out.println("DVL_sender: receives back: (" + response + "). DVL should access this response through this sending thread");
             synchronized (this) {
                 this.response = response;
             }

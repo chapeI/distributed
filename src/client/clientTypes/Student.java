@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Student {
-    BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     String response = "Student: BAD RESPONSE";
     public Student() {}
 
@@ -22,9 +22,6 @@ public class Student {
                 String rno;
                 String date;
                 String timeslot;
-//                String rno = "1";
-//                String date = "WED";
-//                String timeslot = "4:00";
 
                 System.out.println("Enter booking campus (KKL, WST, DVL)");
                 campus_for_booking = br.readLine();
@@ -50,17 +47,15 @@ public class Student {
                 date=br.readLine();
 
                 if(campus.equals("DVL")) {
-                    DVL.getAvailableTimeSlot(date);
+                    response = DVL.getAvailableTimeSlot(date);
                 } else if (campus.equals("KKL")) {
-                    KKL.getAvailableTimeSlot(date);
+                    response = KKL.getAvailableTimeSlot(date);
                 } else if (campus.equals("WST")) {
-                    WST.getAvailableTimeSlot(date);
+                    response = WST.getAvailableTimeSlot(date);
                 }
-
                 break;
             }
             case 3: {
-
                 String booking_id;
                 String campus_for_cancelling;
                 System.out.println("enter booking_id");

@@ -7,7 +7,7 @@ import java.net.MalformedURLException;
 import java.net.SocketException;
 
 public class DVL_listening_for_requests extends Thread {
-    String date;
+//    String date;
     DVL_listening_for_requests() {
         System.out.println("DVL-Listener: starting a thread for listening. opening PORT 2172 (DVL-listener listening for requests)");  // <-- CHANGE CODE
     }
@@ -20,8 +20,7 @@ public class DVL_listening_for_requests extends Thread {
             byte[] b = new byte[1000];
 
             while(true) {
-
-                String response = "DVL_listening: see comment"; // if you're seeing this, the response in one of the methods is incomplete
+                String response = "DVL_listening: ERROR"; // if you're seeing this, the response in one of the methods is incomplete
 
                 // RECEIVE
                 DatagramPacket request = new DatagramPacket(b, b.length);
@@ -31,7 +30,7 @@ public class DVL_listening_for_requests extends Thread {
                 // PROCESS
                 String r = new String(request.getData());
                 String op = r.substring(0,2);
-                System.out.println("DVL_Listener: op: " + op);
+                System.out.println("DVL_Listener: operation: " + op);
 
                 // bookRoom()
                 if(op.equals("BR")) {
@@ -47,8 +46,8 @@ public class DVL_listening_for_requests extends Thread {
                 // getAvailability()
                 if(op.equals("GA")) {
                     String date = r.substring(2,5);
-                    System.out.println("DVL-Listener: date: " + date);
-                    System.out.println("DVL-Listener: processing request for available rooms on: " + this.date);
+//                    System.out.println("DVL-Listener: date: " + date);
+                    System.out.println("DVL-Listener: processing request for available rooms on: " + date);
                     int c = dvl.get_count(date);
                     System.out.println("DVL-Listener: Processed. For " + date + ", available rooms is, count => " + c);
 
@@ -62,11 +61,10 @@ public class DVL_listening_for_requests extends Thread {
 
                 // SEND
                 byte [] reply = response.getBytes();
-                DatagramPacket responsePacket = new DatagramPacket(reply,
+                DatagramPacket responsePackets = new DatagramPacket(reply,
                         reply.length, request.getAddress(), request.getPort());
-                socket.send(responsePacket);
+                socket.send(responsePackets);
                 System.out.println("DVL-Listener: processed request. sending response (" + response + ") back to sender");
-
             }
         }
         catch (SocketException e) {

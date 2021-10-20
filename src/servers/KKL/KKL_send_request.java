@@ -25,14 +25,15 @@ public class KKL_send_request extends Thread {
             InetAddress address = InetAddress.getLocalHost();
             DatagramPacket packet =new DatagramPacket(b, b.length, address, port); // port has to be a variable
             socket.send(packet);
-            System.out.println("KKL_sender: sending a request to " + port + ". (go there)");
+            System.out.println("KKL_sender: sending a request to a servers listener @ port:  " + port + ". (DVL-2172, KKL-2170, WST-2171)");
+            System.out.println("~~ PROCESSING ~~");
 
             // RECEIVE
             byte[] r = new byte[1024];
             DatagramPacket receiving = new DatagramPacket(r, r.length);
             socket.receive(receiving);
             String response = new String(receiving.getData()).trim();
-            System.out.println("KKL_sender: receives back: " + response + ". Storing in sender. KKL can access KKLsender.response");
+            System.out.println("KKL_sender: receives back: (" + response + "). KKL should access response through this sending thread");
             synchronized (this) {
                 this.response = response;
             }

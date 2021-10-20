@@ -7,7 +7,6 @@ import java.net.SocketException;
 
 
 public class KKL_listening_for_requests extends Thread {
-    String date;
     KKL_listening_for_requests() {
         System.out.println("KKL_listener: starting a thread for listening. opening PORT 2170 (KKL-listener listening for requests)");  // <-- CHANGE CODE
     }
@@ -31,7 +30,7 @@ public class KKL_listening_for_requests extends Thread {
                 // PROCESS
                 String r = new String(request.getData());
                 String op = r.substring(0,2);
-                System.out.println("KKL_Listener: op: " + op);
+                System.out.println("KKL_Listener: operation: " + op);
 
                 // bookRoom()
                 if(op.equals("BR")) {
@@ -47,10 +46,12 @@ public class KKL_listening_for_requests extends Thread {
                 // getAvailability()
                 if(op.equals("GA")) {
                     String date = r.substring(2, 5);
-                    System.out.println("date: " + date);
-                    System.out.println("KKL-Listener: processing request for available rooms on: " + this.date);
-                    int c = kkl.get_count(date);
-                    System.out.println("KKL-Listener: Processed. For " + date + ", available rooms is, count => " + c);
+//                    System.out.println("KKL-Listener: processing request for available rooms on: " + date);
+                    int count = kkl.get_count(date);
+//                    System.out.println("KKL-Listener: Processed. For " + date + ", available rooms is, count => " + count);
+                    String c = Integer.toString(count);
+                    response = c;
+
                 }
 
                 if(op.equals("CB")) {
@@ -61,9 +62,9 @@ public class KKL_listening_for_requests extends Thread {
 
                 // SEND
                 byte [] reply = response.getBytes();
-                DatagramPacket responsePacket = new DatagramPacket(reply,
+                DatagramPacket responsePackets = new DatagramPacket(reply,
                         reply.length, request.getAddress(), request.getPort());
-                socket.send(responsePacket);
+                socket.send(responsePackets);
                 System.out.println("KKL-Listener: Request processed. sending response (" + response + ") back to sender");
 
             }
