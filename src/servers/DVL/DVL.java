@@ -157,11 +157,11 @@ public class DVL extends cPOA {
         switch(campus) {
             case "DVL":
                 for(Map.Entry<String, HashMap<String, HashMap<String, String>>> d : a.entrySet()) {
-                    System.out.println(d.getValue());
+//                    System.out.println(d.getValue());
                     for(Map.Entry<String, HashMap<String, String>> rno : d.getValue().entrySet()) {
-                        System.out.println(rno.getValue());
+//                        System.out.println(rno.getValue());
                         for(Map.Entry<String, String> t : rno.getValue().entrySet()) {
-                            System.out.println(t.getValue());
+//                            System.out.println(t.getValue());
                             String booking = t.getValue();
                             if(booking.equals(bookingid)) {
                                 System.out.println(bookingid + " found at {" + d.getKey() + " in rno=" + rno.getKey() + " @" + t.getKey() + "} (DVL campus)");

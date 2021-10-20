@@ -39,8 +39,7 @@ public class WST_listening_for_requests extends Thread {
                     String date = r.substring(6, 9);
                     String time = r.substring(9, 13);
                     System.out.println("r unwrapped: " + rno + date + time);
-                    wst.bookroom("WST", rno, date, time, "WSTSTEST");
-//                    response = wst.bookroom() FIX
+                    response = wst.bookroom("WST", rno, date, time, "WSTSTEST");
                 }
 
                 // getAvailability()
