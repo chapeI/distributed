@@ -13,7 +13,7 @@ public class WST extends cPOA {
         orb = orb_val;
     }
     static HashMap<String, HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();  // 	HM<date, HM<rno, HM<time, b_id>>>
-    WST () {
+    WST() {
         super();
         make_new_date(a, "THU", "4", "1:00");
         make_new_date(a, "WED", "3", "6:00");
@@ -24,7 +24,9 @@ public class WST extends cPOA {
     }
 
     public boolean createroom(String rno, String date, String timeslot) {
-        return false;
+        make_new_date(a, date, rno, timeslot);
+        System.out.println(a);
+        return true;
     }
     static void make_new_date(HashMap<String, HashMap<String, HashMap<String, String>>> dates, String date, String rno, String time) {
         if(dates.containsKey(date)) {
@@ -49,8 +51,8 @@ public class WST extends cPOA {
         return null;
     }
 
-    // following methods need to be synchronized
-    public String bookroom(String campus_for_booking, String rno, String date, String timeslot, String UID) {
+    // synchronize
+    public synchronized String bookroom(String campus_for_booking, String rno, String date, String timeslot, String UID) {
         String bookingid = "WST bookingid debug";
         switch (campus_for_booking) {
             case "WST":
@@ -99,7 +101,7 @@ public class WST extends cPOA {
         return s;
     }
 
-    public String getAvailableTimeSlot(String date) throws InterruptedException {
+    public synchronized String getAvailableTimeSlot(String date) throws InterruptedException {
         String date_ = "GA".concat(date);
         int wst_available_count = 0;
         wst_available_count += get_count(date);
@@ -147,7 +149,7 @@ public class WST extends cPOA {
         return count;
     }
 
-    public String cancelBooking(String bookingid, String campus) {
+    public synchronized String cancelBooking(String bookingid, String campus) {
         String cancellation = "WST: initial cancellation";
         switch (campus) {
             case "WST":

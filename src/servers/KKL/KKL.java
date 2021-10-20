@@ -13,7 +13,7 @@ public class KKL extends cPOA {
         orb = orb_val;
     }
     static HashMap<String, HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();  // 	HM<date, HM<rno, HM<time, b_id>>>
-    KKL () {
+    KKL() {
         super();
         make_new_date(a, "MON", "1", "3:00");
         make_new_date(a, "TUE", "1", "4:00");
@@ -101,7 +101,7 @@ public class KKL extends cPOA {
         return s;
     }
 
-    public String getAvailableTimeSlot(String date) throws InterruptedException {
+    public synchronized String getAvailableTimeSlot(String date) throws InterruptedException {
         String date_ = "GA".concat(date);
         int kkl_available_count = 0;
         kkl_available_count += this.get_count(date);
@@ -149,7 +149,7 @@ public class KKL extends cPOA {
         return count;
     }
 
-    public String cancelBooking(String bookingid, String campus) {
+    public synchronized String cancelBooking(String bookingid, String campus) {
 
         String cancellation = "KKL: initial cancellation (shouldnt see this)";
 

@@ -44,7 +44,7 @@ public class DVL extends cPOA {
         }
     }
 
-    public String changeReservation (String studentid, String booking_id, String new_date, String new_campus_name, String new_room_no, String new_time_slot) {
+    public String changeReservation(String studentid, String booking_id, String new_date, String new_campus_name, String new_room_no, String new_time_slot) {
         return "DEBUG";
     };
 
@@ -148,7 +148,7 @@ public class DVL extends cPOA {
         return count;
     }
 
-    public String cancelBooking(String bookingid, String campus) {
+    public synchronized String cancelBooking(String bookingid, String campus) {
         String cancellation = "DVL: initial cancellation (shouldnt see this)";
         switch(campus) {
             case "DVL":
@@ -201,7 +201,7 @@ public class DVL extends cPOA {
         return cancellation;
     }
 
-    public boolean deleteroom (String rno, String date, String timeslot) {
+    public boolean deleteroom(String rno, String date, String timeslot) {
         return false;
     };
 }
