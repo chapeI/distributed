@@ -47,7 +47,9 @@ public class KKL extends cPOA {
     }
 
     public String changeReservation(String studentid, String booking_id, String new_date, String new_campus_name, String new_room_no, String new_time_slot) {
-        return null;
+        cancelBooking(booking_id, "KKL");
+        bookroom(new_campus_name, new_room_no, new_date, new_time_slot, studentid);
+        return "changed";
     }
 
     // synchronize
@@ -62,7 +64,9 @@ public class KKL extends cPOA {
                     System.out.println(a);
                     break;
                 } else {
-                    System.out.println("already booked");
+                    String s = "\nalready booked";
+                    System.out.println(s);
+                    bookingid = s;
                 }
                 break;
             case "DVL":
@@ -150,17 +154,15 @@ public class KKL extends cPOA {
     }
 
     public synchronized String cancelBooking(String bookingid, String campus) {
-
         String cancellation = "KKL: initial cancellation (shouldnt see this)";
-
         switch (campus) {
             case "KKL":
                 for (Map.Entry<String, HashMap<String, HashMap<String, String>>> d : a.entrySet()) {
-                    System.out.println(d.getValue());
+//                    System.out.println(d.getValue());
                     for (Map.Entry<String, HashMap<String, String>> rno : d.getValue().entrySet()) {
-                        System.out.println(rno.getValue());
+//                        System.out.println(rno.getValue());
                         for (Map.Entry<String, String> t : rno.getValue().entrySet()) {
-                            System.out.println(t.getValue());
+//                            System.out.println(t.getValue());
                             String booking = t.getValue();
                             if (booking.equals(bookingid)) {
                                 System.out.println(bookingid + " found at {" + d.getKey() + " in rno=" + rno.getKey() + " @" + t.getKey() + "} (KKL campus)");
@@ -169,7 +171,7 @@ public class KKL extends cPOA {
                                 System.out.println(a);
                                 cancellation = "cancelled";
                             } else {
-                                System.out.println("no bookings found for " + bookingid);
+                                System.out.println("booking " + bookingid + " not found on " + d.getKey());
                                 cancellation = "not cancelled";
                             }
                         }

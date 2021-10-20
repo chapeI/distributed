@@ -45,7 +45,9 @@ public class DVL extends cPOA {
     }
 
     public String changeReservation(String studentid, String booking_id, String new_date, String new_campus_name, String new_room_no, String new_time_slot) {
-        return "DEBUG";
+        cancelBooking(booking_id, "DVL");
+        bookroom(new_campus_name, new_room_no, new_date, new_time_slot, studentid);
+        return "changed";
     };
 
     // synchronize
@@ -59,7 +61,9 @@ public class DVL extends cPOA {
                     System.out.println(a);
                     break;
                 } else {
-                    System.out.println("already booked");
+                    String s = "\nalready booked";
+                    System.out.println(s);
+                    bookingid = s;
                 }
                 break;
             case "KKL": {
@@ -166,7 +170,7 @@ public class DVL extends cPOA {
                                 System.out.println(a);
                                 cancellation = "cancelled";
                             } else {
-                                System.out.println("no bookings found for " + bookingid);
+                                System.out.println("booking " + bookingid + " not found on " + d.getKey());
                                 cancellation = "not cancelled";
                             }
                         }
