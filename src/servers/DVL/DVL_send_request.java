@@ -36,6 +36,7 @@ public class DVL_send_request extends Thread {
             String response = new String(receiving.getData()).trim();
             System.out.println("DVL_sender: receives back: (" + response + "). DVL should access this response through this sending thread");
             synchronized (this) {
+                System.out.println("SYNC: "+ response);
                 this.response = response;
             }
         }

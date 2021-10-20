@@ -170,6 +170,7 @@ public class WST extends cPOA {
                                 System.out.println("booking_id cancelled and changed to available. check data-structure 'a' for proof");
                                 System.out.println(a);
                                 cancellation = "cancelled";
+                                return cancellation;
                             } else {
                                 System.out.println("booking " + bookingid + " not found on " + d.getKey());
                                 cancellation = "not cancelled";

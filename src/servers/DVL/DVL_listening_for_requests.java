@@ -7,7 +7,6 @@ import java.net.MalformedURLException;
 import java.net.SocketException;
 
 public class DVL_listening_for_requests extends Thread {
-//    String date;
     DVL_listening_for_requests() {
         System.out.println("DVL-Listener: starting a thread for listening. opening PORT 2172 (DVL-listener listening for requests)");  // <-- CHANGE CODE
     }

@@ -36,6 +36,7 @@ public class WST_send_request extends Thread {
             String s = new String(response.getData()).trim();
             System.out.println("WST_sender: receives back: (" + response + "). WST should access response through this sending thread");
             synchronized (this) {
+                System.out.println("SYNC: "+ s);
                 this.response = s;
             }
         }

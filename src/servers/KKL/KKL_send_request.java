@@ -35,6 +35,7 @@ public class KKL_send_request extends Thread {
             String response = new String(receiving.getData()).trim();
             System.out.println("KKL_sender: receives back: (" + response + "). KKL should access response through this sending thread");
             synchronized (this) {
+                System.out.println("SYNC: "+ response);
                 this.response = response;
             }
         }
