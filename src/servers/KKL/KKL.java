@@ -2,8 +2,6 @@ package servers.KKL;
 
 import common.cPOA;
 import org.omg.CORBA.ORB;
-import servers.DVL.DVL_send_request;
-import servers.WST.WST_send_request;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -180,7 +178,7 @@ public class KKL extends cPOA {
                 break;
             case "WST":
                 String request = "CB".concat(bookingid);
-                DVL_send_request sr = new DVL_send_request(request, 2171);
+                KKL_send_request sr = new KKL_send_request(request, 2171);
                 Thread t = new Thread(sr);
                 t.start();
                 try {
@@ -192,7 +190,7 @@ public class KKL extends cPOA {
                 break;
             case "DVL":
                 String request2 = "CB".concat(bookingid);
-                WST_send_request sr2 = new WST_send_request(request2, 2172);
+                KKL_send_request sr2 = new KKL_send_request(request2, 2172);
                 Thread t2 = new Thread(sr2);
                 t2.start();
                 try {

@@ -147,7 +147,6 @@ public class WST extends cPOA {
         return count;
     }
 
-
     public String cancelBooking(String bookingid, String campus) {
         String cancellation = "WST: initial cancellation";
         switch (campus) {

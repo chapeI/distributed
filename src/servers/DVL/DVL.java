@@ -2,7 +2,6 @@ package servers.DVL;
 
 import org.omg.CORBA.ORB;
 import common.*;
-import servers.WST.WST_send_request;
 
 import java.util.*;
 
@@ -188,7 +187,7 @@ public class DVL extends cPOA {
                 break;
             case "KKL":
                 String request2 = "CB".concat(bookingid);
-                WST_send_request sr2 = new WST_send_request(request2, 2170);
+                DVL_send_request sr2 = new DVL_send_request(request2, 2170);
                 Thread t2 = new Thread(sr2);
                 t2.start();
                 try {
