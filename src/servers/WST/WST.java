@@ -1,17 +1,10 @@
 package servers.WST;
 
-import common.cPOA;
-import org.omg.CORBA.ORB;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class WST extends cPOA {
-    private ORB orb;
-    public void setORB(ORB orb_val) {
-        orb = orb_val;
-    }
+public class WST {
     static HashMap<String, HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();  // 	HM<date, HM<rno, HM<time, b_id>>>
     WST() {
         super();

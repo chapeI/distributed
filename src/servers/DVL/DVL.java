@@ -1,15 +1,9 @@
 package servers.DVL;
 
-import org.omg.CORBA.ORB;
-import common.*;
 
 import java.util.*;
 
-public class DVL extends cPOA {
-    private ORB orb;
-    public void setORB(ORB orb_val) {
-        orb = orb_val;
-    }
+public class DVL {
     static HashMap<String, HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();  // 	HM<date, HM<rno, HM<time, b_id>>>
     DVL() {
         super();
