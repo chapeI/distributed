@@ -1,12 +1,16 @@
-package KKL;
+package sKKL;
 
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@WebService(endpointInterface="sKKL.KKL_i")
+@SOAPBinding(style = SOAPBinding.Style.RPC)
 public class KKL {
     static HashMap<String, HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();  // 	HM<date, HM<rno, HM<time, b_id>>>
-    KKL() {
+    public KKL() {
         super();
         make_new_date(a, "MON", "1", "3:00");
         make_new_date(a, "TUE", "1", "4:00");
@@ -40,17 +44,17 @@ public class KKL {
     }
 
     public String changeReservation(String studentid, String booking_id, String new_date, String new_campus_name, String new_room_no, String new_time_slot) {
-        cancelBooking(booking_id, "KKL");
+        cancelBooking(booking_id, "sKKL");
         bookroom(new_campus_name, new_room_no, new_date, new_time_slot, studentid);
         return "changed";
     }
 
     // synchronize
-    public synchronized String bookroom(String campus_for_booking, String rno, String date, String timeslot, String UID) {
+    public String bookroom(String campus_for_booking, String rno, String date, String timeslot, String UID) {
         String bookingid = "kkl DEBUG";
 
         switch (campus_for_booking) {
-            case "KKL":
+            case "sKKL":
                 bookingid = UUID.randomUUID().toString();
                 if (a.get(date).get(rno).get(timeslot) == "available") {
                     a.get(date).get(rno).put(timeslot, bookingid);
@@ -63,8 +67,8 @@ public class KKL {
                 }
                 break;
             case "DVL":
-                String s = serialize_("BR", campus_for_booking, rno, date, timeslot);
-                KKL_send_request st = new KKL_send_request(s, 2172);
+                String s = concat_("BR", campus_for_booking, rno, date, timeslot);
+                KKL_sender st = new KKL_sender(s, 2172);
                 Thread t = new Thread(st);
                 t.start();
                 try {
@@ -77,8 +81,8 @@ public class KKL {
                 System.out.println("DVL.bookroom(): DVL st.response: "+st.response);
                 break;
             case "WST":
-                String s1 = serialize_("BR", campus_for_booking, rno, date, timeslot);
-                KKL_send_request st2 = new KKL_send_request(s1, 2171);
+                String s1 = concat_("BR", campus_for_booking, rno, date, timeslot);
+                KKL_sender st2 = new KKL_sender(s1, 2171);
                 Thread t1 = new Thread(st2);
                 t1.start();
                 try {
@@ -92,20 +96,20 @@ public class KKL {
         }
         return bookingid;
     }
-    String serialize_(String op, String campus, String rno, String date, String timeslot) {
+    String concat_(String op, String campus, String rno, String date, String timeslot) {
         String s = op.concat(campus).concat(rno).concat(date).concat(timeslot);
 //        System.out.println("KKL_serialize: s => " + s);
         return s;
     }
 
-    public synchronized String getAvailableTimeSlot(String date) throws InterruptedException {
+    public String getAvailableTimeSlot(String date) throws InterruptedException {
         String date_ = "GA".concat(date);
         int kkl_available_count = 0;
         kkl_available_count += this.get_count(date);
         System.out.println("\nKKL: (before) just available rooms in kkl : " + kkl_available_count);
 
-        KKL_send_request st1 = new KKL_send_request(date_, 2172); // DVL
-        KKL_send_request st2 = new KKL_send_request(date_, 2171); // WST
+        KKL_sender st1 = new KKL_sender(date_, 2172); // DVL
+        KKL_sender st2 = new KKL_sender(date_, 2171); // WST
 
         Thread t1=new Thread(st1);
         Thread t2 = new Thread(st2);
@@ -146,10 +150,10 @@ public class KKL {
         return count;
     }
 
-    public synchronized String cancelBooking(String bookingid, String campus) {
+    public String cancelBooking(String bookingid, String campus) {
         String cancellation = "KKL: initial cancellation (shouldnt see this)";
         switch (campus) {
-            case "KKL":
+            case "sKKL":
                 for (Map.Entry<String, HashMap<String, HashMap<String, String>>> d : a.entrySet()) {
 //                    System.out.println(d.getValue());
                     for (Map.Entry<String, HashMap<String, String>> rno : d.getValue().entrySet()) {
@@ -174,7 +178,7 @@ public class KKL {
                 break;
             case "WST":
                 String request = "CB".concat(bookingid);
-                KKL_send_request sr = new KKL_send_request(request, 2171);
+                KKL_sender sr = new KKL_sender(request, 2171);
                 Thread t = new Thread(sr);
                 t.start();
                 try {
@@ -186,7 +190,7 @@ public class KKL {
                 break;
             case "DVL":
                 String request2 = "CB".concat(bookingid);
-                KKL_send_request sr2 = new KKL_send_request(request2, 2172);
+                KKL_sender sr2 = new KKL_sender(request2, 2172);
                 Thread t2 = new Thread(sr2);
                 t2.start();
                 try {

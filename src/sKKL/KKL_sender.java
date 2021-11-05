@@ -1,4 +1,4 @@
-package KKL;
+package sKKL;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -6,11 +6,11 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
-public class KKL_send_request extends Thread {
+public class KKL_sender extends Thread {
     public String response = "initial response";
     String request;
     int port;
-    public KKL_send_request(String request, int port) {
+    public KKL_sender(String request, int port) {
         this.request = request;  // TODO: change all from request to data
         this.port = port;
     }

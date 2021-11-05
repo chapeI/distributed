@@ -76,7 +76,7 @@ public class WST {
                 bookingid = st1.response;
                 System.out.println("WST.bookroom(): DVL st.response: "+st1.response);
                 break;
-            case "KKL":
+            case "sKKL":
                 String s1 = serialize_("BR", campus_for_booking, rno, date, timeslot);
                 WST_send_request st2 = new WST_send_request(s1, 2170);
                 Thread t1 = new Thread(st2);
@@ -184,7 +184,7 @@ public class WST {
                 }
                 cancellation = sr.response;
                 break;
-            case "KKL":
+            case "sKKL":
                 String request2 = "CB".concat(bookingid);
                 WST_send_request sr2 = new WST_send_request(request2, 2170);
                 Thread t2 = new Thread(sr2);

@@ -1,6 +1,7 @@
 package client.clientTypes;
 
 import sDVL.DVL_i;
+import sKKL.KKL_i;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,7 +12,7 @@ public class Student {
     String response = "Student: BAD RESPONSE";
     public Student() {}
 
-    public void run_student(String uid, DVL_i dvl_i, DVL_i x, DVL_i y) throws IOException, InterruptedException {
+    public void run_student(String uid, DVL_i dvl_i, KKL_i kkl_i, DVL_i y) throws IOException, InterruptedException {
         String campus = uid.substring(0,3);
 
         System.out.println("1) book room 2) get available times  3) cancel booking  4) changeReservation");
@@ -35,7 +36,7 @@ public class Student {
                 if(campus.equals("DVL")) {
                     response = dvl_i.bookroom(campus_for_booking, rno, date, timeslot, uid);
                 } else if (campus.equals("KKL")) {
-//                    response = KKL.bookroom(campus_for_booking, rno, date, timeslot, uid);
+                    response = kkl_i.bookroom(campus_for_booking, rno, date, timeslot, uid);
                 } else if (campus.equals("WST")) {
 //                    response = WST.bookroom(campus_for_booking, rno, date, timeslot, uid);
                 }
@@ -48,8 +49,8 @@ public class Student {
 
                 if(campus.equals("DVL")) {
                     response = dvl_i.getAvailableTimeSlot(date);
-                } else if (campus.equals("KKL")) {
-//                    response = KKL.getAvailableTimeSlot(date);
+                } else if (campus.equals("sKKL")) {
+                    response = kkl_i.getAvailableTimeSlot(date);
                 } else if (campus.equals("WST")) {
 //                    response = WST.getAvailableTimeSlot(date);
                 }
@@ -65,8 +66,8 @@ public class Student {
 
                 if(campus.equals("DVL")) {
                     response = dvl_i.cancelBooking(booking_id, campus_for_cancelling);
-                } else if (campus.equals("KKL")) {
-//                    response = KKL.cancelBooking(booking_id, campus_for_cancelling);
+                } else if (campus.equals("sKKL")) {
+                    response = kkl_i.cancelBooking(booking_id, campus_for_cancelling);
                 } else if (campus.equals("WST")) {
 //                    response = WST.cancelBooking(booking_id, campus_for_cancelling);
                 }
@@ -95,8 +96,8 @@ public class Student {
 
                 if(campus.equals("DVL")) {
                     response = dvl_i.changeReservation(campus_for_cancelling, booking_id,date, campus_for_booking, rno, timeslot);
-                } else if (campus.equals("KKL")) {
-//                    response = KKL.changeReservation(campus_for_cancelling, booking_id,date, campus_for_booking, rno, timeslot);
+                } else if (campus.equals("sKKL")) {
+                    response = kkl_i.changeReservation(campus_for_cancelling, booking_id,date, campus_for_booking, rno, timeslot);
                 } else if (campus.equals("WST")) {
 //                    response = WST.changeReservation(campus_for_cancelling, booking_id,date, campus_for_booking, rno, timeslot);
                 }

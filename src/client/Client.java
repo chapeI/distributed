@@ -2,6 +2,7 @@ package client;
 import client.clientTypes.Admin;
 import client.clientTypes.Student;
 import sDVL.DVL_i;
+import sKKL.KKL_i;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
@@ -22,13 +23,18 @@ public class Client {
         Service service1 = Service.create(u1, q1);
         DVL_i dvl_i = service1.getPort(DVL_i.class);
 
+        URL u2 = new URL("http://localhost:8081/cal?wsdl");
+        QName q2 = new QName("http://sKKL/", "KKLService");
+        Service service2 = Service.create(u2, q2);
+        KKL_i kkl_i = service2.getPort(KKL_i.class);
+
         BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Enter ID");
         uid = br.readLine();
 
         if(uid.charAt(3)=='S') {
             student = new Student();
-            student.run_student(uid, dvl_i, dvl_i, dvl_i);
+            student.run_student(uid, dvl_i, kkl_i, dvl_i);
         } else if(uid.charAt(3)=='A') {
             admin = new Admin();
 //            admin.run_admin(uid, c1, c2, c3);

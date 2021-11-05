@@ -67,7 +67,7 @@ public class DVL implements DVL_i {
                     bookingid = s;
                 }
                 break;
-            case "KKL": {
+            case "sKKL": {
                 String s = concat_("BR", campus_for_booking, rno, date, timeslot);
                 DVL_sender st = new DVL_sender(s, 2170);
                 Thread t = new Thread(st);
@@ -193,7 +193,7 @@ public class DVL implements DVL_i {
                 }
                 cancellation = sr.response;
                 break;
-            case "KKL":
+            case "sKKL":
                 String request2 = "CB".concat(bookingid);
                 DVL_sender sr2 = new DVL_sender(request2, 2170);
                 Thread t2 = new Thread(sr2);
