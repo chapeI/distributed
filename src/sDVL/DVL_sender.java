@@ -25,7 +25,7 @@ public class DVL_sender extends Thread {
             InetAddress address = InetAddress.getLocalHost();
             DatagramPacket packet =new DatagramPacket(b, b.length, address, port); // port has to be a variable
             socket.send(packet);
-            System.out.println("DVL_sender: sending a request to a servers listener @ port:  " + port + ". (DVL-2172, KKL-2170, WST-2171)");
+            System.out.println("\nDVL_sender: sending a request to a servers listener @ port:  " + port + ". (DVL-2172, KKL-2170, WST-2171)");
             System.out.println("~~ PROCESSING ~~");
 
             // RECEIVE
@@ -46,7 +46,7 @@ public class DVL_sender extends Thread {
         } finally {
             if(socket != null) {
                 socket.close();
-                System.out.println("DVL_sender: closing DVL sending socket");
+                System.out.println("DVL_sender: closing DVL sending socket\n");
             }
         }
     }

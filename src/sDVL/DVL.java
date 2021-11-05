@@ -41,12 +41,13 @@ public class DVL implements DVL_i {
         }
     }
 
-    public String changeReservation(String studentid, String booking_id, String new_date, String new_campus_name, String new_room_no, String new_time_slot) {
+    public String changeReservation(String campus_for_cancelBooking, String booking_id, String new_date, String new_campus_name, String new_room_no, String new_time_slot) {
+        String response;
         synchronized (this) {
-            cancelBooking(booking_id, "DVL");
-            bookroom(new_campus_name, new_room_no, new_date, new_time_slot, studentid);
+            cancelBooking(booking_id, campus_for_cancelBooking);
+            response = bookroom(new_campus_name, new_room_no, new_date, new_time_slot, "NULL");
         }
-        return "changed";
+        return response;
     };
 
     // synchronize
@@ -67,7 +68,7 @@ public class DVL implements DVL_i {
                     bookingid = s;
                 }
                 break;
-            case "sKKL": {
+            case "KKL": {
                 String s = concat_("BR", campus_for_booking, rno, date, timeslot);
                 DVL_sender st = new DVL_sender(s, 2170);
                 Thread t = new Thread(st);
@@ -193,7 +194,7 @@ public class DVL implements DVL_i {
                 }
                 cancellation = sr.response;
                 break;
-            case "sKKL":
+            case "KKL":
                 String request2 = "CB".concat(bookingid);
                 DVL_sender sr2 = new DVL_sender(request2, 2170);
                 Thread t2 = new Thread(sr2);

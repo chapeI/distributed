@@ -1,13 +1,13 @@
-package WST;
+package sWST;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
-public class WST_listening_for_requests extends Thread {
-    WST_listening_for_requests() {
-        System.out.println("WST_listener: starting a thread for listening. opening PORT 2171 (WST-listener listening for requests)");  // <-- CHANGE CODE
+public class WST_listener extends Thread {
+    WST_listener() {
+        System.out.println("\nWST_listener: starting a thread for listening. opening PORT 2171 (WST-listener listening for requests)");  // <-- CHANGE CODE
     }
     WST wst = new WST();
 

@@ -8,7 +8,7 @@ import java.net.SocketException;
 
 public class KKL_listener extends Thread {
     KKL_listener() {
-        System.out.println("KKL_listener: starting a thread for listening. opening PORT 2170 (KKL-listener listening for requests)");  // <-- CHANGE CODE
+        System.out.println("\nKKL_listener: starting a thread for listening. opening PORT 2170 (KKL-listener listening for requests)");  // <-- CHANGE CODE
     }
     KKL kkl = new KKL();
 
@@ -40,7 +40,7 @@ public class KKL_listener extends Thread {
                     String date = r.substring(6, 9);
                     String time = r.substring(9, 13);
                     System.out.println("r unwrapped: " + rno + date + time);
-                    response = kkl.bookroom("sKKL", rno, date, time, "DVLSTEST");
+                    response = kkl.bookroom("KKL", rno, date, time, "DVLSTEST");
                 }
 
                 // getAvailability()
@@ -54,7 +54,7 @@ public class KKL_listener extends Thread {
                 if(op.equals("CB")) {
                     String bookingid = r.substring(2, 38);
 //                    System.out.println("KKL_Listener: bookingid: " + bookingid);
-                    response = kkl.cancelBooking(bookingid, "sKKL");
+                    response = kkl.cancelBooking(bookingid, "KKL");
                 }
 
                 // SEND

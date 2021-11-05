@@ -7,7 +7,7 @@ import java.net.SocketException;
 
 public class DVL_listener extends Thread {
     DVL_listener() {
-        System.out.println("DVL-Listener: starting a thread for listening. opening PORT 2172 (DVL-listener listening for requests)");  // <-- CHANGE CODE
+        System.out.println("\nDVL-Listener: starting a thread for listening. opening PORT 2172 (DVL-listener listening for requests)");  // <-- CHANGE CODE
     }
     DVL dvl = new DVL();
 

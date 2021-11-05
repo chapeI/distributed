@@ -1,12 +1,16 @@
-package WST;
+package sWST;
 
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@WebService(endpointInterface = "sWST.WST_i")
+@SOAPBinding(style = SOAPBinding.Style.RPC)
 public class WST {
     static HashMap<String, HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();  // 	HM<date, HM<rno, HM<time, b_id>>>
-    WST() {
+    public WST() {
         super();
         make_new_date(a, "THU", "4", "1:00");
         make_new_date(a, "WED", "3", "6:00");
@@ -40,14 +44,14 @@ public class WST {
         }
     }
 
-    public String changeReservation(String studentid, String booking_id, String new_date, String new_campus_name, String new_room_no, String new_time_slot) {
-        cancelBooking(booking_id, "WST");
-        bookroom(new_campus_name, new_room_no, new_date, new_time_slot, studentid);
-        return "changed";
+    public String changeReservation(String campus_for_cancelBooking, String booking_id, String new_date, String new_campus_name, String new_room_no, String new_time_slot) {
+        cancelBooking(booking_id, campus_for_cancelBooking);
+        String response = bookroom(new_campus_name, new_room_no, new_date, new_time_slot, "debug");
+        return response;
     }
 
     // synchronize
-    public synchronized String bookroom(String campus_for_booking, String rno, String date, String timeslot, String UID) {
+    public String bookroom(String campus_for_booking, String rno, String date, String timeslot, String UID) {
         String bookingid = "WST bookingid debug";
         switch (campus_for_booking) {
             case "WST":
@@ -63,8 +67,8 @@ public class WST {
                 }
                 break;
             case "DVL":
-                String s = serialize_("BR", campus_for_booking, rno, date, timeslot);
-                WST_send_request st1 = new WST_send_request(s, 2172);
+                String s = concat_("BR", campus_for_booking, rno, date, timeslot);
+                WST_sender st1 = new WST_sender(s, 2172);
                 Thread t = new Thread(st1);
                 t.start();
                 try {
@@ -76,9 +80,9 @@ public class WST {
                 bookingid = st1.response;
                 System.out.println("WST.bookroom(): DVL st.response: "+st1.response);
                 break;
-            case "sKKL":
-                String s1 = serialize_("BR", campus_for_booking, rno, date, timeslot);
-                WST_send_request st2 = new WST_send_request(s1, 2170);
+            case "KKL":
+                String s1 = concat_("BR", campus_for_booking, rno, date, timeslot);
+                WST_sender st2 = new WST_sender(s1, 2170);
                 Thread t1 = new Thread(st2);
                 t1.start();
                 try {
@@ -92,20 +96,20 @@ public class WST {
         }
         return bookingid;
     }
-    String serialize_(String op, String campus, String rno, String date, String timeslot) {
+    String concat_(String op, String campus, String rno, String date, String timeslot) {
         String s = op.concat(campus).concat(rno).concat(date).concat(timeslot);
         System.out.println("WST_serialize: s => " + s);
         return s;
     }
 
-    public synchronized String getAvailableTimeSlot(String date) throws InterruptedException {
+    public String getAvailableTimeSlot(String date) throws InterruptedException {
         String date_ = "GA".concat(date);
         int wst_available_count = 0;
         wst_available_count += get_count(date);
         System.out.println("\nWST: (before) just available rooms in wst : " + wst_available_count);
 
-        WST_send_request st1 = new WST_send_request(date_, 2172); // DVL
-        WST_send_request st2 = new WST_send_request(date_, 2170); // KKL
+        WST_sender st1 = new WST_sender(date_, 2172); // DVL
+        WST_sender st2 = new WST_sender(date_, 2170); // KKL
 
         Thread t1=new Thread(st1);
         Thread t2 = new Thread(st2);
@@ -146,7 +150,7 @@ public class WST {
         return count;
     }
 
-    public synchronized String cancelBooking(String bookingid, String campus) {
+    public String cancelBooking(String bookingid, String campus) {
         String cancellation = "WST: initial cancellation";
         switch (campus) {
             case "WST":
@@ -174,7 +178,7 @@ public class WST {
                 break;
             case "DVL":
                 String request = "CB".concat(bookingid);
-                WST_send_request sr = new WST_send_request(request, 2172);
+                WST_sender sr = new WST_sender(request, 2172);
                 Thread t = new Thread(sr);
                 t.start();
                 try {
@@ -184,9 +188,9 @@ public class WST {
                 }
                 cancellation = sr.response;
                 break;
-            case "sKKL":
+            case "KKL":
                 String request2 = "CB".concat(bookingid);
-                WST_send_request sr2 = new WST_send_request(request2, 2170);
+                WST_sender sr2 = new WST_sender(request2, 2170);
                 Thread t2 = new Thread(sr2);
                 t2.start();
                 try {

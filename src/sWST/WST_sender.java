@@ -1,16 +1,18 @@
-package WST;
+package sWST;
 
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
-public class WST_send_request extends Thread {
+public class WST_sender extends Thread {
     public String response;
     String request;
     int port;
-    public WST_send_request(String request, int port) {
+    public WST_sender(String request, int port) {
         this.request = request;
         this.port = port;
     }
@@ -25,7 +27,7 @@ public class WST_send_request extends Thread {
             InetAddress address = InetAddress.getLocalHost();
             DatagramPacket packet =new DatagramPacket(b, b.length, address, port); // port has to be a variable
             socket.send(packet);
-            System.out.println("WST_sender: sending a request to a servers listener @ port:  " + port + ". (DVL-2172, KKL-2170, WST-2171)");
+            System.out.println("\nWST_sender: sending a request to a servers listener @ port:  " + port + ". (DVL-2172, KKL-2170, WST-2171)");
             System.out.println("~~ PROCESSING ~~");
 
 
@@ -47,7 +49,7 @@ public class WST_send_request extends Thread {
         } finally {
             if(socket != null) {
                 socket.close();
-                System.out.println("sender: closing WST sending socket");
+                System.out.println("sender: closing WST sending socket\n");
             }
         }
     }

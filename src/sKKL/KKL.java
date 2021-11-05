@@ -43,10 +43,10 @@ public class KKL {
         }
     }
 
-    public String changeReservation(String studentid, String booking_id, String new_date, String new_campus_name, String new_room_no, String new_time_slot) {
-        cancelBooking(booking_id, "sKKL");
-        bookroom(new_campus_name, new_room_no, new_date, new_time_slot, studentid);
-        return "changed";
+    public String changeReservation(String campus_for_cancelBooking, String booking_id, String new_date, String new_campus_name, String new_room_no, String new_time_slot) {
+        cancelBooking(booking_id, campus_for_cancelBooking);
+        String response = bookroom(new_campus_name, new_room_no, new_date, new_time_slot, "DEBUG");
+        return response;
     }
 
     // synchronize
@@ -54,7 +54,7 @@ public class KKL {
         String bookingid = "kkl DEBUG";
 
         switch (campus_for_booking) {
-            case "sKKL":
+            case "KKL":
                 bookingid = UUID.randomUUID().toString();
                 if (a.get(date).get(rno).get(timeslot) == "available") {
                     a.get(date).get(rno).put(timeslot, bookingid);
@@ -153,7 +153,7 @@ public class KKL {
     public String cancelBooking(String bookingid, String campus) {
         String cancellation = "KKL: initial cancellation (shouldnt see this)";
         switch (campus) {
-            case "sKKL":
+            case "KKL":
                 for (Map.Entry<String, HashMap<String, HashMap<String, String>>> d : a.entrySet()) {
 //                    System.out.println(d.getValue());
                     for (Map.Entry<String, HashMap<String, String>> rno : d.getValue().entrySet()) {
