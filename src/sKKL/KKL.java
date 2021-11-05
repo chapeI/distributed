@@ -45,7 +45,10 @@ public class KKL {
 
     public String changeReservation(String campus_for_cancelBooking, String booking_id, String new_date, String new_campus_name, String new_room_no, String new_time_slot) {
         cancelBooking(booking_id, campus_for_cancelBooking);
-        String response = bookroom(new_campus_name, new_room_no, new_date, new_time_slot, "DEBUG");
+        String response;
+        synchronized (this) {
+            response = bookroom(new_campus_name, new_room_no, new_date, new_time_slot, "DEBUG");
+        }
         return response;
     }
 
@@ -57,7 +60,9 @@ public class KKL {
             case "KKL":
                 bookingid = UUID.randomUUID().toString();
                 if (a.get(date).get(rno).get(timeslot) == "available") {
-                    a.get(date).get(rno).put(timeslot, bookingid);
+                    synchronized (this) {
+                        a.get(date).get(rno).put(timeslot, bookingid);
+                    }
                     System.out.println(a);
                     break;
                 } else {
@@ -163,7 +168,9 @@ public class KKL {
                             String booking = t.getValue();
                             if (booking.equals(bookingid)) {
                                 System.out.println(bookingid + " found at {" + d.getKey() + " in rno=" + rno.getKey() + " @" + t.getKey() + "} (KKL campus)");
-                                a.get(d.getKey()).get(rno.getKey()).put(t.getKey(), "available");
+                                synchronized (this) {
+                                    a.get(d.getKey()).get(rno.getKey()).put(t.getKey(), "available");
+                                }
                                 System.out.println("booking_id cancelled and changed to available. check data-structure 'a' for proof");
                                 System.out.println(a);
                                 cancellation = "cancelled";
