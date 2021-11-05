@@ -42,8 +42,10 @@ public class DVL implements DVL_i {
     }
 
     public String changeReservation(String studentid, String booking_id, String new_date, String new_campus_name, String new_room_no, String new_time_slot) {
-        cancelBooking(booking_id, "DVL");
-        bookroom(new_campus_name, new_room_no, new_date, new_time_slot, studentid);
+        synchronized (this) {
+            cancelBooking(booking_id, "DVL");
+            bookroom(new_campus_name, new_room_no, new_date, new_time_slot, studentid);
+        }
         return "changed";
     };
 
@@ -54,7 +56,9 @@ public class DVL implements DVL_i {
             case "DVL":
                 bookingid = UUID.randomUUID().toString();
                 if (a.get(date).get(rno).get(timeslot) == "available") {
-                    a.get(date).get(rno).put(timeslot, bookingid);
+                    synchronized (this) {
+                        a.get(date).get(rno).put(timeslot, bookingid);
+                    }
                     System.out.println(a);
                     break;
                 } else {
@@ -64,7 +68,7 @@ public class DVL implements DVL_i {
                 }
                 break;
             case "KKL": {
-                String s = serialize_("BR", campus_for_booking, rno, date, timeslot);
+                String s = concat_("BR", campus_for_booking, rno, date, timeslot);
                 DVL_sender st = new DVL_sender(s, 2170);
                 Thread t = new Thread(st);
                 t.start();
@@ -79,7 +83,7 @@ public class DVL implements DVL_i {
                 break;
             }
             case "WST": {
-                String s1 = serialize_("BR", campus_for_booking, rno, date, timeslot);
+                String s1 = concat_("BR", campus_for_booking, rno, date, timeslot);
                 DVL_sender st2 = new DVL_sender(s1, 2171);
                 Thread t1 = new Thread(st2);
                 t1.start();
@@ -95,7 +99,7 @@ public class DVL implements DVL_i {
         }
         return bookingid;
     }
-    String serialize_(String op, String campus, String rno, String date, String timeslot) {
+    String concat_(String op, String campus, String rno, String date, String timeslot) {
         String s = op.concat(campus).concat(rno).concat(date).concat(timeslot);
 //        System.out.println("DVL_serialize: s => " + s);
         return s;
@@ -162,7 +166,9 @@ public class DVL implements DVL_i {
                             String booking = t.getValue();
                             if(booking.equals(bookingid)) {
                                 System.out.println(bookingid + " found at {" + d.getKey() + " in rno=" + rno.getKey() + " @" + t.getKey() + "} (DVL campus)");
-                                a.get(d.getKey()).get(rno.getKey()).put(t.getKey(), "available");
+                                synchronized (this) {
+                                    a.get(d.getKey()).get(rno.getKey()).put(t.getKey(), "available");
+                                }
                                 System.out.println("booking_id cancelled and changed to available. check data-structure 'a' for proof");
                                 System.out.println(a);
                                 cancellation = "cancelled";
