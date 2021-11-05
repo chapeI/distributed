@@ -1,10 +1,15 @@
-package servers.DVL;
+package servers.sDVL;
+
+import javax.xml.ws.Endpoint;
 
 public class start {
     public static void main(String args[]) {
-        DVL_listening_for_requests lt=new DVL_listening_for_requests();
-        Thread t =new Thread(lt);
-        t.start();
+//        DVL_listener listening_thread = new DVL_listener();
+//        Thread t =new Thread(listening_thread);
+//        t.start();
+
+        Endpoint ep = Endpoint.publish("http://localhost:8080/cal", new DVL());
+        System.out.println("endPoint published: " + ep.isPublished());
 
 //        try{
 //            ORB orb = ORB.init(args, null);
@@ -26,6 +31,6 @@ public class start {
 //            System.err.println("ERROR: " + e);
 //            e.printStackTrace(System.out);
 //        }
-        System.out.println("DVL Server Exiting ...");  // <-- CHANGE CODE
+//        System.out.println("DVL Server Exiting ...");  // <-- CHANGE CODE
     }
 }

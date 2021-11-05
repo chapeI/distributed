@@ -7,3 +7,5 @@ public class testing {
         System.out.println(a3);
     }
 }
+
+// TODO: change synchronization

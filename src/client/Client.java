@@ -1,10 +1,14 @@
 package client;
 import client.clientTypes.Admin;
 import client.clientTypes.Student;
+import servers.sDVL.DVL_i;
 
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.*;
+import java.net.URL;
 
 public class Client {
 
@@ -12,6 +16,11 @@ public class Client {
         String uid;
         Admin admin;
         Student student;
+
+        URL u1 = new URL("http://localhost:8080/cal?wsdl");
+        QName q1 = new QName("http://sDVL.servers/", "DVLService");
+        Service service1 = Service.create(u1, q1);
+        DVL_i DEBUG = service1.getPort(DVL_i.class);
 
 //        ORB orb = ORB.init(args, null);
 //        org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");

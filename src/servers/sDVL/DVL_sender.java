@@ -1,4 +1,4 @@
-package servers.DVL;
+package servers.sDVL;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -6,11 +6,11 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
-public class DVL_send_request extends Thread {
+public class DVL_sender extends Thread {
     public String response;
     String request;
     int port;
-    public DVL_send_request(String request, int port) {
+    public DVL_sender(String request, int port) {
         this.request = request;
         this.port = port;
     }

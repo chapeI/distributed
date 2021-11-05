@@ -1,13 +1,12 @@
-package servers.DVL;
+package servers.sDVL;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.MalformedURLException;
 import java.net.SocketException;
 
-public class DVL_listening_for_requests extends Thread {
-    DVL_listening_for_requests() {
+public class DVL_listener extends Thread {
+    DVL_listener() {
         System.out.println("DVL-Listener: starting a thread for listening. opening PORT 2172 (DVL-listener listening for requests)");  // <-- CHANGE CODE
     }
     DVL dvl = new DVL();

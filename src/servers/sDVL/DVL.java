@@ -1,17 +1,21 @@
-package servers.DVL;
+package servers.sDVL;
 
 
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
 import java.util.*;
 
-public class DVL {
+@WebService
+@SOAPBinding(style = SOAPBinding.Style.RPC)
+public class DVL implements DVL_i {
     static HashMap<String, HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();  // 	HM<date, HM<rno, HM<time, b_id>>>
-    DVL() {
+    public DVL() {
         super();
-        make_new_date(a, "TUE", "5", "6:00");
-        make_new_date(a, "WED", "1", "4:00");
-        make_new_date(a, "MON", "2", "4:00");
-        make_new_date(a, "THU", "6", "7:00");
-        System.out.println("DVL(): " + a);
+//        make_new_date(a, "TUE", "5", "6:00");
+//        make_new_date(a, "WED", "1", "4:00");
+//        make_new_date(a, "MON", "2", "4:00");
+//        make_new_date(a, "THU", "6", "7:00");
+//        System.out.println("DVL(): " + a);
     }
 
     public boolean createroom(String rno, String date, String timeslot) {
@@ -45,7 +49,7 @@ public class DVL {
     };
 
     // synchronize
-    public synchronized String bookroom(String campus_for_booking, String rno, String date, String timeslot, String UID) {
+    public String bookroom(String campus_for_booking, String rno, String date, String timeslot, String UID) {
         String bookingid = "DVL: bookingid initial. this should change";
         switch (campus_for_booking) {
             case "DVL":
@@ -62,7 +66,7 @@ public class DVL {
                 break;
             case "KKL": {
                 String s = serialize_("BR", campus_for_booking, rno, date, timeslot);
-                DVL_send_request st = new DVL_send_request(s, 2170);
+                DVL_sender st = new DVL_sender(s, 2170);
                 Thread t = new Thread(st);
                 t.start();
                 try {
@@ -77,7 +81,7 @@ public class DVL {
             }
             case "WST": {
                 String s1 = serialize_("BR", campus_for_booking, rno, date, timeslot);
-                DVL_send_request st2 = new DVL_send_request(s1, 2171);
+                DVL_sender st2 = new DVL_sender(s1, 2171);
                 Thread t1 = new Thread(st2);
                 t1.start();
                 try {
@@ -98,14 +102,14 @@ public class DVL {
         return s;
     }
 
-    public synchronized String getAvailableTimeSlot(String date) throws InterruptedException {
+    public String getAvailableTimeSlot(String date) throws InterruptedException {
         String date_ = "GA".concat(date);
         int dvl_available_count = 0;
         dvl_available_count += get_count(date);
         System.out.println("\nDVL: (before) just available rooms in dvl : " + dvl_available_count);
 
-        DVL_send_request st1 = new DVL_send_request(date_, 2170); // KKL
-        DVL_send_request st2 = new DVL_send_request(date_, 2171); // WST
+        DVL_sender st1 = new DVL_sender(date_, 2170); // KKL
+        DVL_sender st2 = new DVL_sender(date_, 2171); // WST
 
         Thread t1=new Thread(st1);
         Thread t2 = new Thread(st2);
@@ -146,7 +150,7 @@ public class DVL {
         return count;
     }
 
-    public synchronized String cancelBooking(String bookingid, String campus) {
+    public String cancelBooking(String bookingid, String campus) {
         String cancellation = "DVL: initial cancellation (shouldnt see this)";
         switch(campus) {
             case "DVL":
@@ -174,7 +178,7 @@ public class DVL {
                 break;
             case "WST":
                 String request = "CB".concat(bookingid);
-                DVL_send_request sr = new DVL_send_request(request, 2171);
+                DVL_sender sr = new DVL_sender(request, 2171);
                 Thread t = new Thread(sr);
                 t.start();
                 try {
@@ -186,7 +190,7 @@ public class DVL {
                 break;
             case "KKL":
                 String request2 = "CB".concat(bookingid);
-                DVL_send_request sr2 = new DVL_send_request(request2, 2170);
+                DVL_sender sr2 = new DVL_sender(request2, 2170);
                 Thread t2 = new Thread(sr2);
                 t2.start();
                 try {
