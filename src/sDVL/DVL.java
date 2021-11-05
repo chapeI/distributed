@@ -1,21 +1,20 @@
-package servers.sDVL;
-
+package sDVL;
 
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import java.util.*;
 
-@WebService
+@WebService(endpointInterface="sDVL.DVL_i")
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 public class DVL implements DVL_i {
     static HashMap<String, HashMap<String, HashMap<String,String>>> a = new HashMap< String, HashMap<String,HashMap<String,String>>>();  // 	HM<date, HM<rno, HM<time, b_id>>>
     public DVL() {
         super();
-//        make_new_date(a, "TUE", "5", "6:00");
-//        make_new_date(a, "WED", "1", "4:00");
-//        make_new_date(a, "MON", "2", "4:00");
-//        make_new_date(a, "THU", "6", "7:00");
-//        System.out.println("DVL(): " + a);
+        make_new_date(a, "TUE", "5", "6:00");
+        make_new_date(a, "WED", "1", "4:00");
+        make_new_date(a, "MON", "2", "4:00");
+        make_new_date(a, "THU", "6", "7:00");
+        System.out.println("DVL(): " + a);
     }
 
     public boolean createroom(String rno, String date, String timeslot) {

@@ -1,4 +1,4 @@
-package servers.sDVL;
+package sDVL;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

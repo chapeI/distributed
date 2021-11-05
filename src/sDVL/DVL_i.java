@@ -1,4 +1,4 @@
-package servers.sDVL;
+package sDVL;
 
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;

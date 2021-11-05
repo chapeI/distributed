@@ -1,4 +1,4 @@
-package servers.WST;
+package WST;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

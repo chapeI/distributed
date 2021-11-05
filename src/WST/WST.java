@@ -1,4 +1,4 @@
-package servers.WST;
+package WST;
 
 import java.util.HashMap;
 import java.util.Map;

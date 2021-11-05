@@ -1,59 +1,59 @@
-package servers.WST;
+package sDVL;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
-public class WST_listening_for_requests extends Thread {
-    WST_listening_for_requests() {
-        System.out.println("WST_listener: starting a thread for listening. opening PORT 2171 (WST-listener listening for requests)");  // <-- CHANGE CODE
+public class DVL_listener extends Thread {
+    DVL_listener() {
+        System.out.println("DVL-Listener: starting a thread for listening. opening PORT 2172 (DVL-listener listening for requests)");  // <-- CHANGE CODE
     }
-    WST wst = new WST();
+    DVL dvl = new DVL();
 
     public void run() {
         DatagramSocket socket = null;
         try {
-            socket = new DatagramSocket(2171);  //  DVL: 2172, KKL: 2170, WST: 2171
+            socket = new DatagramSocket(2172);  //  DVL: 2172, KKL: 2170, WST: 2171
             byte[] b = new byte[1000];
 
             while(true) {
-
-                String response = "WST_listening: see comment"; // if you're seeing this, the response in one of the methods is incomplete
+                String response = "DVL_listening: ERROR"; // if you're seeing this, the response in one of the methods is incomplete
 
                 // RECEIVE
                 DatagramPacket request = new DatagramPacket(b, b.length);
                 socket.receive(request);
-                System.out.println("\nWST-Listener: a request was received (dunno from who)");
+                System.out.println("\nDVL-Listener: a request was received (dunno from who)");
 
                 // PROCESS
                 String r = new String(request.getData());
                 String op = r.substring(0,2);
-                System.out.println("WST_Listener: operation: " + op);
+                System.out.println("DVL_Listener: operation" +
+                        ": " + op);
 
                 // bookRoom()
                 if(op.equals("BR")) {
                     String campus = r.substring(2, 5);
-                    System.out.println("campus for booking: " + campus); // should always be DVL no?
+                    System.out.println("DVL_listener: campus for booking: " + campus); // should always be DVL no?
                     String rno = r.substring(5, 6);
                     String date = r.substring(6, 9);
                     String time = r.substring(9, 13);
-                    System.out.println("r unwrapped: " + rno + date + time);
-                    response = wst.bookroom("WST", rno, date, time, "WSTSTEST");
+                    System.out.println("DVL_listener: r unwrapped: " + rno + date + time);
+                    response = dvl.bookroom("DVL", rno, date, time, "DVLSTEST");
                 }
 
                 // getAvailability()
                 if(op.equals("GA")) {
                     String date = r.substring(2, 5);
-                    int count = wst.get_count(date);
+                    int count = dvl.get_count(date);
                     String c = Integer.toString(count);
                     response = c;
                 }
 
                 if(op.equals("CB")) {
                     String bookingid = r.substring(2, 38);
-                    System.out.println("WST_Listener: bookingid: " + bookingid);
-                    response = wst.cancelBooking(bookingid, "WST");
+//                    System.out.println("DVL_Listener: bookingid: " + bookingid);
+                    response = dvl.cancelBooking(bookingid, "DVL");
                 }
 
                 // SEND
@@ -61,8 +61,7 @@ public class WST_listening_for_requests extends Thread {
                 DatagramPacket responsePackets = new DatagramPacket(reply,
                         reply.length, request.getAddress(), request.getPort());
                 socket.send(responsePackets);
-                System.out.println("WST-Listener: Request processed. sending response (" + response + ") back to sender");
-
+                System.out.println("DVL-Listener: processed request. sending response (" + response + ") back to sender");
             }
         }
         catch (SocketException e) {
@@ -72,7 +71,7 @@ public class WST_listening_for_requests extends Thread {
         } finally {
             if(socket != null) {
                 socket.close();
-                System.out.println("WST-Listener: closing WST socket. shouldn't see this");
+                System.out.println("DVL-Listener: closing DVL socket. shouldn't see this");
             }
         }
     }

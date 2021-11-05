@@ -1,4 +1,4 @@
-package servers.KKL;
+package KKL;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
