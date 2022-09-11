@@ -8,7 +8,7 @@ public class start {
         Thread t =new Thread(listening_thread);
         t.start();
 
-        Endpoint ep = Endpoint.publish("http://localhost:8080/cal", new DVL());
+        Endpoint ep = Endpoint.publish("http://localhost:8080/dalailama", new DVL());
         System.out.println("endPoint published: " + ep.isPublished());
 
     }

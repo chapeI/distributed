@@ -19,17 +19,17 @@ public class Client {
         Admin admin;
         Student student;
 
-        URL u1 = new URL("http://localhost:8080/cal?wsdl");
+        URL u1 = new URL("http://localhost:8080/dalailama?wsdl");
         QName q1 = new QName("http://sDVL/", "DVLService");  // has to be implementation (so in this case, DVL, + 'Service' exactly. so ->   DVLService
         Service service1 = Service.create(u1, q1);
         DVL_i dvl_i = service1.getPort(DVL_i.class);
 
-        URL u2 = new URL("http://localhost:8081/cal?wsdl");
+        URL u2 = new URL("http://localhost:8081/dalailama?wsdl");
         QName q2 = new QName("http://sKKL/", "KKLService");
         Service service2 = Service.create(u2, q2);
         KKL_i kkl_i = service2.getPort(KKL_i.class);
 
-        URL u3 = new URL("http://localhost:8082/cal?wsdl");
+        URL u3 = new URL("http://localhost:8082/dalailama?wsdl");
         QName q3 = new QName("http://sWST/", "WSTService");
         Service service3 = Service.create(u3, q3);
         WST_i wst_i = service3.getPort(WST_i.class);

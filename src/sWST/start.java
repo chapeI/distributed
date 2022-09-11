@@ -10,7 +10,7 @@ public class start {
         Thread t =new Thread(l);
         t.start();
 
-        Endpoint ep = Endpoint.publish("http://localhost:8082/cal", new WST());
+        Endpoint ep = Endpoint.publish("http://localhost:8082/dalailama", new WST());
         System.out.println("endPoint published: " + ep.isPublished());
 
     }

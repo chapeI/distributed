@@ -23,7 +23,7 @@ public class DVL_sender extends Thread {
             // SEND
             byte[] b = this.request.getBytes();
             InetAddress address = InetAddress.getLocalHost();
-            DatagramPacket packet =new DatagramPacket(b, b.length, address, port); // port has to be a variable
+            DatagramPacket packet =new DatagramPacket(b, b.length, address, port); // port has to be variable
             socket.send(packet);
             System.out.println("\nDVL_sender: sending a request to a servers listener @ port:  " + port + ". (DVL-2172, KKL-2170, WST-2171)");
             System.out.println("~~ PROCESSING ~~");

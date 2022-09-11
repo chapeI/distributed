@@ -8,7 +8,7 @@ public class start {
         Thread t =new Thread(lt);
         t.start();
 
-        Endpoint ep = Endpoint.publish("http://localhost:8081/cal", new KKL());
+        Endpoint ep = Endpoint.publish("http://localhost:8081/dalailama", new KKL());
         System.out.println("endPoint published: " + ep.isPublished());
     }
 }

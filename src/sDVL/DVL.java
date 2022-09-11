@@ -102,7 +102,6 @@ public class DVL implements DVL_i {
     }
     String concat_(String op, String campus, String rno, String date, String timeslot) {
         String s = op.concat(campus).concat(rno).concat(date).concat(timeslot);
-//        System.out.println("DVL_serialize: s => " + s);
         return s;
     }
 
